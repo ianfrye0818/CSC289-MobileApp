@@ -8,17 +8,54 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Text } from '../ui/text';
 
+/**
+ * Props for {@link InputField}.
+ *
+ * Extends all standard React Native `TextInputProps` except `secureTextEntry`
+ * (which is managed internally based on the `type` prop).
+ *
+ * @template T - The Zod schema that describes the enclosing form's values.
+ */
 export interface InputFieldProps<T extends z.ZodType<FieldValues>> extends Omit<
   TextInputProps,
   'secureTextEntry'
 > {
+  /** The field name — must match a key in your Zod schema. */
   name: FieldPath<z.infer<T>>;
+  /** Optional label rendered above the input. */
   label?: string;
+  /** Helper text shown below the input when there is no error. */
   description?: string;
+  /** When `true`, renders a red asterisk next to the label. */
   required: boolean;
+  /**
+   * Semantic input type. Controls keyboard layout, auto-correct, auto-capitalise,
+   * and whether the password visibility toggle is shown.
+   * @default 'text'
+   */
   type?: 'text' | 'password' | 'email' | 'number' | 'tel';
 }
 
+/**
+ * A controlled text input connected to a React Hook Form context.
+ *
+ * Must be rendered inside a `<FormProvider>` (or a component that calls
+ * `useForm` and passes the instance to `<FormProvider>`). Reads and writes the
+ * field value via `useFormContext` — no need to pass `control` manually.
+ *
+ * Handles validation error display, keyboard type selection, and (for
+ * `type="password"`) a show/hide password toggle button.
+ *
+ * @template T - The Zod schema that describes the enclosing form's values.
+ *
+ * @example
+ * <InputField<typeof loginSchema>
+ *   name="email"
+ *   label="Email"
+ *   type="email"
+ *   required
+ * />
+ */
 export function InputField<T extends z.ZodType<FieldValues>>({
   name,
   label,
@@ -80,6 +117,10 @@ export function InputField<T extends z.ZodType<FieldValues>>({
   );
 }
 
+/**
+ * Small icon button that toggles password visibility for a password input.
+ * Positioned absolutely inside the input wrapper so it overlaps the right edge.
+ */
 function ShowPasswordButton({
   showPassword,
   onToggle,

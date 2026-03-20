@@ -3,6 +3,13 @@ import { DeletedMessageResponse } from '@/types/MessageReponse.type';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RemoveItemFromCartCommand } from './RemoveItemFromCartCommand';
 
+/**
+ * Handles `RemoveItemFromCartCommand` — permanently deletes a single item from
+ * the customer's cart by its composite key (`Cart_ID + Inventory_ID`).
+ *
+ * The cart itself is NOT deleted; only the specific line item is removed.
+ * To clear the entire cart use `DeleteCartCommand` instead.
+ */
 @CommandHandler(RemoveItemFromCartCommand)
 export class RemoveItemFromCartCommandHandler implements ICommandHandler<RemoveItemFromCartCommand> {
   constructor(private readonly prisma: PrismaService) {}

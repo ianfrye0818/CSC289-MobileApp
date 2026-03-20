@@ -8,6 +8,22 @@ import { PaymentMethod } from '../../dtos/PaymentMethod.dto';
 import { PaymentStatus } from '../../dtos/PaytmentStatus.enum';
 import { CreateOrderCommand } from './CreateOrderCommand';
 
+/**
+ * Handles `CreateOrderCommand` — converts a shopping cart into a confirmed order.
+ *
+ * The entire checkout flow runs inside a Prisma transaction so that either all
+ * steps succeed together or the database is left unchanged:
+ *
+ * 1. **Validate cart** — confirms the cart exists and belongs to the requesting
+ *    customer (403 if mismatched, 404 if not found).
+ * 2. **Create order** — inserts an `Order` with one `Order_Item` per cart line,
+ *    capturing the unit price and applying `TAX_RATE` at the time of purchase.
+ * 3. **Mock payment** — creates a `Payment` record with status `COMPLETED`.
+ *    In a real app this is where a payment gateway (Stripe, etc.) would be called.
+ * 4. **Clear cart** — deletes the cart (cascades to its items).
+ * 5. **Update inventory** — decrements the `Quantity` on each `Inventory` record
+ *    by the purchased amount.
+ */
 @CommandHandler(CreateOrderCommand)
 export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCommand> {
   constructor(private readonly prisma: PrismaService) {}
@@ -85,6 +101,12 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
     );
   }
 
+  /**
+   * Creates a mock payment record for the order.
+   * Status is hardcoded to `COMPLETED` because this project does not integrate
+   * with a real payment gateway. Replace this with actual gateway logic when
+   * moving toward production.
+   */
   private async createPayment(
     tx: TX,
     orderId: number,
@@ -101,6 +123,7 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
     });
   }
 
+  /** Deletes the shopping cart (cascade removes all items). */
   private async clearCart(tx: TX, cartId: number): Promise<void> {
     await tx.shopping_Cart.delete({
       where: {
@@ -109,6 +132,11 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
     });
   }
 
+  /**
+   * Decrements inventory quantities for each purchased item.
+   * Runs sequentially inside the transaction — if any update fails, the whole
+   * transaction rolls back and inventory is not partially decremented.
+   */
   private async updateInventory(tx: TX, items: Order_Item[]): Promise<void> {
     for (const item of items) {
       await tx.inventory.update({

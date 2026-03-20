@@ -5,6 +5,15 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { ProductDetailDto } from '../../dtos/ProductDetail.dto';
 import { GetProductDetailsQuery } from './GetProductDetailsQuery';
 
+/**
+ * Handles `GetProductDetailsQuery` — returns full details for a single product.
+ *
+ * Includes all inventory records (each with quantity and unit price), all active
+ * discounts, supplier info, and a `lowestPrice` convenience field derived from
+ * the minimum unit price across all inventory records.
+ *
+ * Throws `NotFoundException` if no product with the given ID exists.
+ */
 @QueryHandler(GetProductDetailsQuery)
 export class GetProductDetailsQueryHandler implements IQueryHandler<GetProductDetailsQuery> {
   constructor(private readonly prisma: PrismaService) {}

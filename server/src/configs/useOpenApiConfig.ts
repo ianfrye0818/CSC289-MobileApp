@@ -11,6 +11,20 @@ import {
 } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+/**
+ * Configures Swagger/OpenAPI documentation for the application.
+ *
+ * The Swagger UI and JSON spec are only mounted in `development` mode so that
+ * internal API details are not exposed in production.
+ *
+ * **Endpoints (dev only):**
+ * - `GET /api/swagger` — interactive Swagger UI
+ * - `GET /api/swagger/json` — raw OpenAPI JSON (used to generate the mobile
+ *   app's `types.generated.ts` via `openapi-typescript`)
+ *
+ * **Global responses:** Common HTTP error codes (400, 401, 403, 404, 409, 500)
+ * are added to every endpoint's Swagger documentation automatically.
+ */
 export const useOpenApiConfig = (
   configService: ConfigService,
   app: INestApplication,

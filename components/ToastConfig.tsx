@@ -3,7 +3,20 @@ import { AlertCircle, AlertTriangle, Check, Info, Loader } from 'lucide-react-na
 import { Pressable, Text, View } from 'react-native';
 import { type BaseToastProps } from 'react-native-toast-message';
 
-// Reusable layout for all your toast types
+/**
+ * Shared layout component used by every toast variant.
+ *
+ * Renders a coloured pill with an icon on the left and up to two lines of text.
+ * The background colour and icon are passed in by each variant so this component
+ * only handles layout.
+ *
+ * @param text1 - Primary (bold) toast message.
+ * @param text2 - Optional secondary (sub) message shown below `text1`.
+ * @param onPress - Called when the user taps the toast. Often used to navigate
+ *   or dismiss manually.
+ * @param backgroundColor - The toast's background colour (hex string).
+ * @param icon - A React node rendered to the left of the text.
+ */
 function AppToast({
   text1,
   text2,
@@ -32,6 +45,18 @@ function AppToast({
   );
 }
 
+/**
+ * Toast type configuration passed to the `<Toast config={toastConfig} />` component
+ * in the root layout.
+ *
+ * Each key matches a `type` string used in `appToast.*` calls (e.g. `'success'`,
+ * `'error'`). `react-native-toast-message` looks up the matching renderer here
+ * whenever a toast is shown.
+ *
+ * To add a new toast type:
+ * 1. Add a renderer here.
+ * 2. Add a helper method to `appToast` in `lib/toast.ts`.
+ */
 export const toastConfig = {
   success: ({ text1, text2, onPress }: BaseToastProps) => (
     <AppToast

@@ -12,6 +12,17 @@ import {
 } from '@prisma/client/runtime/client';
 import type { Request, Response } from 'express';
 
+/**
+ * Maps Prisma error codes to human-readable messages returned to the client.
+ *
+ * Prisma throws typed errors with short codes like `P2002` (unique constraint).
+ * Without this map the raw Prisma error message (often a stack trace fragment)
+ * would leak internal details to API consumers. The mapped messages are safe
+ * and descriptive enough for the mobile app to display or log.
+ *
+ * Add new codes here as you encounter them. Full list:
+ * https://www.prisma.io/docs/reference/api-reference/error-reference
+ */
 const PrismaErrorCodeMap = {
   P2002: 'Unique constraint failed',
   P2003: 'Foreign key constraint failed',
@@ -30,6 +41,11 @@ const PrismaErrorCodeMap = {
     "A number used in the query does not fit into a 64 bit signed integer. Consider using BigInt as field type if you're trying to store large integers",
 };
 
+/**
+ * Catches `PrismaClientValidationError` — thrown when query arguments fail
+ * Prisma's own type-checking (e.g. wrong field name, invalid value type).
+ * Returns HTTP 400 with the raw Prisma validation message.
+ */
 @Catch(PrismaClientValidationError)
 export class PrismaKnownExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(PrismaKnownExceptionFilter.name, {
@@ -58,6 +74,12 @@ export class PrismaKnownExceptionFilter implements ExceptionFilter {
   }
 }
 
+/**
+ * Catches `PrismaClientKnownRequestError` — database constraint violations and
+ * other errors with a known Prisma error code (P2xxx).
+ * Looks up the code in `PrismaErrorCodeMap` to return a friendly message
+ * instead of the raw Prisma error, and always returns HTTP 400.
+ */
 @Catch(PrismaClientKnownRequestError)
 export class PrismaKnownRequestExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(PrismaKnownRequestExceptionFilter.name, {
@@ -94,6 +116,11 @@ export class PrismaKnownRequestExceptionFilter implements ExceptionFilter {
   }
 }
 
+/**
+ * Catches `PrismaClientUnknownRequestError` — unexpected database errors that
+ * don't have a known Prisma error code. Still returns HTTP 400 with the
+ * original message logged server-side for debugging.
+ */
 @Catch(PrismaClientUnknownRequestError)
 export class PrismaUnknownRequestExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(

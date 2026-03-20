@@ -7,6 +7,19 @@ import { ShippingStatus } from '../../dtos/ShippingStatus.enum';
 import { calculateOrderAmount } from '../../utils/CalculateOrderAmount';
 import { GetCurrentUserOrderDetailsQuery } from './GetCurrentUserOrderDetailsQuery';
 
+/**
+ * Handles `GetCurrentUserOrderDetailsQuery` — fetches the full detail view of a
+ * single order including items, addresses, payment, and shipping.
+ *
+ * Ownership check: if the order's `Customer_ID` does not match the requesting
+ * user's `id`, a 403 is thrown so customers cannot view each other's orders.
+ *
+ * All `Decimal` fields from Prisma are converted to plain `number` via
+ * `.toNumber()` before returning — `Decimal` objects are not JSON-serialisable.
+ *
+ * Nullable relations (shipping, billing address) are mapped to `null` when not
+ * present using the `??` operator to satisfy the DTO shape.
+ */
 @QueryHandler(GetCurrentUserOrderDetailsQuery)
 export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<GetCurrentUserOrderDetailsQuery> {
   constructor(private readonly prisma: PrismaService) {}

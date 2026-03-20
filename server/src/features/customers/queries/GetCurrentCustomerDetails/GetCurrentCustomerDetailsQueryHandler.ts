@@ -5,6 +5,17 @@ import { CustomerDetailsResponseDto } from '../../models/CustomerDetailsResponse
 import { MembershipLevel } from '../../models/MembershipLevel.enum';
 import { GetCurrentCustomerDetailsQuery } from './GetCurrentCustomerDetailsQuery';
 
+/**
+ * Handles `GetCurrentCustomerDetailsQuery` — returns the full profile of the
+ * authenticated customer including their membership level and discount rate.
+ *
+ * Eagerly loads the `member` relation (which holds the `Membership_Level` and
+ * `Discount_Rate` fields). The `Discount_Rate` is a Prisma `Decimal` and is
+ * converted to a plain `number` via `.toNumber()` before returning.
+ *
+ * Throws `NotFoundException` if the customer ID from the JWT no longer exists
+ * in the database (e.g. account was deleted between sessions).
+ */
 @QueryHandler(GetCurrentCustomerDetailsQuery)
 export class GetCurrentCustomerDetailsQueryHandler implements IQueryHandler<GetCurrentCustomerDetailsQuery> {
   constructor(private readonly prisma: PrismaService) {}

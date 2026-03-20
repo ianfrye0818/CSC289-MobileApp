@@ -4,6 +4,13 @@ import { NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateItemQuantityCommand } from './UpdateItemQuantityCommand';
 
+/**
+ * Handles `UpdateItemQuantityCommand` — sets the quantity of an existing cart
+ * item to the value provided by the client (replaces rather than increments).
+ *
+ * Throws `NotFoundException` if no cart item exists for the given
+ * `Cart_ID + Inventory_ID` composite key — prevents silent no-ops.
+ */
 @CommandHandler(UpdateItemQuantityCommand)
 export class UpdateItemQuantityCommandHandler implements ICommandHandler<UpdateItemQuantityCommand> {
   constructor(private readonly prisma: PrismaService) {}

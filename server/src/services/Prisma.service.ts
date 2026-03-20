@@ -5,6 +5,27 @@ import { DefaultArgs } from '@prisma/client/runtime/client';
 import sql from 'mssql';
 import { ConfigService } from './ConfigService/Config.service';
 
+/**
+ * NestJS-aware Prisma client service.
+ *
+ * Extends `PrismaClient` (so all Prisma model methods are available directly)
+ * and adds NestJS lifecycle hooks so the database connection is opened when the
+ * module initialises and cleanly closed when the app shuts down.
+ *
+ * **MSSQL adapter:** Uses `@prisma/adapter-mssql` which reads the SQL Server
+ * connection details from `ConfigService`. The pool configuration and timeout
+ * values are pulled from environment variables so they can be tuned per
+ * environment without code changes.
+ *
+ * **Query logging:** In `development`, all queries, info, warnings, and errors
+ * are logged to the console. In other environments only warnings and errors
+ * are logged to reduce noise.
+ *
+ * @example
+ * // Inject and use in a command/query handler
+ * constructor(private readonly prisma: PrismaService) {}
+ * const user = await this.prisma.customer.findUnique({ where: { Customer_ID: 1 } });
+ */
 @Injectable()
 export class PrismaService
   extends PrismaClient
@@ -51,6 +72,20 @@ export class PrismaService
   }
 }
 
+/**
+ * Type alias for the Prisma transaction client passed to `$transaction` callbacks.
+ *
+ * When running operations inside `prisma.$transaction(async (tx) => { ... })`,
+ * the `tx` argument has the same model methods as `PrismaClient` but without the
+ * connection-management methods (`$connect`, `$disconnect`, etc.) since those
+ * are managed by the transaction itself.
+ *
+ * Use this type in private helpers that need to participate in a transaction:
+ * @example
+ * private async clearCart(tx: TX, cartId: number): Promise<void> {
+ *   await tx.shopping_Cart.delete({ where: { Cart_ID: cartId } });
+ * }
+ */
 export type TX = Omit<
   PrismaClient<never, undefined, DefaultArgs>,
   '$connect' | '$disconnect' | '$on' | '$use' | '$extends'

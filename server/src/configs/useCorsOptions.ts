@@ -3,6 +3,22 @@ import {
   CorsOptionsDelegate,
 } from '@nestjs/common/interfaces/external/cors-options.interface';
 
+/**
+ * Returns the CORS configuration for the NestJS application.
+ *
+ * **Allowed origins:** `localhost:3000` and `localhost:5173` are always
+ * permitted (NestJS dev server and Vite dev server). Additional origins can be
+ * injected at deploy time via the `CORS_ORIGIN` env variable (JSON array).
+ *
+ * **Credentials:** enabled so the browser sends cookies and `Authorization`
+ * headers cross-origin during local development.
+ *
+ * **maxAge:** preflight responses are cached for 600 seconds (10 minutes) to
+ * reduce the number of OPTIONS requests in the browser.
+ *
+ * Additional headers/origins can be extended at runtime via env variables
+ * (`CORS_ALLOWED_HEADERS`, `CORS_EXPOSED_HEADERS`) without code changes.
+ */
 export const useCorsOptions = (): CorsOptions | CorsOptionsDelegate<any> => {
   return {
     origin: [

@@ -4,6 +4,19 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { ShoppingCartResponseDto } from '../dtos/ShoppingCartResponse.dto';
 import { GetCurrentCustomerCartQuery } from './GetCurrentCustomerCartQuery';
 
+/**
+ * Handles `GetCurrentCustomerCartQuery` — fetches the most recent active cart
+ * for the authenticated customer including full product details.
+ *
+ * The query eagerly loads the full relation chain:
+ * `Shopping_Cart → items → inventory → product → (category, discounts, supplier)`
+ *
+ * The handler then projects this into a flat `ShoppingCartResponseDto` that
+ * includes calculated `lineTotal` (unit price × quantity), `subtotal`, and
+ * `totalItems` so the mobile app doesn't need to recalculate these.
+ *
+ * Throws `NotFoundException` if the customer has no active cart.
+ */
 @QueryHandler(GetCurrentCustomerCartQuery)
 export class GetCurrentCustomerCartQueryHandler implements IQueryHandler<GetCurrentCustomerCartQuery> {
   constructor(private readonly prisma: PrismaService) {}
