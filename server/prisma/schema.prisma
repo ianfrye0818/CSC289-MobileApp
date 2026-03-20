@@ -34,8 +34,8 @@ model Customer {
 
 model Customer_Address {
   Address_ID      Int        @id @default(autoincrement())
-  Address_Line1   String     @db.VarChar(50)
-  Address_Line2   String?    @db.VarChar(35)
+  Address_Line1   String     @map("Address_Line_1") @db.VarChar(50)
+  Address_Line2   String?    @map("Address_Line_2") @db.VarChar(35)
   City            String     @db.VarChar(50)
   State           String     @db.VarChar(50)
   Zip_Code        String     @db.VarChar(10)
@@ -69,7 +69,7 @@ model Product {
   inventory           Inventory[]
   discounts           Discount[]
 
-  @@map("[Product]")
+  @@map("Product")
 }
 
 model Inventory {
@@ -115,7 +115,7 @@ model Order {
   shipping    Shipping?
   discounts   Discount[]
 
-  @@map("[Order]")
+  @@map("Order")
 }
 
 model Order_Item {
@@ -180,5 +180,5 @@ model Discount {
   product       Product? @relation(fields: [Product_ID], references: [Product_ID])
   order         Order?   @relation(fields: [Order_ID], references: [Order_ID])
 
-  @@map("[Discount]")
+  @@map("Discount")
 }

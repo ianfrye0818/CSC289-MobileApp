@@ -1,42 +1,44 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { PortalHost } from '@rn-primitives/portal';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { Platform } from 'react-native';
-import 'react-native-reanimated';
-import Toast from 'react-native-toast-message';
-import { FullWindowOverlay } from 'react-native-screens';
-import '../global.css';
-
-import { toastConfig } from '@/components/ToastConfig';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-const Overlay = Platform.OS === 'ios' ? FullWindowOverlay : ({ children }: { children: React.ReactNode }) => <>{children}</>;
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import { useAuthStore } from '@/features/auth/store';
+import { queryClient } from '@/lib/queryClient';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Slot, useRouter, useSegments } from 'expo-router';
+import { useEffect } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const initializeAuth = useAuthStore((s) => s.initialize);
+  const isLoading = useAuthStore((s) => s.isLoading);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const router = useRouter();
+  const segments = useSegments();
+
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) return;
+    const inAuthGroup = (segments[0] as string) === '(auth)';
+    if (!isAuthenticated && inAuthGroup) {
+      router.replace('/(public)/login' as never);
+    } else if (isAuthenticated && !inAuthGroup) {
+      router.replace('/(auth)/(tabs)/home' as never);
+    }
+  }, [isAuthenticated, isLoading, segments]);
+
+  if (isLoading)
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator
+          size='large'
+          color='#0000ff'
+        />
+      </View>
+    );
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name='(tabs)'
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='modal'
-          options={{ presentation: 'modal', title: 'Modal' }}
-        />
-      </Stack>
-      <StatusBar style='auto' />
-      <Toast config={toastConfig} />
-      <Overlay>
-        <PortalHost />
-      </Overlay>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <Slot />
+    </QueryClientProvider>
   );
 }
