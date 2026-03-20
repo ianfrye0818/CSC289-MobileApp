@@ -3,7 +3,7 @@
  * 6.75% — update this if the applicable tax jurisdiction changes.
  * Used in `CreateOrderCommandHandler` and `CalculateOrderAmount`.
  */
-export const TAX_RATE = 0.0675;
+export const TAX_RATE = parseInt(process.env.TAX_RATE ?? '6.75') / 100;
 
 /**
  * Membership level assigned to newly created customers.

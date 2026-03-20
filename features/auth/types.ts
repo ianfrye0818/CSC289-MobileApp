@@ -1,4 +1,4 @@
-import { components } from './types.generated';
+import { components } from '@/types/types.generated';
 
 /**
  * The authenticated user's profile data as returned by the server's auth endpoints.

@@ -1,6 +1,6 @@
-import { AppUser } from '@/types/AppUser.type';
 import SecureStore from 'expo-secure-store';
 import { create } from 'zustand';
+import { AppUser } from './types';
 
 /**
  * Shape of the authentication state managed by this store.
