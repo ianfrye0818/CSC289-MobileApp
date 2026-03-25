@@ -7,9 +7,7 @@ export const useGetCustomer = () => {
   return useQuery({
     queryKey: customerQueryKeys.customer,
     queryFn: async () => {
-      const { data, error } = await apiClient.GET('/api/customers/me');
-      if (error) throw error;
-      return data;
+      await apiClient.GET('/api/customers/me');
     },
   });
 };
