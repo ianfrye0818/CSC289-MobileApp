@@ -34,7 +34,7 @@ model Customer {
 
 model Customer_Address {
   Address_ID      Int        @id @default(autoincrement())
-  Address_Line1   String     @map("Address_Line_1") @db.VarChar(50)
+  Address_Line1   String     @map("Address_Line_l") @db.VarChar(50)
   Address_Line2   String?    @map("Address_Line_2") @db.VarChar(35)
   City            String     @db.VarChar(50)
   State           String     @db.VarChar(50)
