@@ -1,9 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { PrismaMssql } from '@prisma/adapter-mssql';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import dotenv from 'dotenv';
 import 'dotenv/config';
 import fs from 'fs';
-import sql from 'mssql';
 import path from 'path';
 import { PrismaClient } from '../generated/prisma/client';
 
@@ -15,27 +14,18 @@ if (result.error && fs.existsSync(envDevPath)) {
   dotenv.config({ path: envDevPath });
 }
 
-const config: sql.config = {
-  server: process.env.DB_HOST!,
-  port: 1433,
-  database: process.env.DB_NAME!,
+const adapter = new PrismaMariaDb({
+  host: process.env.DB_HOST!,
   user: process.env.DB_USER!,
   password: process.env.DB_PASSWORD!,
-  connectionTimeout: 30000,
-  requestTimeout: 30000,
-  pool: {
-    min: 1,
-    max: 10,
-    idleTimeoutMillis: 30000,
+  database: process.env.DB_NAME!,
+  connectionLimit: 10,
+  connectTimeout: 30000,
+  bigIntAsNumber: true,
+  ssl: {
+    rejectUnauthorized: false,
   },
-  options: {
-    encrypt: false,
-    trustedConnection: true,
-    trustServerCertificate: true,
-  },
-};
-
-const adapter = new PrismaMssql(config);
+});
 const prisma = new PrismaClient({ adapter });
 
 // ── helpers ──────────────────────────────────────────────────────────────────

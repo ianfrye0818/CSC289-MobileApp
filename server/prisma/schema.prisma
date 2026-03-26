@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "mysql"
 }
 
 model Member {
@@ -23,9 +23,9 @@ model Customer {
   Email            String             @unique @db.VarChar(254)
   Phone            String?            @db.VarChar(20)
   Membership_Level String             @db.VarChar(50)
-  Created_At       DateTime           @default(now()) @db.DateTime2
-  Updated_At       DateTime?          @db.DateTime2
-  Deleted_At       DateTime?          @db.DateTime2
+  Created_At       DateTime           @default(now())
+  Updated_At       DateTime?
+  Deleted_At       DateTime?
   member           Member             @relation(fields: [Membership_Level], references: [Membership_Level])
   addresses        Customer_Address[]
   carts            Shopping_Cart[]
@@ -41,9 +41,9 @@ model Customer_Address {
   Zip_Code        String     @db.VarChar(10)
   Country         String     @db.VarChar(50)
   Customer_ID     Int
-  Created_At      DateTime   @default(now()) @db.DateTime2
-  Updated_At      DateTime?  @db.DateTime2
-  Deleted_At      DateTime?  @db.DateTime2
+  Created_At      DateTime   @default(now())
+  Updated_At      DateTime?
+  Deleted_At      DateTime?
   customer        Customer   @relation(fields: [Customer_ID], references: [Customer_ID])
   ShippingAddress Shipping[] @relation("ShippingAddress")
   BillingAddress  Shipping[] @relation("BillingAddress")
@@ -63,7 +63,7 @@ model Product {
   Category_ID         Int
   Supplier_ID         Int
   Image_URL           String?          @db.VarChar(255)
-  Deleted_At          DateTime?        @db.DateTime2
+  Deleted_At          DateTime?
   category            Product_Category @relation(fields: [Category_ID], references: [Category_ID])
   supplier            Supplier         @relation(fields: [Supplier_ID], references: [Supplier_ID])
   inventory           Inventory[]
@@ -77,7 +77,7 @@ model Inventory {
   Product_ID   Int
   Quantity     Int
   Unit_Price   Decimal              @db.Decimal(8, 2)
-  Deleted_At   DateTime?            @db.DateTime2
+  Deleted_At   DateTime?
   product      Product              @relation(fields: [Product_ID], references: [Product_ID])
   cartItems    Shopping_Cart_Item[]
   orderItems   Order_Item[]
@@ -86,9 +86,9 @@ model Inventory {
 model Shopping_Cart {
   Cart_ID     Int                  @id @default(autoincrement())
   Customer_ID Int
-  Session_ID  String?              @db.NVarChar(50)
-  Created_At  DateTime             @default(now()) @db.DateTime2
-  Updated_At  DateTime?            @db.DateTime2
+  Session_ID  String?              @db.VarChar(50)
+  Created_At  DateTime             @default(now())
+  Updated_At  DateTime?
   customer    Customer             @relation(fields: [Customer_ID], references: [Customer_ID])
   items       Shopping_Cart_Item[]
 }
@@ -97,8 +97,8 @@ model Shopping_Cart_Item {
   Cart_ID      Int
   Inventory_ID Int
   Quantity     Int
-  Created_At   DateTime      @default(now()) @db.DateTime2
-  Updated_At   DateTime?     @db.DateTime2
+  Created_At   DateTime      @default(now())
+  Updated_At   DateTime?
   cart         Shopping_Cart @relation(fields: [Cart_ID], references: [Cart_ID])
   inventory    Inventory     @relation(fields: [Inventory_ID], references: [Inventory_ID])
 
@@ -108,7 +108,7 @@ model Shopping_Cart_Item {
 model Order {
   Order_ID    Int          @id @default(autoincrement())
   Customer_ID Int
-  Order_Date  DateTime     @default(now()) @db.DateTime2
+  Order_Date  DateTime     @default(now())
   customer    Customer     @relation(fields: [Customer_ID], references: [Customer_ID])
   items       Order_Item[]
   payment     Payment?
@@ -124,8 +124,8 @@ model Order_Item {
   Quantity     Int
   Amount       Decimal   @db.Decimal(8, 2)
   Tax          Decimal   @db.Decimal(8, 2)
-  Created_At   DateTime  @default(now()) @db.DateTime2
-  Updated_At   DateTime? @db.DateTime2
+  Created_At   DateTime  @default(now())
+  Updated_At   DateTime?
   order        Order     @relation(fields: [Order_ID], references: [Order_ID])
   inventory    Inventory @relation(fields: [Inventory_ID], references: [Inventory_ID])
 
@@ -137,8 +137,8 @@ model Payment {
   Order_ID       Int       @unique
   Method         String    @db.VarChar(50)
   Payment_Status String    @db.VarChar(50)
-  Created_At     DateTime  @default(now()) @db.DateTime2
-  Updated_At     DateTime? @db.DateTime2
+  Created_At     DateTime  @default(now())
+  Updated_At     DateTime?
   order          Order     @relation(fields: [Order_ID], references: [Order_ID])
 }
 
@@ -155,13 +155,13 @@ model Shipping {
   Shipping_ID         Int              @id @default(autoincrement())
   Order_ID            Int              @unique
   Cost                Decimal          @db.Decimal(8, 2)
-  Shipped_On          DateTime?        @db.DateTime2
-  Expected_By         DateTime?        @db.DateTime2
+  Shipped_On          DateTime?
+  Expected_By         DateTime?
   Ship_Status         String           @db.VarChar(15)
   Carrier             String           @db.VarChar(100)
   Tracking_Number     String           @db.VarChar(50)
-  Created_At          DateTime         @default(now()) @db.DateTime2
-  Updated_At          DateTime?        @db.DateTime2
+  Created_At          DateTime         @default(now())
+  Updated_At          DateTime?
   Shipping_Address_ID Int
   Billing_Address_ID  Int
   order               Order            @relation(fields: [Order_ID], references: [Order_ID])
