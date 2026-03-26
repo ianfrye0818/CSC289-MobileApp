@@ -1,7 +1,7 @@
 // dtos/ShoppingCartResponse.dto.ts
 
+import { DiscountType } from '@/types/DiscountType.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { DiscountType } from '../../../../types/DiscountType.enum';
 
 export class CartItemInventoryDto {
   @ApiProperty({ type: Number, required: true })

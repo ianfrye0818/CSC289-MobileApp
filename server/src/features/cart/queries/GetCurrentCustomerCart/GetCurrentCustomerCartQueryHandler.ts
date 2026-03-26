@@ -1,7 +1,7 @@
 import { PrismaService } from '@/services/Prisma.service';
 import { NotFoundException } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { ShoppingCartResponseDto } from '../dtos/ShoppingCartResponse.dto';
+import { ShoppingCartResponseDto } from '../../dtos/ShoppingCartResponse.dto';
 import { GetCurrentCustomerCartQuery } from './GetCurrentCustomerCartQuery';
 
 /**

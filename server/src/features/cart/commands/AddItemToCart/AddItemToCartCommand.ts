@@ -1,7 +1,7 @@
 import { UpdatedMessageResponse } from '@/types/MessageReponse.type';
 import { Shopping_Cart } from '@generated/prisma/client';
 import { Command } from '@nestjs/cqrs';
-import { AddItemToCartRequestDto } from '../../queries/dtos/AddItemToCartRequest.dto';
+import { AddItemToCartRequestDto } from '../../dtos/AddItemToCartRequest.dto';
 
 export class AddItemToCartCommand extends Command<UpdatedMessageResponse> {
   constructor(

@@ -193,6 +193,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/addresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get customer addresses */
+        get: operations["AddressesController_getCustomerAddresses"];
+        put?: never;
+        /** Add an address for a customer */
+        post: operations["AddressesController_addAddress"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/addresses/{addressId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Soft delete an address for a customer */
+        delete: operations["AddressesController_deleteAddress"];
+        options?: never;
+        head?: never;
+        /** Update an address for a customer */
+        patch: operations["AddressesController_updateAddress"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -204,7 +240,14 @@ export interface components {
         ConflictException: Record<string, never>;
         InternalServerErrorException: Record<string, never>;
         LoginUserCommandRequestDto: Record<string, never>;
-        AuthUserDto: Record<string, never>;
+        AuthUserDto: {
+            /** @description The customer's primary key. */
+            id: number;
+            /** @description The customer's email address (unique, used as login identifier). */
+            email: string;
+            /** @description The customer's full name (`First_Name + Last_Name`). */
+            name: string;
+        };
         CustomerMemberDetailsResponseDto: {
             /** @enum {string} */
             memberShipLevel: "REGULAR" | "SILVER" | "GOLD" | "PLATINUM" | "DIAMOND";
@@ -225,6 +268,7 @@ export interface components {
             productDescription?: string | null;
             imageUrl?: string | null;
             discounts: string;
+            categoryName: string;
         };
         CartItemDto: {
             inventoryId: number;
@@ -331,7 +375,10 @@ export interface components {
                 [key: string]: unknown;
             };
         };
-        ProductCategoryDto: Record<string, never>;
+        ProductCategoryDto: {
+            categoryId: number;
+            categoryName: string;
+        };
         ProductListItemDto: {
             productId: number;
             productName: string;
@@ -371,6 +418,36 @@ export interface components {
             discounts: components["schemas"]["ProductDiscountDto"][];
             lowestPrice: number;
             inStock: boolean;
+        };
+        ObjectRef: {
+            key: string;
+            value: string;
+        };
+        AddressListReponseDto: {
+            id: number;
+            line1: string;
+            line2?: string;
+            city: string;
+            state: string;
+            zipcode: string;
+            country?: string;
+            customerRef: components["schemas"]["ObjectRef"];
+        };
+        AddAddressRequestDto: {
+            line1: string;
+            line2?: string;
+            city: string;
+            state: string;
+            zipcode: string;
+            country?: string;
+        };
+        UpdateAddressRequestDto: {
+            line1?: string;
+            line2?: string;
+            city?: string;
+            state?: string;
+            zipcode?: string;
+            country?: string;
         };
     };
     responses: never;
@@ -461,6 +538,14 @@ export interface operations {
         responses: {
             /** @description Token */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -808,6 +893,14 @@ export interface operations {
                     "application/json": components["schemas"]["UpdatedMessageResponse"];
                 };
             };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdatedMessageResponse"];
+                };
+            };
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1086,6 +1179,14 @@ export interface operations {
                     "application/json": components["schemas"]["CreatedMessageResponse"];
                 };
             };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatedMessageResponse"];
+                };
+            };
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1289,6 +1390,296 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductDetailDto"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadRequestException"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedException"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictException"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InternalServerErrorException"];
+                };
+            };
+        };
+    };
+    AddressesController_getCustomerAddresses: {
+        parameters: {
+            query: {
+                customerId: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddressListReponseDto"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadRequestException"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedException"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictException"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InternalServerErrorException"];
+                };
+            };
+        };
+    };
+    AddressesController_addAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddAddressRequestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatedMessageResponse"];
+                };
+            };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatedMessageResponse"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadRequestException"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedException"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictException"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InternalServerErrorException"];
+                };
+            };
+        };
+    };
+    AddressesController_deleteAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                addressId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeletedMessageResponse"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadRequestException"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedException"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictException"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InternalServerErrorException"];
+                };
+            };
+        };
+    };
+    AddressesController_updateAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                addressId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAddressRequestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdatedMessageResponse"];
                 };
             };
             400: {

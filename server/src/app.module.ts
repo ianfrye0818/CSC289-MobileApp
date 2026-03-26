@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
+import { AddressesModule } from './features/addresses/addresses.module';
 import { AuthModule } from './features/auth/Auth.module';
-import { JwtAuthGuard } from './features/auth/guards/Auth.guard';
 import { CartModule } from './features/cart/Cart.module';
 import { CustomerModule } from './features/customers/Customer.module';
 import { OrdersModule } from './features/orders/Orders.module';
@@ -40,15 +39,16 @@ import { GlobalServicesModule } from './services/GlobalServices.module';
     CartModule,
     OrdersModule,
     ProductsModule,
+    AddressesModule,
   ],
   controllers: [HealthController],
   providers: [
-    {
-      // Registers JwtAuthGuard globally so every route is protected by default.
-      // Use @Public() on a route or controller to bypass this guard.
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // {
+    //   // Registers JwtAuthGuard globally so every route is protected by default.
+    //   // Use @Public() on a route or controller to bypass this guard.
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
   ],
 })
 export class AppModule {}

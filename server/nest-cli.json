@@ -3,6 +3,21 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "dtoFileNameSuffix": [
+            ".dto.ts",
+            ".input.dto.ts",
+            ".output.dto.ts",
+            ".entity.ts",
+            ".type.ts"
+          ],
+          "introspectComments": true
+        }
+      }
+    ],
     "deleteOutDir": true
   }
 }

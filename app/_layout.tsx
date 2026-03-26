@@ -1,11 +1,13 @@
 import { useAuthStore } from '@/features/auth/store';
 import { queryClient } from '@/lib/queryClient';
+import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
 // import { registerForPushNotificationsAsync } from '@/lib/notifications';
 // import Notifications from 'expo-notifications';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import '../global.css';
 
 /**
@@ -97,7 +99,10 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Slot />
+      <SafeAreaProvider>
+        <Slot />
+        <PortalHost />
+      </SafeAreaProvider>
     </QueryClientProvider>
   );
 }

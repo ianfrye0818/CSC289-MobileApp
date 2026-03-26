@@ -22,9 +22,9 @@ import { DeleteCartCommand } from './commands/DeleteCart/DeleteCartCommand';
 import { RemoveItemFromCartCommand } from './commands/RemoveItemFromCart/RemoveItemFromCartCommand';
 import { UpdateItemQuantityCommand } from './commands/UpdateItemQuantity/UpdateItemQuantityCommand';
 import { Cart } from './decorators/Cart.decorator';
-import { AddItemToCartRequestDto } from './queries/dtos/AddItemToCartRequest.dto';
-import { ShoppingCartResponseDto } from './queries/dtos/ShoppingCartResponse.dto';
-import { UpdateItemQuantityRequestDto } from './queries/dtos/UpdateItemQuantityRequest.dto';
+import { AddItemToCartRequestDto } from './dtos/AddItemToCartRequest.dto';
+import { ShoppingCartResponseDto } from './dtos/ShoppingCartResponse.dto';
+import { UpdateItemQuantityRequestDto } from './dtos/UpdateItemQuantityRequest.dto';
 import { GetCurrentCustomerCartQuery } from './queries/GetCurrentCustomerCart/GetCurrentCustomerCartQuery';
 
 @ApiTags('Cart')
