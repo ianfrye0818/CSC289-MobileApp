@@ -4,6 +4,7 @@ import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
 // import { registerForPushNotificationsAsync } from '@/lib/notifications';
 // import Notifications from 'expo-notifications';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
@@ -36,42 +37,14 @@ export default function RootLayout() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const router = useRouter();
   const segments = useSegments();
+  const { expoPushToken, notification } = usePushNotifications();
+
+  console.log({ expoPushToken });
 
   // Hydrate the auth store from SecureStore once on startup
   useEffect(() => {
     initializeAuth();
   }, []);
-
-  // Register for push notifications - commenting out for now -
-  // but will need to uncomment when we have the rest of the app built
-  // useEffect(() => {
-  //   // Register and get token
-  //   registerForPushNotificationsAsync().then((token) => {
-  //     if (token) {
-  //       setPushToken(token);
-  //       console.log('Push token registered:', token);
-  //     }
-  //   });
-
-  //   // Foreground: notification delivered while app is open
-  //   const receivedSub = Notifications.addNotificationResponseReceivedListener(
-  //     (resp) => {
-  //       console.log('User tapped notification:', resp);
-  //     },
-  //   );
-  //   // User tapped / acted on a notification
-  //   const responseSub = Notifications.addNotificationResponseReceivedListener(
-  //     (resp) => {
-  //       console.log('User tapped notification:', resp);
-  //     },
-  //   );
-
-  //   // Clean up listeners on unmount
-  //   return () => {
-  //     receivedSub.remove();
-  //     responseSub.remove();
-  //   };
-  // }, []);
 
   // Route guard — runs whenever auth state or the current route changes
   useEffect(() => {
