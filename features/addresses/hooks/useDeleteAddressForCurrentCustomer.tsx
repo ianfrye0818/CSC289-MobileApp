@@ -2,13 +2,13 @@ import { apiClient } from '@/lib/apiClient';
 import { appToast } from '@/lib/toast';
 import { unwrapResponse } from '@/lib/unwrapResponse';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AddressListReponseDto } from '../types';
+import { AddressResponseDto } from '../types';
 import { addressQueryKeys } from './shared';
 
 export const useDeleteAddressForCurrentCustomer = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (dto: AddressListReponseDto) =>
+    mutationFn: async (dto: AddressResponseDto) =>
       apiClient
         .DELETE('/api/addresses/{addressId}', {
           params: { path: { addressId: dto.id } },

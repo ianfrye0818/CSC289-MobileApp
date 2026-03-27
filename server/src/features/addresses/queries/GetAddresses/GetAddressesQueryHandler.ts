@@ -1,13 +1,13 @@
 import { PrismaService } from '@/services/Prisma.service';
 import { ICommandHandler, QueryHandler } from '@nestjs/cqrs';
-import { AddressListReponseDto } from '../../dtos/AddressesListResponse.dto';
+import { AddressResponseDto } from '../../dtos/AddressesListResponse.dto';
 import { GetAddressesQuery } from './GetAddressesQuery';
 
 @QueryHandler(GetAddressesQuery)
 export class GetAddressesQueryHandler implements ICommandHandler<GetAddressesQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(command: GetAddressesQuery): Promise<AddressListReponseDto[]> {
+  async execute(command: GetAddressesQuery): Promise<AddressResponseDto[]> {
     const { customerId } = command;
 
     const addresses = await this.prisma.customer_Address.findMany({

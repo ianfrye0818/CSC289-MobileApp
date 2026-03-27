@@ -1,30 +1,21 @@
-import { DataWrapper } from '@/components/DataWrapper';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import { MapPin, Pencil, Trash2 } from 'lucide-react-native';
-import React from 'react';
 import { Alert, Pressable, View } from 'react-native';
-import { useDeleteAddressForCurrentCustomer } from '../hooks/useDeleteAddressForCurrentCustomer';
-import { useGetCurrentCustomerAddresses } from '../hooks/useGetCurrentCustomerAddresses';
-import { AddressListReponseDto } from '../types';
+import { useDeleteAddressForCurrentCustomer } from '../../hooks/useDeleteAddressForCurrentCustomer';
+import { AddressResponseDto } from '../../types';
 
 type Props = {
-  customerId: number;
+  address: AddressResponseDto;
 };
 
-function AddressRow({
-  address,
-  customerId,
-}: {
-  address: AddressListReponseDto;
-  customerId: number;
-}) {
+export function AddressRow({ address }: Props) {
   const router = useRouter();
   const { mutate: deleteAddress, isPending: isDeleting } = useDeleteAddressForCurrentCustomer();
 
   const handleEdit = () => {
-    router.push(`/(public)/addresses/edit/${address.id}?customerId=${customerId}` as never);
+    router.push(`/(public)/addresses/edit/${address.id}` as never);
   };
 
   const handleDelete = () => {
@@ -91,52 +82,5 @@ function AddressRow({
         </View>
       </View>
     </Pressable>
-  );
-}
-
-export default function AddressList({ customerId }: Props) {
-  const { data, isLoading, error } = useGetCurrentCustomerAddresses(customerId);
-  const router = useRouter();
-
-  return (
-    <View className='flex-1'>
-      <DataWrapper
-        isLoading={isLoading}
-        error={error}
-        data={data}
-      >
-        {(addresses) => (
-          <View className='rounded-xl border border-border bg-card'>
-            {addresses.length === 0 ? (
-              <View className='items-center gap-2 py-10'>
-                <MapPin
-                  size={32}
-                  className='text-muted-foreground'
-                />
-                <Text className='text-sm text-muted-foreground'>No saved addresses yet.</Text>
-              </View>
-            ) : (
-              addresses.map((address, index) => (
-                <View key={address.id}>
-                  <View className='px-4'>
-                    <AddressRow
-                      address={address}
-                      customerId={customerId}
-                    />
-                  </View>
-                  {index < addresses.length - 1 && <View className='h-px bg-border mx-4' />}
-                </View>
-              ))
-            )}
-          </View>
-        )}
-      </DataWrapper>
-      <Button
-        className='mt-auto w-full'
-        onPress={() => router.push(`/(public)/addresses/add?customerId=${customerId}`)}
-      >
-        Add Address
-      </Button>
-    </View>
   );
 }

@@ -8,11 +8,11 @@ export class AddAddressCommandHandler implements ICommandHandler<AddAddressComma
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(command: AddAddressCommand): Promise<CreatedMessageResponse> {
-    const { dto } = command;
+    const { dto, userId } = command;
 
     const newAddress = await this.prisma.customer_Address.create({
       data: {
-        Customer_ID: dto.customerId,
+        Customer_ID: userId,
         Address_Line1: dto.line1,
         Address_Line2: dto.line2,
         City: dto.city,

@@ -1,6 +1,6 @@
 import { PrismaService } from '@/services/Prisma.service';
 import { UpdatedMessageResponse } from '@/types/MessageReponse.type';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateAddressCommand } from './UpdateAddressCommand';
 
@@ -11,7 +11,7 @@ export class UpdateAddressCommandHandler implements ICommandHandler<UpdateAddres
   async execute(
     command: UpdateAddressCommand,
   ): Promise<UpdatedMessageResponse> {
-    const { addressId, dto } = command;
+    const { addressId, dto, userId } = command;
 
     const exisiting = await this.prisma.customer_Address.findFirst({
       where: { Address_ID: addressId },
@@ -19,6 +19,11 @@ export class UpdateAddressCommandHandler implements ICommandHandler<UpdateAddres
 
     if (!exisiting)
       throw new NotFoundException(`Address ${addressId} not found`);
+
+    if (exisiting.Customer_ID !== userId)
+      throw new ForbiddenException(
+        'You are not authorized to update this address',
+      );
 
     await this.prisma.customer_Address.update({
       where: { Address_ID: exisiting.Address_ID },

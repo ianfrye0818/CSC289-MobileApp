@@ -11,15 +11,14 @@ import { FormProvider, useWatch } from 'react-hook-form';
 import { ActivityIndicator, View } from 'react-native';
 import { z } from 'zod';
 import { useUpdateAddressForCurrentCustomer } from '../hooks/useUpdateAddressForCurrentCustomer';
-import { AddressListReponseDto } from '../types';
+import { AddressResponseDto } from '../types';
 
 type Props = {
-  address: AddressListReponseDto;
+  address: AddressResponseDto;
   onSuccess?: () => void;
 };
 
 const schema = z.object({
-  customerId: z.coerce.number(),
   line1: z.string().min(1, 'Address is required'),
   line2: z.string().optional(),
   city: z.string().min(1, 'City is required'),
@@ -36,7 +35,6 @@ export default function UpdateAddressForm({ address, onSuccess }: Props) {
     formName: 'UpdateAddressForm',
     resolver: formResolver(schema),
     defaultValues: {
-      customerId: Number(address.customerRef.key),
       line1: address.line1,
       line2: address.line2 ?? '',
       city: address.city,

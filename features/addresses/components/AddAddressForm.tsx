@@ -13,7 +13,6 @@ import { z } from 'zod';
 import { useAddAddressToCurrentCustomer } from '../hooks/useAddAddressToCurrentCustomer';
 
 const schema = z.object({
-  customerId: z.coerce.number(),
   line1: z.string().min(1, 'Address is required'),
   line2: z.string().optional(),
   city: z.string().min(1, 'City is required'),
@@ -25,17 +24,15 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 type Props = {
-  customerId: number;
   onSuccess?: () => void;
 };
 
-export default function AddAddressForm({ customerId, onSuccess }: Props) {
+export default function AddAddressForm({ onSuccess }: Props) {
   const { mutate: addAddress, isPending, error } = useAddAddressToCurrentCustomer();
   const form = useAppForm<FormValues>({
     formName: 'AddAddressForm',
     resolver: formResolver(schema),
     defaultValues: {
-      customerId,
       line1: '',
       line2: '',
       city: '',

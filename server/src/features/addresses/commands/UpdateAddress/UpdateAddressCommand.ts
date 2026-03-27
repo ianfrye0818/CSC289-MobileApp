@@ -6,6 +6,7 @@ export class UpdateAddressCommand extends Command<UpdatedMessageResponse> {
   constructor(
     public readonly addressId: number,
     public readonly dto: UpdateAddressRequestDto,
+    public readonly userId: number,
   ) {
     super();
   }

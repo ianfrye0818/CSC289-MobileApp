@@ -1,7 +1,7 @@
 import { ObjectRef } from '@/types/ObjectRef';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AddressListReponseDto {
+export class AddressResponseDto {
   @ApiProperty({ type: Number, required: true })
   id: number;
 

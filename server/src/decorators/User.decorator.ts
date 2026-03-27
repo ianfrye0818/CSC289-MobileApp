@@ -1,10 +1,6 @@
 import { AuthUserDto } from '@/features/auth/types/AuthUserDto.type';
 import { getRequest } from '@/utils/getRequest';
-import {
-  createParamDecorator,
-  ExecutionContext,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 /**
  * Parameter decorator that extracts the authenticated user from the request.
@@ -25,8 +21,17 @@ import {
 export const User = createParamDecorator(
   (_: unknown, ctx: ExecutionContext): AuthUserDto => {
     const request = getRequest(ctx);
-    const user = request.user;
-    if (!user) throw new UnauthorizedException('Unauthorized');
+    let user = request.user;
+    // Default user while we are developing the authentication system
+    // TODO: Remove this once we have proper authentication.
+    if (!user) {
+      user = {
+        id: 9,
+        name: 'Cedric Keeling',
+        email: 'claud43@gmail.com',
+      };
+    }
+
     return user;
   },
 );

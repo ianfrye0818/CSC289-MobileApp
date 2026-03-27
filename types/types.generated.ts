@@ -54,7 +54,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/customers/me": {
+    "/api/customers/{customerId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -218,7 +218,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get customer addresses */
+        get: operations["AddressesController_getCustomerAddressesById"];
         put?: never;
         post?: never;
         /** Soft delete an address for a customer */
@@ -423,7 +424,7 @@ export interface components {
             key: string;
             value: string;
         };
-        AddressListReponseDto: {
+        AddressResponseDto: {
             id: number;
             line1: string;
             line2?: string;
@@ -434,7 +435,6 @@ export interface components {
             customerRef: components["schemas"]["ObjectRef"];
         };
         AddAddressRequestDto: {
-            customerId: number;
             line1: string;
             line2?: string;
             city: string;
@@ -443,7 +443,6 @@ export interface components {
             country?: string;
         };
         UpdateAddressRequestDto: {
-            customerId?: number;
             line1?: string;
             line2?: string;
             city?: string;
@@ -677,7 +676,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                customerId: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -1446,9 +1447,7 @@ export interface operations {
     };
     AddressesController_getCustomerAddresses: {
         parameters: {
-            query: {
-                customerId: number;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -1460,7 +1459,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AddressListReponseDto"][];
+                    "application/json": components["schemas"]["AddressResponseDto"][];
                 };
             };
             400: {
@@ -1540,6 +1539,75 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreatedMessageResponse"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadRequestException"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedException"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictException"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InternalServerErrorException"];
+                };
+            };
+        };
+    };
+    AddressesController_getCustomerAddressesById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                addressId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddressResponseDto"];
                 };
             };
             400: {

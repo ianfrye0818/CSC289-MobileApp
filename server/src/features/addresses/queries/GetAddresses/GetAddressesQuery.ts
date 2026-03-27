@@ -1,7 +1,7 @@
 import { Query } from '@nestjs/cqrs';
-import { AddressListReponseDto } from '../../dtos/AddressesListResponse.dto';
+import { AddressResponseDto } from '../../dtos/AddressesListResponse.dto';
 
-export class GetAddressesQuery extends Query<AddressListReponseDto[]> {
+export class GetAddressesQuery extends Query<AddressResponseDto[]> {
   constructor(public readonly customerId: number) {
     super();
   }

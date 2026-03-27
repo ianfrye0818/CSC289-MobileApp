@@ -1,7 +1,7 @@
-import { DeletedMessageResponse } from '@/types/MessageReponse.type';
 import { Command } from '@nestjs/cqrs';
+import { AddressResponseDto } from '../../dtos/AddressesListResponse.dto';
 
-export class DeleteAddressCommand extends Command<DeletedMessageResponse> {
+export class GetAddressByIdQuery extends Command<AddressResponseDto> {
   constructor(
     public readonly addressId: number,
     public readonly userId: number,

@@ -1,4 +1,4 @@
-import AddressList from '@/features/addresses/components/AddressList';
+import AddressList from '@/features/addresses/components/AddressList/AddressList';
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 

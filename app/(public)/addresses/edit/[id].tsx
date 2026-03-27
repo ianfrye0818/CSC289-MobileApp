@@ -1,38 +1,28 @@
-import { Text } from '@/components/ui/text';
+import { DataWrapper } from '@/components/DataWrapper';
 import UpdateAddressForm from '@/features/addresses/components/UpdateAddressForm';
-import { useGetCurrentCustomerAddresses } from '@/features/addresses/hooks/useGetCurrentCustomerAddresses';
+import { useGetCurrentCustomerAddressById } from '@/features/addresses/hooks/useGetCurrentCustomerAddressById';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 
 export default function EditAddressScreen() {
-  const { id, customerId } = useLocalSearchParams<{ id: string; customerId: string }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data, isLoading, error } = useGetCurrentCustomerAddressById(Number(id));
   const router = useRouter();
-  const { data: addresses, isLoading } = useGetCurrentCustomerAddresses(Number(customerId));
-
-  const address = addresses?.find((a) => a.id === Number(id));
-
-  if (isLoading) {
-    return (
-      <View className='flex-1 items-center justify-center'>
-        <ActivityIndicator size='large' />
-      </View>
-    );
-  }
-
-  if (!address) {
-    return (
-      <View className='flex-1 items-center justify-center'>
-        <Text className='text-muted-foreground'>Address not found.</Text>
-      </View>
-    );
-  }
 
   return (
-    <View className='flex-1 bg-background px-4 py-10'>
-      <UpdateAddressForm
-        address={address}
-        onSuccess={() => router.back()}
-      />
-    </View>
+    <DataWrapper
+      data={data}
+      isLoading={isLoading}
+      error={error}
+    >
+      {(address) => (
+        <View className='flex-1 bg-background px-4 py-10'>
+          <UpdateAddressForm
+            address={address}
+            onSuccess={() => router.back()}
+          />
+        </View>
+      )}
+    </DataWrapper>
   );
 }
