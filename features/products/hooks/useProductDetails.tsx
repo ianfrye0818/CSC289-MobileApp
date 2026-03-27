@@ -1,5 +1,7 @@
 import { apiClient } from '@/lib/apiClient';
-import { useQuery } from '@tanstack/react-query';
+import { unwrapResponse } from '@/lib/unwrapResponse';
+import { QueryOptions, useQuery } from '@tanstack/react-query';
+import { ProductDetail } from '../types';
 import { productQueryKeys } from './shared';
 
 /**
@@ -7,16 +9,14 @@ import { productQueryKeys } from './shared';
  * Query is disabled until a valid productId is provided.
  * Each product is cached independently by its ID.
  */
-export const useProductDetails = (productId: number | undefined) => {
+export const useProductDetails = (productId: number, options?: QueryOptions<ProductDetail>) => {
   return useQuery({
-    queryKey: productQueryKeys.productDetails(productId!),
-    queryFn: async () => {
-      const { data, error } = await apiClient.GET('/api/products/{productId}', {
-        params: { path: { productId: productId! } },
-      });
-      if (error) throw error;
-      return data;
-    },
+    queryKey: productQueryKeys.details(productId),
+    queryFn: async () =>
+      apiClient
+        .GET('/api/products/{productId}', { params: { path: { productId } } })
+        .then(unwrapResponse),
     enabled: !!productId,
+    ...options,
   });
 };

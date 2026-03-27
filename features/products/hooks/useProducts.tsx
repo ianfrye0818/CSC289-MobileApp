@@ -1,15 +1,14 @@
 import { apiClient } from '@/lib/apiClient';
-import { useQuery } from '@tanstack/react-query';
+import { unwrapResponse } from '@/lib/unwrapResponse';
+import { QueryOptions, useQuery } from '@tanstack/react-query';
+import { ProductListItem } from '../types';
 import { productQueryKeys } from './shared';
 
 /** Fetches all available products from the catalogue. */
-export const useProducts = () => {
+export const useProducts = (options?: QueryOptions<ProductListItem[]>) => {
   return useQuery({
     queryKey: productQueryKeys.products,
-    queryFn: async () => {
-      const { data, error } = await apiClient.GET('/api/products');
-      if (error) throw error;
-      return data;
-    },
+    queryFn: async () => apiClient.GET('/api/products').then(unwrapResponse),
+    ...options,
   });
 };

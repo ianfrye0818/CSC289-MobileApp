@@ -17,10 +17,6 @@
 export const productQueryKeys = {
   /** Base key for all product list queries. */
   products: ['products'],
-  /**
-   * Key for a single product's detail query.
-   * Inherits `products` as a prefix so invalidating all products also
-   * invalidates individual detail caches.
-   */
-  productDetails: (productId: number) => [...productQueryKeys.products, productId],
+  list: () => [...productQueryKeys.products, 'list'] as const,
+  details: (productId: number) => [...productQueryKeys.products, 'details', productId] as const,
 };
