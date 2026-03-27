@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=22.0.0"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "npm@11.0.0",
   "scripts": {
     "dev": "expo start",
     "dev:concurrent": "concurrently -n app,server -c blue,green \"pnpm run start\" \"pnpm -C server run dev\"",
