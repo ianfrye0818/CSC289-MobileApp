@@ -9,9 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.csc289sp2026.elevateretail",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.csc289sp2026.elevateretail",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -58,6 +60,6 @@
         "projectId": "28f22246-1bd6-49e6-8c8f-ba240b0923bb"
       }
     },
-    "owner": "ianfrye.dev"
+    "owner": "csc289-sp2026"
   }
 }
