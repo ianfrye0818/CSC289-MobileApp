@@ -167,7 +167,7 @@ async function seed() {
         Product_Description: faker.commerce.productDescription(),
         Category_ID: pickRandom(categories).Category_ID,
         Supplier_ID: pickRandom(suppliers).Supplier_ID,
-        Image_URL: faker.image.url(),
+        Image_URL: faker.image.urlPicsumPhotos({ width: 400, height: 400 }),
         inventory: {
           create: {
             Quantity: faker.number.int({ min: 10, max: 500 }),
