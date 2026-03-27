@@ -1,11 +1,27 @@
-import { Text } from '@/components/ui/text';
+import { DataWrapper } from '@/components/DataWrapper';
+import { ProductDetails } from '@/features/products/components/ProductDetails/ProductDetails';
+import { useProductDetails } from '@/features/products/hooks/useProductDetails';
 import { useLocalSearchParams } from 'expo-router';
-import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 export default function AuthProductDetailScreen() {
   const { id } = useLocalSearchParams();
+  const { data, isLoading, error } = useProductDetails(Number(id));
+
   return (
-    <View>
-      <Text>Product Detail {id}</Text>
-    </View>
+    <SafeAreaView
+      className='flex-1 bg-background'
+      edges={['bottom']}
+    >
+      <DataWrapper
+        data={data}
+        isLoading={isLoading}
+        error={error}
+      >
+        {(product) => {
+          return <ProductDetails product={product} />;
+        }}
+      </DataWrapper>
+    </SafeAreaView>
   );
 }

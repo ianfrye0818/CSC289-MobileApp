@@ -18,6 +18,8 @@ import { GetProductDetailsQuery } from './GetProductDetailsQuery';
 export class GetProductDetailsQueryHandler implements IQueryHandler<GetProductDetailsQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
+  debugger;
+
   async execute(query: GetProductDetailsQuery): Promise<ProductDetailDto> {
     const product = await this.prisma.product.findUnique({
       where: {

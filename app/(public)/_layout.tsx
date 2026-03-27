@@ -4,7 +4,8 @@ export default function PublicLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name='index' />
       <Stack.Screen name='login' />
-      <Stack.Screen name='products' />
+      <Stack.Screen name='products/index' />
+      <Stack.Screen name='products/[id]' />
       <Stack.Screen
         name='addresses/index'
         options={{ title: 'Addresses', headerShown: true, headerBackTitle: 'Back' }}

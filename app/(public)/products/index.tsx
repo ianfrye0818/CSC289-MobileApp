@@ -1,10 +1,5 @@
-import { ProductGrid } from '@/features/products/components/ProductGrid/ProductGrid';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import ProductsListScreen from '@/features/products/components/ProductsListScreen';
 
 export default function ProductsScreen() {
-  return (
-    <SafeAreaView className='flex-1 bg-background'>
-      <ProductGrid />
-    </SafeAreaView>
-  );
+  return <ProductsListScreen />;
 }
