@@ -48,11 +48,17 @@ interface Props {
  * an item count and status badge when the API provides them.
  */
 export function OrderHistoryCard({ order, itemCount, status }: Props) {
-  const formattedDate = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(order.orderDate));
+  /* Hermes (React Native's JS engine) is stricter than V8 with date parsing.
+     Guard against invalid or unexpected date formats from the API. */
+
+  const orderDate = new Date(order.orderDate);
+  const formattedDate = isNaN(orderDate.getTime())
+    ? "Date unavailable"
+    : new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }).format(orderDate);
 
   const formattedTotal = new Intl.NumberFormat("en-US", {
     style: "currency",

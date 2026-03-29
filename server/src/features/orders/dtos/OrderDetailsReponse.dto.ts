@@ -47,10 +47,25 @@ export class OrderDetailsResponseShippingDetails {
   id: number;
   @ApiProperty({ type: Number, required: true })
   cost: number;
-  @ApiProperty({ type: Date, required: true, nullable: true })
-  shippedOn: Date | null;
-  @ApiProperty({ type: Date, required: true, nullable: true })
-  expectedBy: Date | null;
+  /**
+   * ISO 8601 date strings. Changed from Date to string because
+   * class-transformer serialises Date objects as `{}`.
+   * — D3adMan, ticket #15
+   */
+  @ApiProperty({
+    type: String,
+    format: 'date-time',
+    required: true,
+    nullable: true,
+  })
+  shippedOn: string | null;
+  @ApiProperty({
+    type: String,
+    format: 'date-time',
+    required: true,
+    nullable: true,
+  })
+  expectedBy: string | null;
   @ApiProperty({ enum: ShippingStatus, required: true })
   status: ShippingStatus;
   @ApiProperty({ type: String, required: true })
@@ -97,8 +112,13 @@ export class OrderDetailsResponseDto {
   @ApiProperty({ type: OrderDetailsResponseDiscount, required: true })
   discounts: OrderDetailsResponseDiscount[];
 
-  @ApiProperty({ type: Date, required: true })
-  orderDate: Date;
+  /**
+   * ISO 8601 date string. Changed from Date to string because
+   * class-transformer serialises Date objects as `{}`.
+   * — D3adMan, ticket #15
+   */
+  @ApiProperty({ type: String, format: 'date-time', required: true })
+  orderDate: string;
 
   @ApiProperty({ type: Number, required: true })
   totalAmount: number;
