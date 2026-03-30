@@ -4,11 +4,11 @@ import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
 // import { registerForPushNotificationsAsync } from '@/lib/notifications';
 // import Notifications from 'expo-notifications';
+import '@/global.css';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import '../global.css';
 
 /**
  * Root layout — the single component that wraps every screen in the app.
@@ -49,7 +49,7 @@ export default function RootLayout() {
     if (!isAuthenticated && inAuthGroup) {
       // User is not logged in but tried to access a protected screen
       router.replace('/(public)/login' as never);
-    } else if (!isAuthenticated && !inAuthGroup && segments[1] !== 'login') {
+    } else if (!isAuthenticated && !inAuthGroup && segments[0] !== 'login') {
       // User is not logged in and not on the login page — send them to login
       router.replace('/(public)/login' as never);
     } else if (isAuthenticated && !inAuthGroup) {
