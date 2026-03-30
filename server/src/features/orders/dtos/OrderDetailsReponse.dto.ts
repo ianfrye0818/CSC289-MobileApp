@@ -47,9 +47,17 @@ export class OrderDetailsResponseShippingDetails {
   id: number;
   @ApiProperty({ type: Number, required: true })
   cost: number;
-  @ApiProperty({ type: Date, required: true, nullable: true })
+  @ApiProperty({
+    type: Date,
+    required: true,
+    nullable: true,
+  })
   shippedOn: Date | null;
-  @ApiProperty({ type: Date, required: true, nullable: true })
+  @ApiProperty({
+    type: Date,
+    required: true,
+    nullable: true,
+  })
   expectedBy: Date | null;
   @ApiProperty({ enum: ShippingStatus, required: true })
   status: ShippingStatus;

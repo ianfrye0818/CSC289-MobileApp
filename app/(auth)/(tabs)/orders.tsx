@@ -1,9 +1,9 @@
-import { Text } from '@/components/ui/text';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import OrderHistoryScreen from "@/features/orders/components/OrderHistoryScreen";
+
+/**
+ * Orders tab route — thin wrapper that renders the OrderHistoryScreen
+ * feature component. Follows the same pattern as the products tab.
+ */
 export default function AuthOrdersScreen() {
-  return (
-    <SafeAreaView className='flex-1 bg-background p-4'>
-      <Text>Orders</Text>
-    </SafeAreaView>
-  );
+  return <OrderHistoryScreen />;
 }

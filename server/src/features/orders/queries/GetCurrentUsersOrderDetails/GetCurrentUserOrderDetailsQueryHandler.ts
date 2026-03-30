@@ -63,6 +63,11 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
 
     return {
       id: order.Order_ID,
+      /**
+       * Explicitly convert to ISO string — class-transformer serialises
+       * raw Date objects as `{}` which breaks the mobile client.
+       * — D3adMan, ticket #15
+       */
       orderDate: order.Order_Date,
       billingAddress: {
         addressId: order.shipping?.billingAddress.Address_ID ?? null,
@@ -86,6 +91,7 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
         ? {
             id: order.shipping?.Shipping_ID ?? null,
             cost: order.shipping?.Cost.toNumber() ?? 0,
+            /* Same Date-to-string fix for shipping dates */
             shippedOn: order.shipping?.Shipped_On ?? null,
             expectedBy: order.shipping?.Expected_By ?? null,
             status: order.shipping?.Ship_Status as ShippingStatus,
