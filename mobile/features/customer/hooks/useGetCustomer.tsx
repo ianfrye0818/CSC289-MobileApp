@@ -9,7 +9,7 @@ import { customerQueryKeys } from './shared';
 export const useGetCustomer = (options?: QueryOptions<CustomerDetails>) => {
   return useQuery({
     queryKey: customerQueryKeys.customer,
-    queryFn: () => apiClient.GET('/api/customers/me').then(unwrapResponse),
+    queryFn: () => apiClient.GET('/api/customers/{customerId}', { params: { path: { customerId: 1003 } } }).then(unwrapResponse),
     ...options,
   });
 };

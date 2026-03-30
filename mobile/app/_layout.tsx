@@ -8,7 +8,6 @@ import '@/global.css';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 /**
  * Root layout — the single component that wraps every screen in the app.
@@ -71,10 +70,8 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider>
         <Slot />
         <PortalHost />
-      </SafeAreaProvider>
     </QueryClientProvider>
   );
 }

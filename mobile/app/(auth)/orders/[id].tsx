@@ -3,7 +3,11 @@ import OrderDetailScreen from '@/features/orders/components/OrderDetailScreen';
 import { useOrderDetails } from '@/features/orders/hooks/useOrderDetails';
 import { OrderDetails } from '@/features/orders/types';
 import { useLocalSearchParams } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { styled } from 'nativewind';
+import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
+
+const SafeAreaView = styled(RNSafeAreaView);
+
 
 /**
  * Order detail route — fetches and displays full order information.

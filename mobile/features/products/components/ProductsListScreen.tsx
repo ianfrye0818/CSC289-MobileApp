@@ -1,8 +1,12 @@
 import { DataWrapper } from '@/components/DataWrapper';
 import NoProductsAvailable from '@/features/products/components/NoProductsAvailable';
 import { useProducts } from '@/features/products/hooks/useProducts';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { styled } from 'nativewind';
+import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
 import { ProductGrid } from './ProductGrid';
+
+const SafeAreaView = styled(RNSafeAreaView);
+
 
 export default function AuthProductsScreen() {
   const { data, isLoading, error, refetch, isRefetching } = useProducts();

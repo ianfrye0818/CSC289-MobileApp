@@ -1,11 +1,14 @@
 import { DataWrapper } from "@/components/DataWrapper";
 import { Text } from "@/components/ui/text";
 import { useOrders } from "@/features/orders/hooks/useOrders";
+import { styled } from "nativewind";
 import { FlatList, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { OrderListItem } from "../types";
 import NoOrdersAvailable from "./NoOrdersAvailable";
 import { OrderHistoryCard } from "./OrderHistoryCard";
+
+const SafeAreaView = styled(RNSafeAreaView);
 
 /**
  * Order History screen (ticket #14).

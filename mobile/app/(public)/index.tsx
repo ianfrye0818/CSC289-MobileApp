@@ -1,7 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'expo-router';
+import { styled } from 'nativewind';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
+
+const SafeAreaView = styled(RNSafeAreaView);
 
 export default function HomeScreen() {
   const router = useRouter();
