@@ -384,7 +384,7 @@ export interface components {
             productId: number;
             productName: string;
             imageUrl?: string | null;
-            category: components["schemas"]["ProductCategoryDto"];
+            category: components["schemas"]["ProductCategoryDto"] | null;
             unitPrice: number;
             inStock: boolean;
         };
@@ -413,7 +413,7 @@ export interface components {
             productName: string;
             productDescription?: string | null;
             imageUrl?: string | null;
-            category: components["schemas"]["ProductCategoryDto"];
+            category: components["schemas"]["ProductCategoryDto"] | null;
             supplier: components["schemas"]["ProductSupplierDto"];
             inventory: components["schemas"]["ProductInventoryDto"][];
             discounts: components["schemas"]["ProductDiscountDto"][];

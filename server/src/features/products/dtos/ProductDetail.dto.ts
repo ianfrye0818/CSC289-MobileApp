@@ -54,8 +54,8 @@ export class ProductDetailDto {
   @ApiProperty({ type: String, required: false, nullable: true })
   imageUrl: string | null;
 
-  @ApiProperty({ type: ProductCategoryDto, required: true })
-  category: ProductCategoryDto;
+  @ApiProperty({ type: ProductCategoryDto, required: true, nullable: true })
+  category: ProductCategoryDto | null;
 
   @ApiProperty({ type: ProductSupplierDto, required: true })
   supplier: ProductSupplierDto;

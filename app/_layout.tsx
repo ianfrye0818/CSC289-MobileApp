@@ -42,37 +42,6 @@ export default function RootLayout() {
     initializeAuth();
   }, []);
 
-  // Register for push notifications - commenting out for now -
-  // but will need to uncomment when we have the rest of the app built
-  // useEffect(() => {
-  //   // Register and get token
-  //   registerForPushNotificationsAsync().then((token) => {
-  //     if (token) {
-  //       setPushToken(token);
-  //       console.log('Push token registered:', token);
-  //     }
-  //   });
-
-  //   // Foreground: notification delivered while app is open
-  //   const receivedSub = Notifications.addNotificationResponseReceivedListener(
-  //     (resp) => {
-  //       console.log('User tapped notification:', resp);
-  //     },
-  //   );
-  //   // User tapped / acted on a notification
-  //   const responseSub = Notifications.addNotificationResponseReceivedListener(
-  //     (resp) => {
-  //       console.log('User tapped notification:', resp);
-  //     },
-  //   );
-
-  //   // Clean up listeners on unmount
-  //   return () => {
-  //     receivedSub.remove();
-  //     responseSub.remove();
-  //   };
-  // }, []);
-
   // Route guard — runs whenever auth state or the current route changes
   useEffect(() => {
     if (isLoading) return; // Wait until we've read from SecureStore

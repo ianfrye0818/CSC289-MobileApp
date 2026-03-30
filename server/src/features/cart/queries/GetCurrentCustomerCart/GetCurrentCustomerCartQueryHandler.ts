@@ -72,7 +72,7 @@ export class GetCurrentCustomerCartQueryHandler implements IQueryHandler<GetCurr
             productName: item.inventory.product.Product_Name,
             productDescription: item.inventory.product.Product_Description,
             imageUrl: item.inventory.product.Image_URL,
-            categoryName: item.inventory.product.category.Category_Name,
+            categoryName: item.inventory.product.category?.Category_Name ?? '-',
             discounts: item.inventory.product.discounts.map((d) => ({
               discountId: d.Discount_ID,
               discountType: d.Discount_Type as 'Percentage' | 'Flat',
