@@ -50,7 +50,7 @@ export class GetCurrentUsersOrdersQueryHandler implements IQueryHandler<GetCurre
        * raw Date objects as `{}` which breaks the mobile client.
        * — D3adMan, ticket #14
        */
-      orderDate: order.Order_Date.toISOString(),
+      orderDate: order.Order_Date,
       totalAmount: order.totalAmount,
     }));
   }
