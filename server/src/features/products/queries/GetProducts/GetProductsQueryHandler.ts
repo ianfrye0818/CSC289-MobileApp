@@ -34,10 +34,12 @@ export class GetProductsQueryHandler implements IQueryHandler<GetProductsQuery> 
         productId: product.Product_ID,
         productName: product.Product_Name,
         imageUrl: product.Image_URL,
-        category: {
-          categoryId: product.category.Category_ID,
-          categoryName: product.category.Category_Name,
-        },
+        category: product.category
+          ? {
+              categoryId: product.category.Category_ID,
+              categoryName: product.category.Category_Name,
+            }
+          : null,
         unitPrice: Number(firstProduct?.Unit_Price ?? 0),
         inStock: product.inventory?.some((i) => i.Quantity > 0) ?? false,
       };

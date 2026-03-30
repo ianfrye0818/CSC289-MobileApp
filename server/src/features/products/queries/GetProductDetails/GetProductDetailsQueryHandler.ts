@@ -18,8 +18,6 @@ import { GetProductDetailsQuery } from './GetProductDetailsQuery';
 export class GetProductDetailsQueryHandler implements IQueryHandler<GetProductDetailsQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
-  debugger;
-
   async execute(query: GetProductDetailsQuery): Promise<ProductDetailDto> {
     const product = await this.prisma.product.findUnique({
       where: {
@@ -45,10 +43,12 @@ export class GetProductDetailsQueryHandler implements IQueryHandler<GetProductDe
       productName: product.Product_Name,
       productDescription: product.Product_Description,
       imageUrl: product.Image_URL,
-      category: {
-        categoryId: product.category.Category_ID,
-        categoryName: product.category.Category_Name,
-      },
+      category: product.category
+        ? {
+            categoryId: product.category.Category_ID,
+            categoryName: product.category.Category_Name,
+          }
+        : null,
       supplier: {
         supplierId: product.supplier.Supplier_ID,
         supplierName: product.supplier.Supplier_Name,

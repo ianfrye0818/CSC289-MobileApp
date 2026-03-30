@@ -32,7 +32,7 @@ export function DataWrapper<T>({
     return typeof errorComponent === 'function'
       ? errorComponent(error)
       : errorComponent || (
-          <View className='bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded font-bold'>
+          <View className=' flex-1 items-center justify-center bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded font-bold'>
             <Text>Error:</Text>
             <Text>{error.message}</Text>
           </View>
@@ -42,7 +42,7 @@ export function DataWrapper<T>({
   if (!data || (Array.isArray(data) && data.length === 0)) {
     return (
       noDataComponent || (
-        <View className='text-gray-500 text-center p-8'>
+        <View className='flex-1 items-center justify-center text-gray-500 text-center p-8'>
           <Text>No data available</Text>
         </View>
       )
