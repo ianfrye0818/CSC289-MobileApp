@@ -1,13 +1,21 @@
 import { TAX_RATE } from '@/constants';
+import { EmitWebhookEventCommand } from '@/features/webhooks/commands/EmitWebhookEvent/EmitWebhookEventCommand';
+import { AppLogger } from '@/services/AppLogger.service';
 import { PrismaService, TX } from '@/services/Prisma.service';
 import { CreatedMessageResponse } from '@/types/MessageReponse.type';
 import { Order_Item, Prisma } from '@generated/prisma/client';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PaymentMethod } from '../../dtos/PaymentMethod.dto';
 import { PaymentStatus } from '../../dtos/PaytmentStatus.enum';
 import { CreateOrderCommand } from './CreateOrderCommand';
 
+export type DbOrder = Prisma.OrderGetPayload<{
+  include: {
+    items: true;
+    payment: true;
+  };
+}>;
 /**
  * Handles `CreateOrderCommand` — converts a shopping cart into a confirmed order.
  *
@@ -26,7 +34,11 @@ import { CreateOrderCommand } from './CreateOrderCommand';
  */
 @CommandHandler(CreateOrderCommand)
 export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCommand> {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new AppLogger(CreateOrderCommandHandler.name);
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly commandBus: CommandBus,
+  ) {}
 
   async execute(command: CreateOrderCommand): Promise<CreatedMessageResponse> {
     const cart = await this.prisma.shopping_Cart.findUnique({
@@ -77,6 +89,7 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
         data: orderData,
         include: {
           items: true,
+          payment: true,
         },
       });
 
@@ -92,6 +105,8 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
       // Update the inventory quantites
       await this.updateInventory(tx, createdOrder.items);
 
+      await this.emitWebhook(createdOrder);
+
       return createdOrder;
     });
 
@@ -99,6 +114,44 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
       'Order created successfully',
       transaction.Order_ID,
     );
+  }
+
+  /**
+   * Emits a webhook event for the order creation.
+   * @param order - The order to emit the webhook event for.
+   * @error - Fail silently so that we don't block the order creation.
+   */
+  private async emitWebhook(order: DbOrder): Promise<void> {
+    try {
+      await this.commandBus.execute(
+        new EmitWebhookEventCommand({
+          event: 'order.created',
+          payload: {
+            orderId: order.Order_ID,
+            customerId: order.Customer_ID,
+            paymentMethod: order.payment?.Method as PaymentMethod,
+            totalAmount: order.items.reduce(
+              (acc, item) =>
+                acc +
+                item.Amount.toNumber() *
+                  item.Quantity *
+                  (1 + item.Tax.toNumber()),
+              0,
+            ),
+            items: order.items.map((item) => ({
+              inventoryId: item.Inventory_ID,
+              quantity: item.Quantity,
+              amount: item.Amount,
+              tax: item.Tax,
+            })),
+          },
+        }),
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error emitting webhook event for order ${order.Order_ID}: ${error}`,
+      );
+    }
   }
 
   /**
