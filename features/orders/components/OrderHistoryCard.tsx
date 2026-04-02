@@ -34,7 +34,6 @@ interface Props {
    * Optional — not currently returned by GET /orders.
    * Ready to render once the backend adds it to OrderListResponseDto.
    */
-  itemCount?: number;
   /**
    * Optional — not currently returned by GET /orders.
    * Accepts any status string; mapped to a Badge variant automatically.
@@ -47,10 +46,10 @@ interface Props {
  * Shows order number, formatted date, total amount, and optionally
  * an item count and status badge when the API provides them.
  */
-export function OrderHistoryCard({ order, itemCount, status }: Props) {
+export function OrderHistoryCard({ order, status }: Props) {
   /* Hermes (React Native's JS engine) is stricter than V8 with date parsing.
      Guard against invalid or unexpected date formats from the API. */
-
+  const itemCount = order.itemCount;
   const orderDate = new Date(order.orderDate);
   const formattedDate = isNaN(orderDate.getTime())
     ? "Date unavailable"

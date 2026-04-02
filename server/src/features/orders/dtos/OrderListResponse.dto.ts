@@ -12,5 +12,8 @@ export class OrderListResponseDto {
   orderDate: Date;
 
   @ApiProperty({ type: Number, required: true })
+  itemCount: number;
+
+  @ApiProperty({ type: Number, required: true })
   totalAmount: number;
 }

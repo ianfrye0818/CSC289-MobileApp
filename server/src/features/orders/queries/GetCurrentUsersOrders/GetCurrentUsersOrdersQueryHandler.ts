@@ -27,6 +27,9 @@ export class GetCurrentUsersOrdersQueryHandler implements IQueryHandler<GetCurre
         customer: true,
         items: true,
       },
+      orderBy: {
+        Order_Date: 'desc',
+      },
     });
 
     // calcualte the total of each order based on the item amount * quantity * tax rate
@@ -45,12 +48,8 @@ export class GetCurrentUsersOrdersQueryHandler implements IQueryHandler<GetCurre
         email: order.customer.Email,
         name: `${order.customer.First_Name} ${order.customer.Last_Name}`,
       },
-      /**
-       * Explicitly convert to ISO string — class-transformer serialises
-       * raw Date objects as `{}` which breaks the mobile client.
-       * — D3adMan, ticket #14
-       */
       orderDate: order.Order_Date,
+      itemCount: order.items.length,
       totalAmount: order.totalAmount,
     }));
   }
