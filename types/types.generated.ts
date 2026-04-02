@@ -54,7 +54,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/customers/{customerId}": {
+    "/api/customers/me": {
         parameters: {
             query?: never;
             header?: never;
@@ -62,7 +62,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get customer details */
-        get: operations["CustomerController_getCustomerDetails"];
+        get: operations["CustomerController_getCurrentCustomerDetails"];
         put?: never;
         post?: never;
         delete?: never;
@@ -672,13 +672,11 @@ export interface operations {
             };
         };
     };
-    CustomerController_getCustomerDetails: {
+    CustomerController_getCurrentCustomerDetails: {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                customerId: number;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
