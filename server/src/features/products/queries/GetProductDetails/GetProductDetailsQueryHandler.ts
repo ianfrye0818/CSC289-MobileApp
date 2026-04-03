@@ -50,8 +50,8 @@ export class GetProductDetailsQueryHandler implements IQueryHandler<GetProductDe
           }
         : null,
       supplier: {
-        supplierId: product.supplier.Supplier_ID,
-        supplierName: product.supplier.Supplier_Name,
+        supplierId: product.supplier?.Supplier_ID ?? 0,
+        supplierName: product.supplier?.Supplier_Name ?? '-',
       },
       inventory: product.inventory.map((i) => ({
         inventoryId: i.Inventory_ID,

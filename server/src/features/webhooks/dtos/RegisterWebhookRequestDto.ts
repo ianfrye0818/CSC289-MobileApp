@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsNotEmpty, IsUrl } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { WebhookEvents } from '../types/WebhookEvents.type';
 
 export class RegisterWebhookRequestDto {
   @ApiProperty({ type: String, required: true, format: 'uri' })
-  @IsUrl()
+  @IsString()
   @IsNotEmpty()
   url: string;
 

@@ -116,7 +116,7 @@ export class EmitWebhookEventCommandHandler implements ICommandHandler<EmitWebho
       }
       return { ok: true };
     } catch (error) {
-      return { ok: false, error };
+      return { ok: false, error: error };
     }
   }
 
