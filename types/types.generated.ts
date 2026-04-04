@@ -368,6 +368,7 @@ export interface components {
             customer: components["schemas"]["OrderCustomerDto"];
             /** Format: date-time */
             orderDate: string;
+            itemCount: number;
             totalAmount: number;
         };
         OrderDetailsResponseAddress: {
