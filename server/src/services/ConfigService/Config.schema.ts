@@ -39,7 +39,10 @@ export const configSchema = z.object({
   REDIS_HOST: z.string().optional().default('localhost'),
   REDIS_PORT: z.coerce.number().optional().default(6379),
 
-  WEBHOOK_API_KEY: z.string(),
+  WEBHOOK_API_KEY: z
+    .string()
+    .optional()
+    .default('4C679E7B-B25F-431C-9E6D-06517D2D891A'),
 });
 
 /** Type-safe representation of all validated environment variables. */

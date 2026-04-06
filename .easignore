@@ -35,3 +35,4 @@ yarn-error.*
 
 android/
 ios/
+build-and-push.sh

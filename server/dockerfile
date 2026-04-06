@@ -1,0 +1,30 @@
+# Base image
+FROM node:20-bullseye-slim
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy tsconfig and other config files first
+COPY tsconfig.json ./
+COPY nest-cli.json ./
+
+# Bundle app source
+COPY . .
+
+# Generate Prisma client and fix namespace issues
+RUN npm run db:generate
+
+# Build the app
+RUN npm run build
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start the app -> entry point
+CMD [ "npm", "start" ]
