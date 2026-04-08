@@ -21,11 +21,12 @@ import {
  */
 export const useCorsOptions = (): CorsOptions | CorsOptionsDelegate<any> => {
   return {
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      ...(process.env.CORS_ORIGIN ? JSON.parse(process.env.CORS_ORIGIN) : []),
-    ],
+    origin: "*",
+    // origin: [
+    //   'http://localhost:3000',
+    //   'http://localhost:5173',
+    //   ...(process.env.CORS_ORIGIN ? JSON.parse(process.env.CORS_ORIGIN) : []),
+    // ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: [
