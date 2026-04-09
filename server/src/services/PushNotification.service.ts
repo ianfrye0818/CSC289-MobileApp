@@ -31,8 +31,6 @@ export class PushNotificationService {
       return false;
     }
 
-    const result = await resp.json();
-    console.log({ pushResult: result });
     return true;
   }
 }

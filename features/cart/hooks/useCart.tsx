@@ -9,7 +9,12 @@ export const useCart = () => {
     queryFn: async () => {
       const { data, error } = await apiClient.GET('/api/cart');
       if (error) throw error;
+      if (data == null) {
+        throw new Error('Cart response was empty');
+      }
       return data;
     },
+    /** Keep showing the last cart while refetching so the list does not blank after mutations. */
+    placeholderData: (previousData) => previousData,
   });
 };
