@@ -1,10 +1,5 @@
-import { Text } from '@/components/ui/text';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import CartOverviewScreen from "@/features/cart/components/CartOverviewScreen";
 
 export default function AuthCartScreen() {
-  return (
-    <SafeAreaView className='flex-1 bg-background p-4'>
-      <Text>Cart</Text>
-    </SafeAreaView>
-  );
+  return <CartOverviewScreen />;
 }
