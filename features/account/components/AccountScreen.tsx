@@ -1,15 +1,33 @@
-import { Text } from "@/components/ui/text";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Text } from '@/components/ui/text';
+import { useGetCustomer } from '@/features/account/hooks/useGetCustomer';
+import { ActivityIndicator, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AccountCard } from './AccountCard';
 
 export default function AccountScreen() {
-    return (
-        <SafeAreaView className="flex-1 bg-background items-center justify-center">
-            <Text className="text-2xl font-bold text-foreground">
-                Account Screen
+  const { data: customer, isPending, isError } = useGetCustomer();
+
+  return (
+    <SafeAreaView className="flex-1 bg-background">
+      <View className="flex-1 px-4 pt-6 gap-4">
+        <Text variant="h3">My Account</Text>
+
+        {isPending && (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator />
+          </View>
+        )}
+
+        {isError && (
+          <View className="flex-1 items-center justify-center">
+            <Text className="text-destructive text-sm">
+              Failed to load account details. Please try again.
             </Text>
-            <Text className="text-base text-muted-foreground mt-2">
-                This is a placeholder for the Account screen. It will display user information and account settings in the future.
-            </Text>
-        </SafeAreaView>
-    );
+          </View>
+        )}
+
+        {customer && <AccountCard customer={customer} />}
+      </View>
+    </SafeAreaView>
+  );
 }

@@ -77,7 +77,6 @@ model Inventory {
   Product_ID   Int
   Quantity     Int
   Unit_Price   Decimal              @db.Decimal(8, 2)
-  Deleted_At   DateTime?
   product      Product              @relation(fields: [Product_ID], references: [Product_ID])
   cartItems    Shopping_Cart_Item[]
   orderItems   Order_Item[]
