@@ -31,7 +31,9 @@
     "plugins": [
       [
         "expo-notifications",
-        {}
+        {
+          "googleServicesFile": "./google-services.json"
+        }
       ],
       "expo-router",
       [
