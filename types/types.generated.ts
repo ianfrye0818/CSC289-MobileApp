@@ -284,7 +284,7 @@ export interface components {
         };
         CustomerMemberDetailsResponseDto: {
             /** @enum {string} */
-            memberShipLevel: "REGULAR" | "SILVER" | "GOLD" | "PLATINUM" | "DIAMOND";
+            memberShipLevel: "BRONZE" | "SILVER" | "GOLD" | "PLATINUM";
             discountRate: number;
         };
         CustomerDetailsResponseDto: {

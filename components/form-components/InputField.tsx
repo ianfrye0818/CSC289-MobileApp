@@ -85,6 +85,7 @@ export function InputField<T extends z.ZodType<FieldValues>>({
             <Input
               {...props}
               value={value}
+              onPress={(event) => event.stopPropagation()}
               onChangeText={onChange}
               onBlur={onBlur}
               keyboardType={

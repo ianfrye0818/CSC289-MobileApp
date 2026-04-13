@@ -20,6 +20,34 @@ export default function AuthLayout() {
           headerBackTitle: "Back",
         }}
       />
+
+      <Stack.Screen
+        name="addresses/index"
+        options={{
+          headerShown: true,
+          title: "Addresses",
+          headerBackTitle: "Back",
+        }}
+      />
+
+      <Stack.Screen
+        name="addresses/add/index"
+        options={{
+          headerShown: true,
+          title: "Add Address",
+          headerBackTitle: "Back",
+        }}
+      />
+
+      <Stack.Screen
+        name="addresses/edit/[id]"
+        options={{
+          headerShown: true,
+          title: "Edit Address",
+          headerBackTitle: "Back",
+        }}
+      />
+      
     </Stack>
   );
 }

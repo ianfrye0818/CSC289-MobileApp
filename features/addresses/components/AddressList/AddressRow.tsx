@@ -15,7 +15,7 @@ export function AddressRow({ address }: Props) {
   const { mutate: deleteAddress, isPending: isDeleting } = useDeleteAddressForCurrentCustomer();
 
   const handleEdit = () => {
-    router.push(`/(public)/addresses/edit/${address.id}` as never);
+    router.push(`/addresses/edit/${address.id}`);
   };
 
   const handleDelete = () => {

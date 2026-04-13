@@ -44,7 +44,7 @@ export default function AddressList() {
       </DataWrapper>
       <Button
         className='mt-auto w-full'
-        onPress={() => router.push(`/(public)/addresses/add`)}
+        onPress={() => router.push('/addresses/add') }
       >
         Add Address
       </Button>
