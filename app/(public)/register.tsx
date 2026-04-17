@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
   return (
-    <SafeAreaView>
+    <SafeAreaView className='flex-1 bg-background justify-center items-center px-4'>
       <RegisterForm />
     </SafeAreaView>
   );

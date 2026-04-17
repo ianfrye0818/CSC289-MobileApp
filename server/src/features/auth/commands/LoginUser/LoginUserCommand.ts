@@ -1,6 +1,7 @@
 import { Command } from '@nestjs/cqrs';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { TokenResponse } from '../../types/TokenResponse';
 
 /**
  * Request body DTO for the `POST /auth/login` endpoint.
@@ -26,7 +27,7 @@ export class LoginUserCommandRequestDto {
  * the `CommandBus`. The generic type parameter `Command<string>` indicates that
  * `LoginUserCommandHandler` resolves with a JWT string.
  */
-export class LoginUserCommand extends Command<string> {
+export class LoginUserCommand extends Command<TokenResponse> {
   constructor(public readonly dto: LoginUserCommandRequestDto) {
     super();
   }

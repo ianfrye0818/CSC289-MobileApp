@@ -3,6 +3,7 @@ import { Customer } from '@generated/prisma/client';
 import { NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
+import { TokenResponse } from '../../types/TokenResponse';
 import { LoginUserCommand } from './LoginUserCommand';
 
 /**
@@ -25,7 +26,7 @@ export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(command: LoginUserCommand): Promise<string> {
+  async execute(command: LoginUserCommand): Promise<TokenResponse> {
     const { email } = command.dto;
     const customer = await this.queryBus.execute(
       new GetCustomerByEmailQuery(email),
@@ -47,6 +48,6 @@ export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand
       name: `${customer.First_Name} ${customer.Last_Name}`,
     };
 
-    return this.jwtService.signAsync(payload);
+    return { accessToken: await this.jwtService.signAsync(payload) };
   }
 }

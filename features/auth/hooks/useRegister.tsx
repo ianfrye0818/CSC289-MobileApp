@@ -12,12 +12,12 @@ export const useRegister = () => {
 
   return useMutation({
     mutationFn: async (payload: RegisterUserPayload) => {
-      const token = await apiClient
+      const { accessToken } = await apiClient
         .POST('/api/auth/register', { body: payload })
         .then(unwrapResponse);
       const user = await apiClient.GET('/api/auth/me').then(unwrapResponse);
       return {
-        token,
+        token: accessToken,
         user,
       };
     },

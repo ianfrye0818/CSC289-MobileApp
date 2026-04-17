@@ -43,7 +43,8 @@ export default function LoginForm() {
   };
   return (
     <FormProvider {...form}>
-      <View className='gap-4'>
+      <View className='gap-4 w-full'>
+        <Text className='text-2xl font-bold text-center'>Login</Text>
         <InputField<typeof loginSchema>
           name='email'
           type='email'
@@ -70,6 +71,7 @@ export default function LoginForm() {
           <Text className='text-sm text-gray-500'>Don't have an account?</Text>
           <Link
             href={'/register'}
+            replace
             className='text-sm text-primary'
           >
             Register

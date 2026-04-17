@@ -8,6 +8,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { TokenResponse } from '../../types/TokenResponse';
 
 export class RegisterUserCommandRequestDto {
   @ApiProperty({ type: String, required: true })
@@ -35,7 +36,7 @@ export class RegisterUserCommandRequestDto {
   phone?: string;
 }
 
-export class RegisterUserCommand extends Command<string> {
+export class RegisterUserCommand extends Command<TokenResponse> {
   constructor(public readonly dto: RegisterUserCommandRequestDto) {
     super();
   }

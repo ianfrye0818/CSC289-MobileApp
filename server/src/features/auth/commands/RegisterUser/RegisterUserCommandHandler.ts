@@ -4,6 +4,7 @@ import { Customer } from '@generated/prisma/client';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../../types/Payload';
+import { TokenResponse } from '../../types/TokenResponse';
 import { RegisterUserCommand } from './RegisterUserCommand';
 
 @CommandHandler(RegisterUserCommand)
@@ -13,7 +14,7 @@ export class RegisterUserCommandHandler implements ICommandHandler<RegisterUserC
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(command: RegisterUserCommand): Promise<string> {
+  async execute(command: RegisterUserCommand): Promise<TokenResponse> {
     const { email, firstName, lastName, phone } = command.dto;
 
     const existingUser = await this.prisma.customer.findUnique({
@@ -25,7 +26,7 @@ export class RegisterUserCommandHandler implements ICommandHandler<RegisterUserC
     if (existingUser) {
       // Login the user and return the token
       const payload = this.generatePayload(existingUser);
-      return this.jwtService.signAsync(payload);
+      return { accessToken: await this.jwtService.signAsync(payload) };
     }
 
     const customer = await this.prisma.customer.create({
@@ -44,7 +45,7 @@ export class RegisterUserCommandHandler implements ICommandHandler<RegisterUserC
 
     const payload = this.generatePayload(customer);
 
-    return this.jwtService.signAsync(payload);
+    return { accessToken: await this.jwtService.signAsync(payload) };
   }
 
   generatePayload(customer: Customer): Payload {

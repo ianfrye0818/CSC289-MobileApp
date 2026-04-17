@@ -13,3 +13,4 @@ import { components } from '@/types/types.generated';
 export type AppUser = components['schemas']['AuthUserDto'];
 export type RegisterUserPayload = components['schemas']['RegisterUserCommandRequestDto'];
 export type LoginUserPayload = components['schemas']['LoginUserCommandRequestDto'];
+export type TokenResponse = components['schemas']['TokenResponse'];

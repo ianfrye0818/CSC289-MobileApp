@@ -12,10 +12,12 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: async (payload: LoginUserPayload) => {
-      const token = await apiClient.POST('/api/auth/login', { body: payload }).then(unwrapResponse);
+      const { accessToken } = await apiClient
+        .POST('/api/auth/login', { body: payload })
+        .then(unwrapResponse);
       const user = await apiClient.GET('/api/auth/me').then(unwrapResponse);
       return {
-        token,
+        token: accessToken,
         user,
       };
     },
@@ -23,6 +25,7 @@ export const useLogin = () => {
       await Promise.all([setToken(token), setUser(user), setIsAuthenticated(true)]);
     },
     onError: (error) => {
+      console.error(error);
       appToast.error(error.message);
     },
   });
