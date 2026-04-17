@@ -4,12 +4,12 @@ import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
 // import { registerForPushNotificationsAsync } from '@/lib/notifications';
 // import Notifications from 'expo-notifications';
+import { toastConfig } from '@/components/ToastConfig';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-import { toastConfig } from '@/components/ToastConfig';
 import '../global.css';
 
 /**
@@ -32,7 +32,6 @@ import '../global.css';
  * full-screen spinner is shown so users never see a flash of the wrong screen.
  */
 export default function RootLayout() {
-  // const [pushToken, setPushToken] = useState<string | null>(null);
   const initializeAuth = useAuthStore((s) => s.initialize);
   const isLoading = useAuthStore((s) => s.isLoading);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -50,13 +49,13 @@ export default function RootLayout() {
     const inAuthGroup = (segments[0] as string) === '(auth)';
     if (!isAuthenticated && inAuthGroup) {
       // User is not logged in but tried to access a protected screen
-      router.replace('/(public)/login' as never);
+      router.replace('/login');
     } else if (!isAuthenticated && !inAuthGroup && segments[1] !== 'login') {
       // User is not logged in and not on the login page — send them to login
-      router.replace('/(public)/login' as never);
+      router.replace('/login');
     } else if (isAuthenticated && !inAuthGroup) {
       // User is logged in but landed on a public screen (e.g. after deep link)
-      router.replace('/(auth)/(tabs)/products' as never);
+      router.replace('/products');
     }
   }, [isAuthenticated, isLoading, segments]);
 

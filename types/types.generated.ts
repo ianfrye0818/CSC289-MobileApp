@@ -20,6 +20,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get User Info */
+        get: operations["AuthController_me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/login": {
         parameters: {
             query?: never;
@@ -37,17 +54,17 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/auth/me": {
+    "/api/auth/register": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get User Info */
-        get: operations["AuthController_me"];
+        get?: never;
         put?: never;
-        post?: never;
+        /** Register User */
+        post: operations["AuthController_register"];
         delete?: never;
         options?: never;
         head?: never;
@@ -273,7 +290,6 @@ export interface components {
         NotFoundException: Record<string, never>;
         ConflictException: Record<string, never>;
         InternalServerErrorException: Record<string, never>;
-        LoginUserCommandRequestDto: Record<string, never>;
         AuthUserDto: {
             /** @description The customer's primary key. */
             id: number;
@@ -281,6 +297,17 @@ export interface components {
             email: string;
             /** @description The customer's full name (`First_Name + Last_Name`). */
             name: string;
+        };
+        LoginUserCommandRequestDto: {
+            email: string;
+            password: string;
+        };
+        RegisterUserCommandRequestDto: {
+            email: string;
+            password: string;
+            firstName: string;
+            lastName: string;
+            phone?: string;
         };
         CustomerMemberDetailsResponseDto: {
             /** @enum {string} */
@@ -576,6 +603,74 @@ export interface operations {
             };
         };
     };
+    AuthController_me: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User Info */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthUserDto"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadRequestException"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedException"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictException"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InternalServerErrorException"];
+                };
+            };
+        };
+    };
     AuthController_login: {
         parameters: {
             query?: never;
@@ -656,22 +751,33 @@ export interface operations {
             };
         };
     };
-    AuthController_me: {
+    AuthController_register: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterUserCommandRequestDto"];
+            };
+        };
         responses: {
-            /** @description User Info */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthUserDto"];
+                    "application/json": string;
+                };
+            };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
                 };
             };
             400: {

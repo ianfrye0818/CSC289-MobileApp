@@ -13,17 +13,7 @@ import { PushNotificationService } from './PushNotification.service';
  */
 @Global()
 @Module({
-  providers: [
-    PrismaService,
-    AppLogger,
-    PushNotificationService,
-    // RedisService
-  ],
-  exports: [
-    PrismaService,
-    AppLogger,
-    PushNotificationService,
-    // RedisService
-  ],
+  providers: [PrismaService, AppLogger, PushNotificationService],
+  exports: [PrismaService, AppLogger, PushNotificationService],
 })
 export class GlobalServicesModule {}

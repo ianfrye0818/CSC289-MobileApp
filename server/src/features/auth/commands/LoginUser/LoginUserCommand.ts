@@ -1,5 +1,6 @@
 import { Command } from '@nestjs/cqrs';
-import { IsEmail } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
 /**
  * Request body DTO for the `POST /auth/login` endpoint.
@@ -7,8 +8,15 @@ import { IsEmail } from 'class-validator';
  * `ValidationPipe` before the command handler ever runs.
  */
 export class LoginUserCommandRequestDto {
+  @ApiProperty({ type: String, required: true })
   @IsEmail()
   email: string;
+
+  @ApiProperty({ type: String, required: true })
+  @IsString()
+  @MinLength(8)
+  @MaxLength(20)
+  password: string;
 }
 
 /**

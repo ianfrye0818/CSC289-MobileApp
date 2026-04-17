@@ -4,10 +4,9 @@ import { useProductDetails } from '@/features/products/hooks/useProductDetails';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function AuthProductDetailScreen() {
-  const { id } = useLocalSearchParams();
+export default function PublicProductDetailScreen() {
+  const { id } = useLocalSearchParams() as { id: string };
   const { data, isLoading, error } = useProductDetails(Number(id));
-
   return (
     <SafeAreaView
       className='flex-1 bg-background'
@@ -18,9 +17,7 @@ export default function AuthProductDetailScreen() {
         isLoading={isLoading}
         error={error}
       >
-        {(product) => {
-          return <ProductDetails product={product} />;
-        }}
+        {(product) => <ProductDetails product={product} />}
       </DataWrapper>
     </SafeAreaView>
   );
