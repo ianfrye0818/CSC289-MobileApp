@@ -12,11 +12,23 @@ import {
   LoginUserCommand,
   LoginUserCommandRequestDto,
 } from './commands/LoginUser/LoginUserCommand';
+import {
+  RegisterUserCommand,
+  RegisterUserCommandRequestDto,
+} from './commands/RegisterUser/RegisterUserCommand';
 import { AuthUserDto } from './types/AuthUserDto.type';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly commandBus: CommandBus) {}
+
+  @Get('me')
+  @ApiOperation({ summary: 'Get User Info' })
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: AuthUserDto, description: 'User Info' })
+  async me(@User() user: AuthUserDto): Promise<AuthUserDto> {
+    return user;
+  }
 
   @Post('login')
   @Public()
@@ -27,11 +39,11 @@ export class AuthController {
     return this.commandBus.execute(new LoginUserCommand(body));
   }
 
-  @Get('me')
-  @ApiOperation({ summary: 'Get User Info' })
+  @Post('register')
+  @ApiOperation({ summary: 'Register User' })
   @ApiBearerAuth()
-  @ApiOkResponse({ type: AuthUserDto, description: 'User Info' })
-  async me(@User() user: AuthUserDto): Promise<AuthUserDto> {
-    return user;
+  @ApiOkResponse({ type: String })
+  async register(@Body() body: RegisterUserCommandRequestDto): Promise<string> {
+    return this.commandBus.execute(new RegisterUserCommand(body));
   }
 }

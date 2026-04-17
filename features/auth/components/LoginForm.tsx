@@ -1,9 +1,81 @@
-import { Text } from '@/components/ui/text';
-import { View } from 'react-native';
+import { formResolver } from '@/components/form-components/form-resolver';
+import { InputField } from '@/components/form-components/InputField';
+import { Button } from '@/components/ui/button';
+import useAppForm from '@/hooks/useAppForm';
+import { Link, useRouter } from 'expo-router';
+import React from 'react';
+import { FormProvider } from 'react-hook-form';
+import { ActivityIndicator, Text, View } from 'react-native';
+import z from 'zod';
+import { useLogin } from '../hooks/useLogin';
+
+const loginSchema = z.object({
+  email: z.email('Invalid email address'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(20, 'Password must be less than 20 characters'),
+});
+type LoginSchema = z.infer<typeof loginSchema>;
+
 export default function LoginForm() {
+  const router = useRouter();
+  const { mutate: login, isPending, error } = useLogin();
+
+  const form = useAppForm<LoginSchema>({
+    formName: 'LoginForm',
+    resolver: formResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const isLoading = form.formState.isSubmitting || isPending;
+
+  const onSubmit = async (data: LoginSchema) => {
+    login(data, {
+      onSuccess: () => {
+        form.reset();
+        router.replace('/products');
+      },
+    });
+  };
   return (
-    <View>
-      <Text>Login Form</Text>
-    </View>
+    <FormProvider {...form}>
+      <View className='gap-4'>
+        <InputField<typeof loginSchema>
+          name='email'
+          type='email'
+          label='Email'
+          placeholder='john.doe@example.com'
+          required
+        />
+        <InputField<typeof loginSchema>
+          name='password'
+          type='password'
+          label='Password'
+          placeholder='********'
+          required
+        />
+        <Button
+          onPress={form.handleSubmit(onSubmit)}
+          disabled={isLoading}
+          size='lg'
+          className='w-full mt-auto'
+        >
+          {isLoading ? <ActivityIndicator /> : 'Login'}
+        </Button>
+        <View className='flex-row items-center gap-2'>
+          <Text className='text-sm text-gray-500'>Don't have an account?</Text>
+          <Link
+            href={'/register'}
+            className='text-sm text-primary'
+          >
+            Register
+          </Link>
+        </View>
+      </View>
+    </FormProvider>
   );
 }

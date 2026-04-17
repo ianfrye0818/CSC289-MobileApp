@@ -1,9 +1,10 @@
-import { Text } from '@/components/ui/text';
-import { View } from 'react-native';
+import LoginForm from '@/features/auth/components/LoginForm';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 export default function LoginScreen() {
   return (
-    <View>
-      <Text>Login</Text>
-    </View>
+    <SafeAreaView>
+      <LoginForm />
+    </SafeAreaView>
   );
 }

@@ -11,3 +11,5 @@ import { components } from '@/types/types.generated';
  * and this alias will pick up the new shape automatically.
  */
 export type AppUser = components['schemas']['AuthUserDto'];
+export type RegisterUserPayload = components['schemas']['RegisterUserCommandRequestDto'];
+export type LoginUserPayload = components['schemas']['LoginUserCommandRequestDto'];
