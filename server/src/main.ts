@@ -24,6 +24,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
+  app.use((req, res, next) => {
+    console.log('req.url', req.url);
+    console.log('req.headers', req.headers);
+    next();
+  });
   app.enableCors(useCorsOptions());
   app.setGlobalPrefix('api');
   app.useGlobalPipes(useValidationPipes());

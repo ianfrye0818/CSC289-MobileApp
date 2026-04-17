@@ -56,7 +56,8 @@ export default function RegisterForm() {
   const isLoading = form.formState.isSubmitting || isPending;
 
   const onSubmit = async (data: RegisterSchema) => {
-    register(data, {
+    const { confirmPassword, ...payload } = data;
+    register(payload, {
       onSuccess: () => {
         form.reset();
         router.replace('/products');

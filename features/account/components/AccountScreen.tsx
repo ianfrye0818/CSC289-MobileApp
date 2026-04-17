@@ -15,19 +15,19 @@ export default function AccountScreen() {
   const logout = useAuthStore((state) => state.logout);
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
-      <View className="flex-1 px-4 pt-6 gap-4">
-        <Text variant="h3">My Account</Text>
+    <SafeAreaView className='flex-1 bg-background'>
+      <View className='flex-1 px-4 pt-6 gap-4'>
+        <Text variant='h3'>My Account</Text>
 
         {isPending && (
-          <View className="flex-1 items-center justify-center">
+          <View className='flex-1 items-center justify-center'>
             <ActivityIndicator />
           </View>
         )}
 
         {isError && (
-          <View className="flex-1 items-center justify-center">
-            <Text className="text-destructive text-sm">
+          <View className='flex-1 items-center justify-center'>
+            <Text className='text-destructive text-sm'>
               Failed to load account details. Please try again.
             </Text>
           </View>
@@ -36,9 +36,25 @@ export default function AccountScreen() {
         {customer && <AccountCard customer={customer} />}
         {customer && <ContactCard customer={customer} />}
         {customer && <MemberCard customer={customer} />}
-        {customer && <Button variant="outline" onPress={() => router.push('/addresses')}> Addresses</Button>}
-        {customer && <Button className='mt-auto w-full' variant="outline" onPress={logout}> Logout</Button>}
-        
+        {customer && (
+          <Button
+            variant='outline'
+            onPress={() => router.push('/addresses')}
+          >
+            {' '}
+            Addresses
+          </Button>
+        )}
+        {customer && (
+          <Button
+            className='mt-auto w-full'
+            variant='outline'
+            onPress={logout}
+          >
+            {' '}
+            Logout
+          </Button>
+        )}
       </View>
     </SafeAreaView>
   );

@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './Auth.controller';
 import { LoginUserCommandHandler } from './commands/LoginUser/LoginUserCommandHandler';
+import { RegisterUserCommandHandler } from './commands/RegisterUser/RegisterUserCommandHandler';
 import { JwtStrategy } from './jwt.strategy';
 
 /**
@@ -26,7 +27,7 @@ import { JwtStrategy } from './jwt.strategy';
       signOptions: { expiresIn: '30d' },
     }),
   ],
-  providers: [LoginUserCommandHandler, JwtStrategy],
+  providers: [LoginUserCommandHandler, RegisterUserCommandHandler, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

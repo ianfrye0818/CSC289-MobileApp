@@ -43,8 +43,8 @@ export class AuthController {
   }
 
   @Post('register')
+  @Public()
   @ApiOperation({ summary: 'Register User' })
-  @ApiBearerAuth()
   @ApiOkResponse({ type: TokenResponse })
   async register(
     @Body() body: RegisterUserCommandRequestDto,

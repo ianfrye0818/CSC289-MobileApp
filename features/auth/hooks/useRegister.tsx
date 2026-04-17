@@ -23,6 +23,7 @@ export const useRegister = () => {
       await Promise.all([setUser(user), setIsAuthenticated(true)]);
     },
     onError: (error) => {
+      console.error(error);
       appToast.error(error.message);
     },
   });
