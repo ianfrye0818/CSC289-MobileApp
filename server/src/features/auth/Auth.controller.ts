@@ -1,5 +1,4 @@
 import { Public } from '@/decorators/Public.decorator';
-import { User } from '@/decorators/User.decorator';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -16,7 +15,6 @@ import {
   RegisterUserCommand,
   RegisterUserCommandRequestDto,
 } from './commands/RegisterUser/RegisterUserCommand';
-import { AuthUserDto } from './types/AuthUserDto.type';
 import { TokenResponse } from './types/TokenResponse';
 
 @Controller('auth')
@@ -26,9 +24,11 @@ export class AuthController {
   @Get('me')
   @ApiOperation({ summary: 'Get User Info' })
   @ApiBearerAuth()
-  @ApiOkResponse({ type: AuthUserDto, description: 'User Info' })
-  async me(@User() user: AuthUserDto): Promise<AuthUserDto> {
-    return user;
+  @ApiOkResponse({ type: TokenResponse })
+  async getUserInfo(
+    @Body() body: RegisterUserCommandRequestDto,
+  ): Promise<TokenResponse> {
+    return this.commandBus.execute(new RegisterUserCommand(body));
   }
 
   @Post('login')
