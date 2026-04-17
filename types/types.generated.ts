@@ -302,6 +302,9 @@ export interface components {
             email: string;
             password: string;
         };
+        TokenResponse: {
+            accessToken: string;
+        };
         RegisterUserCommandRequestDto: {
             email: string;
             password: string;
@@ -684,13 +687,12 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Token */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": components["schemas"]["TokenResponse"];
                 };
             };
             201: {
@@ -698,7 +700,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": components["schemas"]["TokenResponse"];
                 };
             };
             400: {
@@ -769,7 +771,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": components["schemas"]["TokenResponse"];
                 };
             };
             201: {
@@ -777,7 +779,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": components["schemas"]["TokenResponse"];
                 };
             };
             400: {

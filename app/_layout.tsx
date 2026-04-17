@@ -60,8 +60,8 @@ export default function RootLayout() {
     if (!isAuthenticated && inAuthGroup) {
       // User is not logged in but tried to access a protected screen
       router.replace('/login');
-    } else if (!isAuthenticated && !inAuthGroup && segments[1] !== 'login') {
-      // User is not logged in and not on the login page — send them to login
+    } else if (!isAuthenticated && !inAuthGroup && segments[1] !== 'login' && segments[1] !== 'register') {
+      // User is not logged in and not on a public auth screen — send them to login
       router.replace('/login');
     } else if (isAuthenticated && !inAuthGroup) {
       // User is logged in but landed on a public screen (e.g. after deep link)

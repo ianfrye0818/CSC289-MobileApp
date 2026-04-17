@@ -67,13 +67,24 @@ type Actions = {
 export const useAuthStore = create<AuthStore & Actions>((set) => ({
   ...initialState,
   initialize: async () => {
-    // TODO: remove fake user and restore SecureStore logic when auth is implemented
-    set({
-      token: 'fake-token',
-      user: { id: 9, email: 'dev@example.com', name: 'Dev User' },
-      isAuthenticated: true,
-      isLoading: false,
-    });
+    try {
+      const [token, userJson] = await Promise.all([
+        SecureStore.getItemAsync('token'),
+        SecureStore.getItemAsync('user'),
+      ]);
+      if (token && userJson) {
+        set({
+          token,
+          user: JSON.parse(userJson),
+          isAuthenticated: true,
+          isLoading: false,
+        });
+      } else {
+        set({ ...initialState, isLoading: false });
+      }
+    } catch {
+      set({ ...initialState, isLoading: false });
+    }
   },
   setToken: async (token: string) => {
     await SecureStore.setItemAsync('token', token);
@@ -86,6 +97,6 @@ export const useAuthStore = create<AuthStore & Actions>((set) => ({
   setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
   logout: async () => {
     await Promise.all([SecureStore.deleteItemAsync('token'), SecureStore.deleteItemAsync('user')]);
-    set({ ...initialState });
+    set({ ...initialState, isLoading: false });
   },
 }));

@@ -65,7 +65,8 @@ export default function RegisterForm() {
   };
   return (
     <FormProvider {...form}>
-      <View className='gap-4'>
+      <View className='gap-4 w-full'>
+        <Text className='text-2xl font-bold text-center'>Register</Text>
         <InputField<typeof registerSchema>
           name='firstName'
           label='First Name'
@@ -93,11 +94,13 @@ export default function RegisterForm() {
         <InputField<typeof registerSchema>
           name='password'
           label='Password'
+          type='password'
           placeholder='********'
           required
         />
         <InputField<typeof registerSchema>
           name='confirmPassword'
+          type='password'
           label='Confirm Password'
           placeholder='********'
           required
@@ -114,6 +117,7 @@ export default function RegisterForm() {
           <Text className='text-sm text-gray-500'>Already have an account?</Text>
           <Link
             href='/login'
+            replace
             className='text-sm text-primary'
           >
             Login

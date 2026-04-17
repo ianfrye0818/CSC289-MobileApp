@@ -17,6 +17,7 @@ import {
   RegisterUserCommandRequestDto,
 } from './commands/RegisterUser/RegisterUserCommand';
 import { AuthUserDto } from './types/AuthUserDto.type';
+import { TokenResponse } from './types/TokenResponse';
 
 @Controller('auth')
 export class AuthController {
@@ -34,16 +35,20 @@ export class AuthController {
   @Public()
   @ApiOperation({ summary: 'Login User' })
   @ApiBody({ type: LoginUserCommandRequestDto, required: true })
-  @ApiOkResponse({ type: String, description: 'Token' })
-  async login(@Body() body: LoginUserCommandRequestDto): Promise<string> {
+  @ApiOkResponse({ type: TokenResponse })
+  async login(
+    @Body() body: LoginUserCommandRequestDto,
+  ): Promise<TokenResponse> {
     return this.commandBus.execute(new LoginUserCommand(body));
   }
 
   @Post('register')
   @ApiOperation({ summary: 'Register User' })
   @ApiBearerAuth()
-  @ApiOkResponse({ type: String })
-  async register(@Body() body: RegisterUserCommandRequestDto): Promise<string> {
+  @ApiOkResponse({ type: TokenResponse })
+  async register(
+    @Body() body: RegisterUserCommandRequestDto,
+  ): Promise<TokenResponse> {
     return this.commandBus.execute(new RegisterUserCommand(body));
   }
 }

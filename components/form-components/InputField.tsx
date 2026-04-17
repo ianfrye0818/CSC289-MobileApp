@@ -84,6 +84,7 @@ export function InputField<T extends z.ZodType<FieldValues>>({
           <View className='relative justify-center'>
             <Input
               {...props}
+              secureTextEntry={isPassword && !showPassword}
               value={value}
               onPress={(event) => event.stopPropagation()}
               onChangeText={onChange}
