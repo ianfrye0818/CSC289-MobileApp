@@ -70,67 +70,67 @@ const InputFieldInner = React.forwardRef<TextInput, InputFieldProps<z.ZodType<Fi
     },
     ref,
   ) {
-  const [showPassword, setShowPassword] = useState(false);
-  const form = useFormContext<FieldValues>();
+    const [showPassword, setShowPassword] = useState(false);
+    const form = useFormContext<FieldValues>();
 
-  const isPassword = type === 'password';
+    const isPassword = type === 'password';
 
-  return (
-    <Controller
-      name={name}
-      control={form.control}
-      render={({ field: { onChange, onBlur, value }, fieldState }) => (
-        <View className='w-full gap-2'>
-          {label && (
-            <View className='flex-row items-center gap-2'>
-              <Label className='text-sm font-medium text-gray-700'>{label}</Label>
-              {required && <Text className='text-xs text-red-500'>*</Text>}
-            </View>
-          )}
-          <View className='relative justify-center'>
-            <Input
-              {...props}
-              ref={ref}
-              secureTextEntry={isPassword && !showPassword}
-              value={value}
-              onPress={(event) => event.stopPropagation()}
-              onChangeText={onChange}
-              onBlur={(e) => {
-                onBlur();
-                onBlurProp?.(e);
-              }}
-              onSubmitEditing={(e) => {
-                onSubmitEditingProp?.(e);
-              }}
-              keyboardType={
-                type === 'email'
-                  ? 'email-address'
-                  : type === 'number'
-                    ? 'numeric'
-                    : type === 'tel'
-                      ? 'phone-pad'
-                      : 'default'
-              }
-              autoCapitalize={type === 'email' ? 'none' : props.autoCapitalize}
-              autoCorrect={type === 'email' || isPassword ? false : props.autoCorrect}
-            />
-            {isPassword && (
-              <ShowPasswordButton
-                showPassword={showPassword}
-                onToggle={() => setShowPassword((prev) => !prev)}
+    return (
+      <Controller
+        name={name}
+        control={form.control}
+        render={({ field: { onChange, onBlur, value }, fieldState }) => (
+          <View className='w-full gap-2'>
+            {label && (
+              <View className='flex-row items-center gap-2'>
+                <Label className='text-sm font-medium text-gray-700'>{label}</Label>
+                {required && <Text className='text-xs text-red-500'>*</Text>}
+              </View>
+            )}
+            <View className='relative justify-center'>
+              <Input
+                {...props}
+                ref={ref}
+                secureTextEntry={isPassword && !showPassword}
+                value={value}
+                onPress={(event) => event.stopPropagation()}
+                onChangeText={onChange}
+                onBlur={(e) => {
+                  onBlur();
+                  onBlurProp?.(e);
+                }}
+                onSubmitEditing={(e) => {
+                  onSubmitEditingProp?.(e);
+                }}
+                keyboardType={
+                  type === 'email'
+                    ? 'email-address'
+                    : type === 'number'
+                      ? 'numeric'
+                      : type === 'tel'
+                        ? 'phone-pad'
+                        : 'default'
+                }
+                autoCapitalize={type === 'email' ? 'none' : props.autoCapitalize}
+                autoCorrect={type === 'email' || isPassword ? false : props.autoCorrect}
               />
-            )}
+              {isPassword && (
+                <ShowPasswordButton
+                  showPassword={showPassword}
+                  onToggle={() => setShowPassword((prev) => !prev)}
+                />
+              )}
 
-            {description && !fieldState.error && (
-              <Text className='text-[#6B7280] text-sm'>{description}</Text>
-            )}
-            <ErrorMessage message={fieldState.error?.message} />
+              {description && !fieldState.error && (
+                <Text className='text-[#6B7280] text-sm'>{description}</Text>
+              )}
+              <ErrorMessage message={fieldState.error?.message} />
+            </View>
           </View>
-        </View>
-      )}
-    />
-  );
-  }
+        )}
+      />
+    );
+  },
 );
 
 export const InputField = InputFieldInner as <T extends z.ZodType<FieldValues>>(
