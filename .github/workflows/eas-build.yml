@@ -1,0 +1,65 @@
+# EAS Build workflow — manual trigger only while credentials are still being set up.
+# Once `__PLACEHOLDER_*__` values in eas.json are replaced and EXPO_TOKEN is configured
+# as a repo secret, this can be extended with `push:` or `schedule:` triggers.
+#
+# Secrets required:
+#   - EXPO_TOKEN: access token from https://expo.dev/settings/access-tokens
+#   - EXPO_PUBLIC_API_URL (optional): if injecting env at build time instead of via eas.json
+#
+# See .claude/placeholder-tokens.md for the authoritative list of tokens this workflow
+# and the rest of the EAS setup reference.
+
+name: EAS Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform to build"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - ios
+          - android
+      profile:
+        description: "EAS build profile"
+        required: true
+        default: "preview"
+        type: choice
+        options:
+          - development
+          - preview
+          - production
+
+jobs:
+  build:
+    name: eas build (${{ github.event.inputs.platform }} / ${{ github.event.inputs.profile }})
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Set up EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build via EAS
+        run: |
+          eas build \
+            --platform ${{ github.event.inputs.platform }} \
+            --profile ${{ github.event.inputs.profile }} \
+            --non-interactive \
+            --no-wait
