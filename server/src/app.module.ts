@@ -4,6 +4,7 @@ import { AddressesModule } from './features/addresses/addresses.module';
 import { AuthModule } from './features/auth/Auth.module';
 import { CartModule } from './features/cart/Cart.module';
 import { CustomerModule } from './features/customers/Customer.module';
+import { NotificationsModule } from './features/notifications/Notifications.module';
 import { OrdersModule } from './features/orders/Orders.module';
 import { ProductsModule } from './features/products/Products.module';
 import { HealthController } from './health.controller';
@@ -40,6 +41,7 @@ import { GlobalServicesModule } from './services/GlobalServices.module';
     OrdersModule,
     ProductsModule,
     AddressesModule,
+    NotificationsModule,
     // WebhooksModule,
   ],
   controllers: [HealthController],
