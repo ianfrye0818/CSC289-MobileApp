@@ -1,7 +1,7 @@
 import { Eye, EyeOff } from 'lucide-react-native';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Controller, useFormContext, type FieldPath, type FieldValues } from 'react-hook-form';
-import { Pressable, View, type TextInputProps } from 'react-native';
+import { Pressable, TextInput, View, type TextInputProps } from 'react-native';
 import z from 'zod';
 import { ErrorMessage } from '../ErrorMessage';
 import { Input } from '../ui/input';
@@ -56,16 +56,22 @@ export interface InputFieldProps<T extends z.ZodType<FieldValues>> extends Omit<
  *   required
  * />
  */
-export function InputField<T extends z.ZodType<FieldValues>>({
-  name,
-  label,
-  description,
-  required,
-  type = 'text',
-  ...props
-}: InputFieldProps<T>) {
+const InputFieldInner = React.forwardRef<TextInput, InputFieldProps<z.ZodType<FieldValues>>>(
+  function InputFieldInner(
+    {
+      name,
+      label,
+      description,
+      required,
+      type = 'text',
+      onBlur: onBlurProp,
+      onSubmitEditing: onSubmitEditingProp,
+      ...props
+    },
+    ref,
+  ) {
   const [showPassword, setShowPassword] = useState(false);
-  const form = useFormContext<z.infer<T>>();
+  const form = useFormContext<FieldValues>();
 
   const isPassword = type === 'password';
 
@@ -84,11 +90,18 @@ export function InputField<T extends z.ZodType<FieldValues>>({
           <View className='relative justify-center'>
             <Input
               {...props}
+              ref={ref}
               secureTextEntry={isPassword && !showPassword}
               value={value}
               onPress={(event) => event.stopPropagation()}
               onChangeText={onChange}
-              onBlur={onBlur}
+              onBlur={(e) => {
+                onBlur();
+                onBlurProp?.(e);
+              }}
+              onSubmitEditing={(e) => {
+                onSubmitEditingProp?.(e);
+              }}
               keyboardType={
                 type === 'email'
                   ? 'email-address'
@@ -117,7 +130,14 @@ export function InputField<T extends z.ZodType<FieldValues>>({
       )}
     />
   );
-}
+  }
+);
+
+export const InputField = InputFieldInner as <T extends z.ZodType<FieldValues>>(
+  props: InputFieldProps<T> & React.RefAttributes<TextInput>,
+) => React.ReactElement;
+
+InputFieldInner.displayName = 'InputField';
 
 /**
  * Small icon button that toggles password visibility for a password input.

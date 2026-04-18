@@ -10,14 +10,24 @@ export default function EditAddressScreen() {
   const { data, isLoading, error } = useGetCurrentCustomerAddressById(Number(id));
 
   const router = useRouter();
-  
+
   return (
-    <SafeAreaView className='flex-1 bg-background p-4'>
-      <DataWrapper data={data} isLoading={isLoading} error={error}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      className='flex-1 bg-background p-4'
+    >
+      <DataWrapper
+        data={data}
+        isLoading={isLoading}
+        error={error}
+      >
         {(address) => (
-          <UpdateAddressForm address={address} onSuccess={() => router.back()} />
+          <UpdateAddressForm
+            address={address}
+            onSuccess={() => router.back()}
+          />
         )}
-        </DataWrapper>
+      </DataWrapper>
     </SafeAreaView>
-  )
+  );
 }
