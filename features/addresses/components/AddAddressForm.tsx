@@ -6,9 +6,9 @@ import { Combobox } from '@/components/ui/combobox';
 import { Text } from '@/components/ui/text';
 import useAppForm from '@/hooks/useAppForm';
 import { US_STATES } from '@/lib/usSates';
-import React from 'react';
+import React, { useRef } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, TextInput, View } from 'react-native';
 import { z } from 'zod';
 import { useAddAddressToCurrentCustomer } from '../hooks/useAddAddressToCurrentCustomer';
 
@@ -44,6 +44,11 @@ export default function AddAddressForm({ onSuccess }: Props) {
 
   const stateValue = useWatch({ control: form.control, name: 'state' });
 
+  const line1Ref = useRef<TextInput>(null);
+  const line2Ref = useRef<TextInput>(null);
+  const cityRef = useRef<TextInput>(null);
+  const zipRef = useRef<TextInput>(null);
+
   const isLoading = form.formState.isSubmitting || isPending;
 
   const onSubmit = async (data: FormValues) => {
@@ -67,27 +72,36 @@ export default function AddAddressForm({ onSuccess }: Props) {
 
         <View className='gap-4'>
           <InputField<typeof schema>
+            ref={line1Ref}
             name='line1'
             label='Street Address'
             placeholder='123 Main St'
             required
+            returnKeyType='next'
             autoCapitalize='words'
+            onSubmitEditing={() => line2Ref.current?.focus()}
           />
 
           <InputField<typeof schema>
+            ref={line2Ref}
             name='line2'
             label='Apt, Suite, Unit (optional)'
             placeholder='Apt 4B'
             required={false}
+            returnKeyType='next'
             autoCapitalize='words'
+            onSubmitEditing={() => cityRef.current?.focus()}
           />
 
           <InputField<typeof schema>
+            ref={cityRef}
             name='city'
             label='City'
             placeholder='Raleigh'
             required
+            returnKeyType='next'
             autoCapitalize='words'
+            onSubmitEditing={() => zipRef.current?.focus()}
           />
 
           <View className='flex-row gap-3'>
@@ -104,12 +118,14 @@ export default function AddAddressForm({ onSuccess }: Props) {
 
             <View className='flex-1'>
               <InputField<typeof schema>
+                ref={zipRef}
                 name='zipcode'
                 label='ZIP Code'
                 placeholder='27601'
                 required
                 type='number'
                 maxLength={10}
+                returnKeyType='done'
               />
             </View>
           </View>
