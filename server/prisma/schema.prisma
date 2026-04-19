@@ -20,16 +20,18 @@ model Customer {
   Customer_ID      Int                @id @default(autoincrement())
   First_Name       String             @db.VarChar(50)
   Last_Name        String             @db.VarChar(50)
-  Email            String             @unique @db.VarChar(254)
+  Email            String             @unique(map: "Email") @db.VarChar(254)
   Phone            String?            @db.VarChar(20)
   Membership_Level String             @db.VarChar(50)
-  Created_At       DateTime           @default(now())
-  Updated_At       DateTime?
-  Deleted_At       DateTime?
-  member           Member             @relation(fields: [Membership_Level], references: [Membership_Level])
+  Created_At       DateTime           @default(now()) @db.DateTime(6)
+  Updated_At       DateTime?          @db.DateTime(6)
+  Deleted_At       DateTime?          @db.DateTime(6)
+  member           Member             @relation(fields: [Membership_Level], references: [Membership_Level], onDelete: NoAction, onUpdate: NoAction, map: "FK_Customer_Member")
   addresses        Customer_Address[]
-  carts            Shopping_Cart[]
   orders           Order[]
+  carts            Shopping_Cart[]
+
+  @@index([Membership_Level], map: "FK_Customer_Member")
 }
 
 model Customer_Address {
@@ -41,12 +43,14 @@ model Customer_Address {
   Zip_Code        String     @db.VarChar(10)
   Country         String     @db.VarChar(50)
   Customer_ID     Int
-  Created_At      DateTime   @default(now())
-  Updated_At      DateTime?
-  Deleted_At      DateTime?
-  customer        Customer   @relation(fields: [Customer_ID], references: [Customer_ID])
-  ShippingAddress Shipping[] @relation("ShippingAddress")
+  Created_At      DateTime   @default(now()) @db.DateTime(6)
+  Updated_At      DateTime?  @db.DateTime(6)
+  Deleted_At      DateTime?  @db.DateTime(6)
+  customer        Customer   @relation(fields: [Customer_ID], references: [Customer_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Address_Customer")
   BillingAddress  Shipping[] @relation("BillingAddress")
+  ShippingAddress Shipping[] @relation("ShippingAddress")
+
+  @@index([Customer_ID], map: "FK_Address_Customer")
 }
 
 model Product_Category {
@@ -57,18 +61,21 @@ model Product_Category {
 }
 
 model Product {
-  Product_ID          Int              @id @default(autoincrement())
-  Product_Name        String           @db.VarChar(100)
-  Product_Description String?          @db.VarChar(1000)
+  Product_ID          Int                   @id @default(autoincrement())
+  Product_Name        String                @db.VarChar(100)
+  Product_Description String?               @db.VarChar(1000)
   Category_ID         Int
   Supplier_ID         Int
-  Image_URL           String?          @db.VarChar(255)
-  Deleted_At          DateTime?
-  category            Product_Category @relation(fields: [Category_ID], references: [Category_ID])
-  supplier            Supplier         @relation(fields: [Supplier_ID], references: [Supplier_ID])
-  inventory           Inventory[]
+  Image_URL           String?               @db.VarChar(255)
+  Deleted_At          DateTime?             @db.DateTime(6)
   discounts           Discount[]
+  inventory           Inventory[]
+  category            Product_Category      @relation(fields: [Category_ID], references: [Category_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Product_Category")
+  supplier            Supplier              @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Product_Supplier")
+  Purchase_Order_Item Purchase_Order_Item[]
 
+  @@index([Category_ID], map: "FK_Product_Category")
+  @@index([Supplier_ID], map: "FK_Product_Supplier")
   @@map("Product")
 }
 
@@ -77,43 +84,54 @@ model Inventory {
   Product_ID   Int
   Quantity     Int
   Unit_Price   Decimal              @db.Decimal(8, 2)
-  product      Product              @relation(fields: [Product_ID], references: [Product_ID])
-  cartItems    Shopping_Cart_Item[]
+  Deleted_At   DateTime?            @db.DateTime(6)
+  product      Product              @relation(fields: [Product_ID], references: [Product_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Inventory_Product")
   orderItems   Order_Item[]
+  cartItems    Shopping_Cart_Item[]
+
+  @@index([Product_ID], map: "FK_Inventory_Product")
 }
 
 model Shopping_Cart {
   Cart_ID     Int                  @id @default(autoincrement())
   Customer_ID Int
   Session_ID  String?              @db.VarChar(50)
-  Created_At  DateTime             @default(now())
-  Updated_At  DateTime?
-  customer    Customer             @relation(fields: [Customer_ID], references: [Customer_ID])
+  Created_At  DateTime             @default(now()) @db.DateTime(6)
+  Updated_At  DateTime?            @db.DateTime(6)
+  customer    Customer             @relation(fields: [Customer_ID], references: [Customer_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Cart_Customer")
   items       Shopping_Cart_Item[]
+
+  @@index([Customer_ID], map: "FK_Cart_Customer")
 }
 
 model Shopping_Cart_Item {
   Cart_ID      Int
   Inventory_ID Int
   Quantity     Int
-  Created_At   DateTime      @default(now())
-  Updated_At   DateTime?
-  cart         Shopping_Cart @relation(fields: [Cart_ID], references: [Cart_ID])
-  inventory    Inventory     @relation(fields: [Inventory_ID], references: [Inventory_ID])
+  Created_At   DateTime      @default(now()) @db.DateTime(6)
+  Updated_At   DateTime?     @db.DateTime(6)
+  cart         Shopping_Cart @relation(fields: [Cart_ID], references: [Cart_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_CartItem_Cart")
+  inventory    Inventory     @relation(fields: [Inventory_ID], references: [Inventory_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_CartItem_Inventory")
 
   @@id([Cart_ID, Inventory_ID])
+  @@index([Inventory_ID], map: "FK_CartItem_Inventory")
 }
 
 model Order {
-  Order_ID    Int          @id @default(autoincrement())
-  Customer_ID Int
-  Order_Date  DateTime     @default(now())
-  customer    Customer     @relation(fields: [Customer_ID], references: [Customer_ID])
-  items       Order_Item[]
-  payment     Payment?
-  shipping    Shipping?
-  discounts   Discount[]
+  Order_ID           Int             @id @default(autoincrement())
+  Customer_ID        Int
+  Order_Date         DateTime        @default(now()) @db.DateTime(6)
+  Order_Status       String          @default("Pending") @db.VarChar(50)
+  Fulfillment_Status String          @default("Pending") @db.VarChar(50)
+  Fulfilled_At       DateTime?       @db.DateTime(0)
+  discounts          Discount[]
+  customer           Customer        @relation(fields: [Customer_ID], references: [Customer_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Order_Customer")
+  Order_History      Order_History[]
+  items              Order_Item[]
+  payment            Payment[]
+  shipping           Shipping[]
 
+  @@index([Customer_ID], map: "FK_Order_Customer")
   @@map("Order")
 }
 
@@ -123,49 +141,62 @@ model Order_Item {
   Quantity     Int
   Amount       Decimal   @db.Decimal(8, 2)
   Tax          Decimal   @db.Decimal(8, 2)
-  Created_At   DateTime  @default(now())
-  Updated_At   DateTime?
-  order        Order     @relation(fields: [Order_ID], references: [Order_ID])
-  inventory    Inventory @relation(fields: [Inventory_ID], references: [Inventory_ID])
+  Created_At   DateTime  @default(now()) @db.DateTime(6)
+  Updated_At   DateTime? @db.DateTime(6)
+  inventory    Inventory @relation(fields: [Inventory_ID], references: [Inventory_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_OrderItem_Inventory")
+  order        Order     @relation(fields: [Order_ID], references: [Order_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_OrderItem_Order")
 
   @@id([Order_ID, Inventory_ID])
+  @@index([Inventory_ID], map: "FK_OrderItem_Inventory")
 }
 
 model Payment {
-  Payment_ID     Int       @id @default(autoincrement())
-  Order_ID       Int       @unique
-  Method         String    @db.VarChar(50)
-  Payment_Status String    @db.VarChar(50)
-  Created_At     DateTime  @default(now())
-  Updated_At     DateTime?
-  order          Order     @relation(fields: [Order_ID], references: [Order_ID])
+  Payment_ID           Int       @id @default(autoincrement())
+  Order_ID             Int
+  Method               String    @db.VarChar(50)
+  Payment_Status       String?   @db.VarChar(50)
+  Created_At           DateTime  @default(now()) @db.DateTime(6)
+  Updated_At           DateTime? @db.DateTime(6)
+  Payment_Confirmed_At DateTime? @db.DateTime(0)
+  order                Order     @relation(fields: [Order_ID], references: [Order_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Payment_Order")
+
+  @@index([Order_ID], map: "FK_Payment_Order")
 }
 
 model Supplier {
-  Supplier_ID   Int       @id @default(autoincrement())
-  Supplier_Name String    @db.VarChar(100)
-  Contact_Name  String    @db.VarChar(100)
-  Contact_Email String    @db.VarChar(254)
-  Contact_Phone String    @db.VarChar(20)
-  products      Product[]
+  Supplier_ID    Int              @id @default(autoincrement())
+  Supplier_Name  String           @db.VarChar(100)
+  Contact_Name   String           @db.VarChar(100)
+  Contact_Email  String           @db.VarChar(254)
+  Contact_Phone  String           @db.VarChar(20)
+  products       Product[]
+  Purchase_Order Purchase_Order[]
 }
 
 model Shipping {
-  Shipping_ID         Int              @id @default(autoincrement())
-  Order_ID            Int              @unique
-  Cost                Decimal          @db.Decimal(8, 2)
-  Shipped_On          DateTime?
-  Expected_By         DateTime?
-  Ship_Status         String           @db.VarChar(15)
-  Carrier             String           @db.VarChar(100)
-  Tracking_Number     String           @db.VarChar(50)
-  Created_At          DateTime         @default(now())
-  Updated_At          DateTime?
+  Shipping_ID         Int                @id @default(autoincrement())
+  Order_ID            Int
+  Cost                Decimal            @db.Decimal(8, 2)
+  Shipped_On          DateTime?          @db.DateTime(6)
+  Expected_By         DateTime?          @db.DateTime(6)
+  Ship_Status         String             @db.VarChar(15)
+  Carrier             String             @db.VarChar(100)
+  Tracking_Number     String             @db.VarChar(50)
+  Created_At          DateTime           @default(now()) @db.DateTime(6)
+  Updated_At          DateTime?          @db.DateTime(6)
   Shipping_Address_ID Int
   Billing_Address_ID  Int
-  order               Order            @relation(fields: [Order_ID], references: [Order_ID])
-  shippingAddress     Customer_Address @relation("ShippingAddress", fields: [Shipping_Address_ID], references: [Address_ID], onDelete: NoAction, onUpdate: NoAction)
-  billingAddress      Customer_Address @relation("BillingAddress", fields: [Billing_Address_ID], references: [Address_ID], onDelete: NoAction, onUpdate: NoAction)
+  Status_Updated_At   DateTime?          @db.DateTime(0)
+  Shipment_Notes      String?            @db.VarChar(255)
+  Return_Reason       String?            @db.VarChar(255)
+  billingAddress      Customer_Address   @relation("BillingAddress", fields: [Billing_Address_ID], references: [Address_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Billing_Address")
+  shippingAddress     Customer_Address   @relation("ShippingAddress", fields: [Shipping_Address_ID], references: [Address_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Shipping_Address")
+  order               Order              @relation(fields: [Order_ID], references: [Order_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Shipping_Order")
+  Shipping_History    Shipping_History[]
+
+  @@index([Billing_Address_ID], map: "FK_Billing_Address")
+  @@index([Shipping_Address_ID], map: "FK_Shipping_Address")
+  @@index([Order_ID], map: "FK_Shipping_Order")
 }
 
 model Discount {
@@ -176,8 +207,63 @@ model Discount {
   End_Date      DateTime @db.Date
   Product_ID    Int?
   Order_ID      Int?
-  product       Product? @relation(fields: [Product_ID], references: [Product_ID])
-  order         Order?   @relation(fields: [Order_ID], references: [Order_ID])
+  order         Order?   @relation(fields: [Order_ID], references: [Order_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Discount_Order")
+  product       Product? @relation(fields: [Product_ID], references: [Product_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Discount_Product")
 
+  @@index([Order_ID], map: "FK_Discount_Order")
+  @@index([Product_ID], map: "FK_Discount_Product")
   @@map("Discount")
+}
+
+model Order_History {
+  Order_History_ID       Int      @id @default(autoincrement())
+  Order_ID               Int
+  Old_Order_Status       String?  @db.VarChar(50)
+  New_Order_Status       String   @db.VarChar(50)
+  Old_Fulfillment_Status String?  @db.VarChar(50)
+  New_Fulfillment_Status String?  @db.VarChar(50)
+  Changed_At             DateTime @default(now()) @db.DateTime(0)
+  Notes                  String?  @db.VarChar(255)
+  Order                  Order    @relation(fields: [Order_ID], references: [Order_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_OrderHistory_Order")
+
+  @@index([Order_ID], map: "FK_OrderHistory_Order")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Purchase_Order {
+  Purchase_Order_ID     Int                   @id @default(autoincrement())
+  Supplier_ID           Int
+  Order_Date            DateTime              @default(now()) @db.DateTime(6)
+  Purchase_Order_Status String                @db.VarChar(15)
+  Supplier              Supplier              @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_PO_Supplier")
+  Purchase_Order_Item   Purchase_Order_Item[]
+
+  @@index([Supplier_ID], map: "FK_PO_Supplier")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Purchase_Order_Item {
+  Purchase_Order_Item_ID Int            @id @default(autoincrement())
+  Purchase_Order_ID      Int
+  Product_ID             Int
+  Quantity               Int
+  Created_At             DateTime       @default(now()) @db.DateTime(6)
+  Updated_At             DateTime?      @db.DateTime(6)
+  Purchase_Order         Purchase_Order @relation(fields: [Purchase_Order_ID], references: [Purchase_Order_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_POI_PO")
+  Product                Product        @relation(fields: [Product_ID], references: [Product_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_POI_Product")
+
+  @@index([Purchase_Order_ID], map: "FK_POI_PO")
+  @@index([Product_ID], map: "FK_POI_Product")
+}
+
+model Shipping_History {
+  Shipping_History_ID Int      @id @default(autoincrement())
+  Shipping_ID         Int
+  Old_Status          String?  @db.VarChar(15)
+  New_Status          String   @db.VarChar(15)
+  Changed_At          DateTime @default(now()) @db.DateTime(0)
+  Notes               String?  @db.VarChar(255)
+  Shipping            Shipping @relation(fields: [Shipping_ID], references: [Shipping_ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_ShippingHistory_Shipping")
+
+  @@index([Shipping_ID], map: "FK_ShippingHistory_Shipping")
 }
