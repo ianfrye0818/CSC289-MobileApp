@@ -16,6 +16,7 @@
 3. Enter android package name
 4. Create a new android app in Firebase Console and put in package name
 5. Download the google.services.json file and place it in the android folder
+   `android/app/google-services.json`
 6. In `app.json` add the following:
    ```json
    "android": {
@@ -30,3 +31,19 @@
 10. Scroll to FMC V1 Service Account Key -> Add a service account key
 11. Upload your generated private key file
 12. In terminal run `npx expo run:android --device` and select the device you want to test on
+
+**NOTE** After building - you may get an error that you need to add firebase or google services to
+your app - even with the `google-services.json` file in the android folder If this is the case,
+follow the steps below:
+
+1. Update `android/build.gradle` and add this in the `buildscript.dependencies` block:
+
+```groovy
+classpath('com.google.gms:google-services:4.4.2')
+```
+
+2. Add this to the `android/app/build.gradle` at the very bottom:
+
+```groovy
+apply plugin: 'com.google.gms.google-services'
+```
