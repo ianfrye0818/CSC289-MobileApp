@@ -1,5 +1,10 @@
 import { Stack } from "expo-router";
+
 export default function AuthLayout() {
+  // Push notification registration moved to the root layout (via the
+  // <NotificationRegistrar /> component) so the token dance starts before
+  // auth completes; the mutation inside `useNotificationSetup` auth-gates
+  // itself, so calling here too would just double-register.
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
@@ -47,7 +52,6 @@ export default function AuthLayout() {
           headerBackTitle: "Back",
         }}
       />
-      
     </Stack>
   );
 }

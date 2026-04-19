@@ -69,34 +69,35 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
        * — D3adMan, ticket #15
        */
       orderDate: order.Order_Date,
+      // Schema declares shipping/payment as arrays; take [0] for current single-record DTO assumption.
       billingAddress: {
-        addressId: order.shipping?.billingAddress.Address_ID ?? null,
-        line1: order.shipping?.billingAddress.Address_Line1 ?? null,
-        line2: order.shipping?.billingAddress.Address_Line2 ?? null,
-        city: order.shipping?.billingAddress.City ?? null,
-        state: order.shipping?.billingAddress.State ?? null,
-        zipCode: order.shipping?.billingAddress.Zip_Code ?? null,
-        country: order.shipping?.billingAddress.Country ?? null,
+        addressId: order.shipping?.[0]?.billingAddress.Address_ID ?? null,
+        line1: order.shipping?.[0]?.billingAddress.Address_Line1 ?? null,
+        line2: order.shipping?.[0]?.billingAddress.Address_Line2 ?? null,
+        city: order.shipping?.[0]?.billingAddress.City ?? null,
+        state: order.shipping?.[0]?.billingAddress.State ?? null,
+        zipCode: order.shipping?.[0]?.billingAddress.Zip_Code ?? null,
+        country: order.shipping?.[0]?.billingAddress.Country ?? null,
       },
       shippingAddress: {
-        addressId: order.shipping?.shippingAddress.Address_ID ?? null,
-        line1: order.shipping?.shippingAddress.Address_Line1 ?? null,
-        line2: order.shipping?.shippingAddress.Address_Line2 ?? null,
-        city: order.shipping?.shippingAddress.City ?? null,
-        state: order.shipping?.shippingAddress.State ?? null,
-        zipCode: order.shipping?.shippingAddress.Zip_Code ?? null,
-        country: order.shipping?.shippingAddress.Country ?? null,
+        addressId: order.shipping?.[0]?.shippingAddress.Address_ID ?? null,
+        line1: order.shipping?.[0]?.shippingAddress.Address_Line1 ?? null,
+        line2: order.shipping?.[0]?.shippingAddress.Address_Line2 ?? null,
+        city: order.shipping?.[0]?.shippingAddress.City ?? null,
+        state: order.shipping?.[0]?.shippingAddress.State ?? null,
+        zipCode: order.shipping?.[0]?.shippingAddress.Zip_Code ?? null,
+        country: order.shipping?.[0]?.shippingAddress.Country ?? null,
       },
       shipping: order.shipping
         ? {
-            id: order.shipping?.Shipping_ID ?? null,
-            cost: order.shipping?.Cost.toNumber() ?? 0,
+            id: order.shipping?.[0]?.Shipping_ID ?? null,
+            cost: order.shipping?.[0]?.Cost.toNumber() ?? 0,
             /* Same Date-to-string fix for shipping dates */
-            shippedOn: order.shipping?.Shipped_On ?? null,
-            expectedBy: order.shipping?.Expected_By ?? null,
-            status: order.shipping?.Ship_Status as ShippingStatus,
-            carrier: order.shipping?.Carrier ?? null,
-            trackingNumber: order.shipping?.Tracking_Number ?? null,
+            shippedOn: order.shipping?.[0]?.Shipped_On ?? null,
+            expectedBy: order.shipping?.[0]?.Expected_By ?? null,
+            status: order.shipping?.[0]?.Ship_Status as ShippingStatus,
+            carrier: order.shipping?.[0]?.Carrier ?? null,
+            trackingNumber: order.shipping?.[0]?.Tracking_Number ?? null,
           }
         : null,
       customer: {
@@ -117,9 +118,9 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
         tax: item.Tax?.toNumber() ?? null,
       })),
       payment: {
-        id: order.payment?.Payment_ID ?? 0,
-        method: order.payment?.Method ?? '',
-        status: order.payment?.Payment_Status as PaymentStatus,
+        id: order.payment?.[0]?.Payment_ID ?? 0,
+        method: order.payment?.[0]?.Method ?? '',
+        status: order.payment?.[0]?.Payment_Status as PaymentStatus,
       },
       totalAmount: calculateOrderAmount(order.items),
     };

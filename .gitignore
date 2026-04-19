@@ -46,3 +46,9 @@ app-example
 /android
 .env
 .claude/
+
+# Native signing — never commit
+credentials.json
+*.keystore
+google-services.json
+GoogleService-Info.plist

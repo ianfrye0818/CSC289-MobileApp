@@ -1,9 +1,8 @@
 import { useAuthStore } from '@/features/auth/store';
+import { useNotificationSetup } from '@/features/notifications/hooks/useNotificationSetup';
 import { queryClient } from '@/lib/queryClient';
 import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
-// import { registerForPushNotificationsAsync } from '@/lib/notifications';
-// import Notifications from 'expo-notifications';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
@@ -11,6 +10,17 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '@/components/ToastConfig';
 import '../global.css';
+
+/**
+ * Thin wrapper that calls `useNotificationSetup` inside the React Query
+ * provider so `useRegisterPushToken` (a `useMutation` call) has a client to
+ * attach to. Rendering `null` keeps the hook's effects but adds nothing to
+ * the tree.
+ */
+function NotificationRegistrar() {
+  useNotificationSetup();
+  return null;
+}
 
 /**
  * Root layout — the single component that wraps every screen in the app.
@@ -32,7 +42,6 @@ import '../global.css';
  * full-screen spinner is shown so users never see a flash of the wrong screen.
  */
 export default function RootLayout() {
-  // const [pushToken, setPushToken] = useState<string | null>(null);
   const initializeAuth = useAuthStore((s) => s.initialize);
   const isLoading = useAuthStore((s) => s.isLoading);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -74,6 +83,8 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
+        {/* Fires push-token registration early; self-gates on auth. */}
+        <NotificationRegistrar />
         <Slot />
         <PortalHost />
         <Toast config={toastConfig} />

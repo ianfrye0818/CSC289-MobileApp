@@ -10,15 +10,44 @@
       "android": {
         "buildType": "apk"
       },
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "__PLACEHOLDER_DEV_API_URL__"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "__PLACEHOLDER_PREVIEW_API_URL__"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "__PLACEHOLDER_PROD_API_URL__"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "__PLACEHOLDER_APPLE_ID_EMAIL__",
+        "ascAppId": "__PLACEHOLDER_ASC_APP_ID__",
+        "appleTeamId": "__PLACEHOLDER_APPLE_TEAM_ID__"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./__PLACEHOLDER_GOOGLE_SERVICE_ACCOUNT_PATH__.json",
+        "track": "internal",
+        "releaseStatus": "draft"
+      }
+    }
   }
 }

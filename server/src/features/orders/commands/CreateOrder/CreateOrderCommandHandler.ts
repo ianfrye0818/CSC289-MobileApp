@@ -1,4 +1,5 @@
 import { TAX_RATE } from '@/constants';
+import { ExpoPushService } from '@/features/notifications/services/ExpoPushService';
 import { AppLogger } from '@/services/AppLogger.service';
 import { PrismaService, TX } from '@/services/Prisma.service';
 import { CreatedMessageResponse } from '@/types/MessageReponse.type';
@@ -36,6 +37,9 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
   private readonly logger = new AppLogger(CreateOrderCommandHandler.name);
   constructor(
     private readonly prisma: PrismaService,
+    // Direct-send path for order.created push notification (ticket 53).
+    // Ian's webhook emitter below is intentionally left commented-out.
+    private readonly expoPush: ExpoPushService,
     // private readonly commandBus: CommandBus,
   ) {}
 
@@ -108,6 +112,14 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
 
       return createdOrder;
     });
+
+    // Fire-and-forget: send an order.created push to the customer. Not awaited
+    // and errors are swallowed inside ExpoPushService so notification failure
+    // never blocks the order-creation response. Direct Expo path (ticket 53)
+    // rather than the commented `emitWebhook` call above — that's Ian's work.
+    this.expoPush
+      .notifyOrderCreated(command.customerId, transaction.Order_ID)
+      .catch((e) => this.logger.error('Order notification failed:', e));
 
     return new CreatedMessageResponse(
       'Order created successfully',

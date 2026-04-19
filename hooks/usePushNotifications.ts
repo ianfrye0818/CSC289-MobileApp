@@ -10,16 +10,20 @@ export interface PushNotificationState {
   expoPushToken?: Notifications.ExpoPushToken;
 }
 
-export const usePushNotifications = (): PushNotificationState => {
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-      shouldShowList: true,
-      shouldShowBanner: true,
-    }),
-  });
+// Module-scope: `setNotificationHandler` is a global config call, not per-hook state.
+// Invoking it inside the hook body re-registered the handler on every render; doing
+// it once at module load is what `expo-notifications` expects and matches Ian's
+// `upstream/ianfrye/playground` direction.
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowList: true,
+    shouldShowBanner: true,
+  }),
+});
 
+export const usePushNotifications = (): PushNotificationState => {
   const [notification, setNotification] = useState<Notifications.Notification | undefined>(
     undefined,
   );
