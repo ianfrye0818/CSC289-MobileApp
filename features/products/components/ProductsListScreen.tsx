@@ -7,7 +7,10 @@ import { ProductGrid } from './ProductGrid';
 export default function ProductsListScreen() {
   const { data, isLoading, error, refetch, isRefetching } = useProducts();
   return (
-    <SafeAreaView className='flex-1 bg-background'>
+    <SafeAreaView
+      className='flex-1 bg-background'
+      edges={['left', 'right', 'bottom']}
+    >
       <DataWrapper
         data={data}
         isLoading={isLoading}

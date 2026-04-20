@@ -1,5 +1,7 @@
 import { Stack } from "expo-router";
 
+import { ElevateAppHeader } from "@/components/elevate-app-header";
+
 export default function AuthLayout() {
   // Push notification registration moved to the root layout (via the
   // <NotificationRegistrar /> component) so the token dance starts before
@@ -7,7 +9,13 @@ export default function AuthLayout() {
   // itself, so calling here too would just double-register.
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
+      <Stack.Screen
+        name="(tabs)"
+        options={{
+          headerShown: true,
+          header: () => <ElevateAppHeader />,
+        }}
+      />
       <Stack.Screen
         name="products/[id]"
         options={{

@@ -9,8 +9,10 @@ export default function NoCartItemsAvailable() {
         size={48}
         className='text-muted-foreground'
       />
-      <Text className='text-muted-foreground text-center text-base'>No items in your cart</Text>
-      <Text className='text-muted-foreground text-center text-sm'>Your selected items will appear here.</Text>
+      <Text className='text-foreground text-center text-lg font-semibold'>Your cart is empty</Text>
+      <Text className='text-muted-foreground text-center text-base'>
+        Add products from the Store to get started.
+      </Text>
     </View>
 );
 }

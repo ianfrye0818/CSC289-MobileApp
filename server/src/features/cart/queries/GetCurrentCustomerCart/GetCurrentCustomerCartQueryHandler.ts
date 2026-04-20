@@ -1,5 +1,4 @@
 import { PrismaService } from '@/services/Prisma.service';
-import { NotFoundException } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { ShoppingCartResponseDto } from '../../dtos/ShoppingCartResponse.dto';
 import { GetCurrentCustomerCartQuery } from './GetCurrentCustomerCartQuery';
@@ -15,7 +14,8 @@ import { GetCurrentCustomerCartQuery } from './GetCurrentCustomerCartQuery';
  * includes calculated `lineTotal` (unit price × quantity), `subtotal`, and
  * `totalItems` so the mobile app doesn't need to recalculate these.
  *
- * Throws `NotFoundException` if the customer has no active cart.
+ * If the customer has no cart row yet, returns an empty payload with `cartId: null`
+ * (checkout/add-item flows create the cart on demand).
  */
 @QueryHandler(GetCurrentCustomerCartQuery)
 export class GetCurrentCustomerCartQueryHandler implements IQueryHandler<GetCurrentCustomerCartQuery> {
@@ -51,10 +51,15 @@ export class GetCurrentCustomerCartQueryHandler implements IQueryHandler<GetCurr
       },
     });
 
-    if (!cart)
-      throw new NotFoundException(
-        `No carts found for customer ${query.customerId}`,
-      );
+    if (!cart) {
+      return {
+        cartId: null,
+        customerId: query.customerId,
+        items: [],
+        subtotal: 0,
+        totalItems: 0,
+      };
+    }
 
     return {
       cartId: cart.Cart_ID,

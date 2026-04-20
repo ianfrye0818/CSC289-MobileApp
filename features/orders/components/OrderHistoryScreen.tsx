@@ -1,11 +1,11 @@
-import { DataWrapper } from "@/components/DataWrapper";
-import { Text } from "@/components/ui/text";
-import { useOrders } from "@/features/orders/hooks/useOrders";
-import { FlatList, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { OrderListItem } from "../types";
-import NoOrdersAvailable from "./NoOrdersAvailable";
-import { OrderHistoryCard } from "./OrderHistoryCard";
+import { DataWrapper } from '@/components/DataWrapper';
+import { Text } from '@/components/ui/text';
+import { useOrders } from '@/features/orders/hooks/useOrders';
+import { FlatList, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { OrderListItem } from '../types';
+import NoOrdersAvailable from './NoOrdersAvailable';
+import { OrderHistoryCard } from './OrderHistoryCard';
 
 /**
  * Order History screen (ticket #14).
@@ -16,7 +16,10 @@ export default function OrderHistoryScreen() {
   const { data, isLoading, error, refetch, isRefetching } = useOrders();
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView
+      className='flex-1 bg-background'
+      edges={['left', 'right', 'bottom']}
+    >
       {/* DataWrapper handles loading spinner, error display, and empty state.
           Render function receives typed data only after all checks pass. */}
       <DataWrapper
@@ -36,10 +39,8 @@ export default function OrderHistoryScreen() {
             onRefresh={refetch}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={
-              <View className="mb-1">
-                <Text className="text-2xl font-bold text-foreground">
-                  Order History
-                </Text>
+              <View className='mb-1'>
+                <Text className='text-2xl font-bold text-foreground'>Order History</Text>
               </View>
             }
             /* Fallback if DataWrapper passes data but it filters to empty */

@@ -352,7 +352,7 @@ export interface components {
             product: components["schemas"]["CartItemProductDto"];
         };
         ShoppingCartResponseDto: {
-            cartId: number;
+            cartId: number | null;
             customerId: number;
             items: components["schemas"]["CartItemDto"][];
             subtotal: number;
