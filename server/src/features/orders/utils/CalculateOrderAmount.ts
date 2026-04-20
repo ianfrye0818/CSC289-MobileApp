@@ -1,4 +1,4 @@
-import { Order_Item } from '@generated/prisma/client';
+import { Order_Item, } from '@generated/prisma/client';
 
 /**
  * Calculates the grand total for a list of order items.
@@ -11,10 +11,11 @@ import { Order_Item } from '@generated/prisma/client';
  * @param items - The `Order_Item` records from a Prisma query.
  * @returns The total order amount as a plain JavaScript `number`.
  */
-export const calculateOrderAmount = (items: Order_Item[]): number => {
+export const calculateOrderAmount = (items: Order_Item[],): number => {
   return items.reduce(
     (acc, item) =>
-      acc + item.Amount.toNumber() * item.Quantity * (1 + item.Tax.toNumber()),
+      //acc + item.Amount.toNumber() * item.Quantity * (1 + item.Tax.toNumber()),
+      acc + (item.Amount.toNumber() * item.Quantity) * 1 + item.Tax.toNumber(),
     0,
   );
 };

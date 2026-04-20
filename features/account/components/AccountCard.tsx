@@ -1,4 +1,5 @@
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { IconSymbol } from '@/components/ui/icon-symbol';
 import { type CustomerDetails } from '@/features/customer/types';
 
 interface AccountCardProps {
@@ -6,13 +7,12 @@ interface AccountCardProps {
 }
 
 export function AccountCard({ customer }: AccountCardProps) {
-  const { firstName, lastName, email } = customer;
+  const { firstName, lastName, } = customer;
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>{firstName} {lastName}</CardTitle>
-        <CardDescription>{email}</CardDescription>
+        <CardTitle> <IconSymbol size = {20} name='person.fill'/>{firstName} {lastName} </CardTitle>
       </CardHeader>
     </Card>
   );
