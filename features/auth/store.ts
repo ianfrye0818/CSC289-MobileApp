@@ -1,3 +1,4 @@
+import { queryClient } from '@/lib/queryClient';
 import SecureStore from 'expo-secure-store';
 import { create } from 'zustand';
 import { AppUser } from './types';
@@ -86,6 +87,7 @@ export const useAuthStore = create<AuthStore & Actions>((set) => ({
   setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
   logout: async () => {
     await Promise.all([SecureStore.deleteItemAsync('token'), SecureStore.deleteItemAsync('user')]);
-    set({ ...initialState });
+    queryClient.clear();
+    set({ ...initialState, isLoading: false});
   },
 }));

@@ -1,15 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useGetCustomer } from '@/features/account/hooks/useGetCustomer';
+import { useAuthStore } from '@/features/auth/store';
 import { useRouter } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AccountCard } from './AccountCard';
+import { ContactCard } from './ContactCard';
 import { MemberCard } from './MemberCard';
 
 export default function AccountScreen() {
   const { data: customer, isPending, isError } = useGetCustomer();
   const router = useRouter();
+  const logout = useAuthStore((state) => state.logout);
 
   return (
     <SafeAreaView className="flex-1 bg-background">
@@ -31,8 +34,10 @@ export default function AccountScreen() {
         )}
 
         {customer && <AccountCard customer={customer} />}
+        {customer && <ContactCard customer={customer} />}
         {customer && <MemberCard customer={customer} />}
         {customer && <Button variant="outline" onPress={() => router.push('/addresses')}> Addresses</Button>}
+        {customer && <Button className='mt-auto w-full' variant="outline" onPress={logout}> Logout</Button>}
         
       </View>
     </SafeAreaView>
