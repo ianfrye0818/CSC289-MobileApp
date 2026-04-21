@@ -111,8 +111,10 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
         amount: discount.Amount.toNumber(),
       })),
       items: order.items.map((item) => ({
-        id: item.Inventory_ID,
-        name: item.inventory.product.Product_Name,
+        id: item.Inventory_ID ?? 0,
+        name:
+          item.inventory?.product?.Product_Name ??
+          'Product details unavailable',
         quantity: item.Quantity,
         price: item.Amount.toNumber(),
         tax: item.Tax?.toNumber() ?? null,
