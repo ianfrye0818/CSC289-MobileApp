@@ -12,7 +12,7 @@ export function MemberCard({ customer }: MemberCardProps) {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Membership Level: {memberDetails.memberShipLevel} </CardTitle>
-        <CardDescription>Discount Rate: {memberDetails.discountRate}</CardDescription>
+        <CardDescription>Discount Rate: {memberDetails.discountRate}%</CardDescription>
       </CardHeader>  
     </Card>
   );

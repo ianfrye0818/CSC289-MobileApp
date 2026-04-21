@@ -6,7 +6,6 @@ import { useRouter } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AccountCard } from './AccountCard';
-import { ContactCard } from './ContactCard';
 import { MemberCard } from './MemberCard';
 
 export default function AccountScreen() {
@@ -37,7 +36,6 @@ export default function AccountScreen() {
         )}
 
         {customer && <AccountCard customer={customer} />}
-        {customer && <ContactCard customer={customer} />}
         {customer && <MemberCard customer={customer} />}
         {customer && (
           <Button

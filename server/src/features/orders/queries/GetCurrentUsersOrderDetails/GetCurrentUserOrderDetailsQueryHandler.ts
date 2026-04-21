@@ -124,7 +124,7 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
         method: order.payment?.[0]?.Method ?? '',
         status: order.payment?.[0]?.Payment_Status as PaymentStatus,
       },
-      totalAmount: calculateOrderAmount(order.items),
+      totalAmount: calculateOrderAmount(order.items, order.shipping?.[0]?.Cost.toNumber() ?? 0),
     };
   }
 }

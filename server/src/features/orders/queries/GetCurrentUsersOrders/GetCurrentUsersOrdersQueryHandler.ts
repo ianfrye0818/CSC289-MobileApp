@@ -26,6 +26,7 @@ export class GetCurrentUsersOrdersQueryHandler implements IQueryHandler<GetCurre
       include: {
         customer: true,
         items: true,
+        shipping: true,
       },
       orderBy: {
         Order_Date: 'desc',
@@ -34,7 +35,7 @@ export class GetCurrentUsersOrdersQueryHandler implements IQueryHandler<GetCurre
 
     // calcualte the total of each order based on the item amount * quantity * tax rate
     const ordersWithTotal = orders.map((order) => {
-      const total = calculateOrderAmount(order.items);
+      const total = calculateOrderAmount(order.items, order.shipping?.[0]?.Cost.toNumber() ?? 0);
       return {
         ...order,
         totalAmount: total,

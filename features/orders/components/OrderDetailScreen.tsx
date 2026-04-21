@@ -67,6 +67,13 @@ export default function OrderDetailScreen({ order }: Props) {
     currency: "USD",
   }).format(order.totalAmount);
 
+  const formattedShippingCost = order.shipping?.cost
+    ? new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(order.shipping.cost)
+    : "N/A";
+
   /* Calculate subtotal and tax from line items */
   const subtotal = order.items.reduce(
     (sum, item) => sum + item.price * item.quantity,

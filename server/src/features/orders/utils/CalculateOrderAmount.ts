@@ -11,11 +11,12 @@ import { Order_Item, } from '@generated/prisma/client';
  * @param items - The `Order_Item` records from a Prisma query.
  * @returns The total order amount as a plain JavaScript `number`.
  */
-export const calculateOrderAmount = (items: Order_Item[],): number => {
-  return items.reduce(
+export const calculateOrderAmount = (items: Order_Item[], shippingCost: number): number => {
+  const total = items.reduce(
     (acc, item) =>
       //acc + item.Amount.toNumber() * item.Quantity * (1 + item.Tax.toNumber()),
       acc + (item.Amount.toNumber() * item.Quantity) * 1 + item.Tax.toNumber(),
     0,
   );
+  return total + shippingCost;
 };
