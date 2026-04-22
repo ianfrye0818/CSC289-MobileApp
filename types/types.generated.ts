@@ -4,2243 +4,2243 @@
  */
 
 export interface paths {
-    "/api/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["HealthController_health"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  '/api/health': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/auth/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get User Info */
-        get: operations["AuthController_me"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get: operations['HealthController_health'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/me': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/auth/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Login User */
-        post: operations["AuthController_login"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get User Info */
+    get: operations['AuthController_me'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/login': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/auth/register": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Register User */
-        post: operations["AuthController_register"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Login User */
+    post: operations['AuthController_login'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/register': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/customers/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get customer details */
-        get: operations["CustomerController_getCurrentCustomerDetails"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Register User */
+    post: operations['AuthController_register'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/customers/me': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/customers/{customerId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Update customer details */
-        patch: operations["CustomerController_updateCustomerDetails"];
-        trace?: never;
+    /** Get customer details */
+    get: operations['CustomerController_getCurrentCustomerDetails'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/customers/{customerId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/cart": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current users cart */
-        get: operations["CartController_getCurrentCustomerCart"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update customer details */
+    patch: operations['CustomerController_updateCustomerDetails'];
+    trace?: never;
+  };
+  '/api/cart': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/cart/qty": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get cart quantity */
-        get: operations["CartController_getCartQty"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get current users cart */
+    get: operations['CartController_getCurrentCustomerCart'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/cart/qty': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/cart/add": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Add item to cart */
-        post: operations["CartController_addItemToCart"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get cart quantity */
+    get: operations['CartController_getCartQty'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/cart/add': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/cart/items/{cartId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete an item from the cart */
-        delete: operations["CartController_deleteItemFromCart"];
-        options?: never;
-        head?: never;
-        /** Update quantity of an item in the cart */
-        patch: operations["CartController_updateItemQuantity"];
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Add item to cart */
+    post: operations['CartController_addItemToCart'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/cart/items/{cartId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/cart/{cartId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete cart */
-        delete: operations["CartController_deleteCart"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Delete an item from the cart */
+    delete: operations['CartController_deleteItemFromCart'];
+    options?: never;
+    head?: never;
+    /** Update quantity of an item in the cart */
+    patch: operations['CartController_updateItemQuantity'];
+    trace?: never;
+  };
+  '/api/cart/{cartId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/orders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current users orders */
-        get: operations["OrdersController_getOrders"];
-        put?: never;
-        /** @description Create a user order */
-        post: operations["OrdersController_createOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Delete cart */
+    delete: operations['CartController_deleteCart'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/orders': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/orders/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current users orders */
-        get: operations["OrdersController_getOrderDetails"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get current users orders */
+    get: operations['OrdersController_getOrders'];
+    put?: never;
+    /** @description Create a user order */
+    post: operations['OrdersController_createOrder'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/orders/{orderId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/notifications/register-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Register device push token */
-        post: operations["NotificationsController_registerToken"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get current users orders */
+    get: operations['OrdersController_getOrderDetails'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/notifications/register-token': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all products */
-        get: operations["ProductsController_getProducts"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Register device push token */
+    post: operations['NotificationsController_registerToken'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/products': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/products/{productId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get product by productId */
-        get: operations["ProductsController_getProductById"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get all products */
+    get: operations['ProductsController_getProducts'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/products/{productId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/addresses": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get customer addresses */
-        get: operations["AddressesController_getCustomerAddresses"];
-        put?: never;
-        /** Add an address for a customer */
-        post: operations["AddressesController_addAddress"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get product by productId */
+    get: operations['ProductsController_getProductById'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/addresses': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/addresses/{addressId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get customer addresses */
-        get: operations["AddressesController_getCustomerAddressesById"];
-        put?: never;
-        post?: never;
-        /** Soft delete an address for a customer */
-        delete: operations["AddressesController_deleteAddress"];
-        options?: never;
-        head?: never;
-        /** Update an address for a customer */
-        patch: operations["AddressesController_updateAddress"];
-        trace?: never;
+    /** Get customer addresses */
+    get: operations['AddressesController_getCustomerAddresses'];
+    put?: never;
+    /** Add an address for a customer */
+    post: operations['AddressesController_addAddress'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/addresses/{addressId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    /** Get customer addresses */
+    get: operations['AddressesController_getCustomerAddressesById'];
+    put?: never;
+    post?: never;
+    /** Soft delete an address for a customer */
+    delete: operations['AddressesController_deleteAddress'];
+    options?: never;
+    head?: never;
+    /** Update an address for a customer */
+    patch: operations['AddressesController_updateAddress'];
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        BadRequestException: Record<string, never>;
-        UnauthorizedException: Record<string, never>;
-        ForbiddenException: Record<string, never>;
-        NotFoundException: Record<string, never>;
-        ConflictException: Record<string, never>;
-        InternalServerErrorException: Record<string, never>;
-        AuthUserDto: {
-            /** @description The customer's primary key. */
-            id: number;
-            /** @description The customer's email address (unique, used as login identifier). */
-            email: string;
-            /** @description The customer's full name (`First_Name + Last_Name`). */
-            name: string;
-        };
-        LoginUserCommandRequestDto: {
-            email: string;
-            password: string;
-        };
-        TokenResponse: {
-            accessToken: string;
-        };
-        RegisterUserCommandRequestDto: {
-            email: string;
-            password: string;
-            firstName: string;
-            lastName: string;
-            phone?: string;
-        };
-        CustomerMemberDetailsResponseDto: {
-            /** @enum {string} */
-            memberShipLevel: "BRONZE" | "SILVER" | "GOLD" | "PLATINUM";
-            discountRate: number;
-        };
-        CustomerDetailsResponseDto: {
-            id: number;
-            email: string;
-            firstName: string;
-            lastName: string;
-            fullName: string;
-            phone?: string | null;
-            memberDetails: components["schemas"]["CustomerMemberDetailsResponseDto"];
-        };
-        UpdateCustomerRequestDto: {
-            firstName: string;
-            lastName?: string;
-            phone?: string;
-        };
-        UpdatedMessageResponse: {
-            statusCode: number;
-            message: string;
-            data?: {
-                [key: string]: unknown;
-            };
-        };
-        CartItemDiscountDto: {
-            discountId: number;
-            /** @enum {string} */
-            discountType: "Percentage" | "Flat";
-            amount: number;
-            /** Format: date-time */
-            startDate: string;
-            /** Format: date-time */
-            endDate: string;
-        };
-        CartItemProductDto: {
-            productId: number;
-            productName: string;
-            productDescription?: string | null;
-            imageUrl?: string | null;
-            categoryName: string;
-            discounts: components["schemas"]["CartItemDiscountDto"][];
-        };
-        CartItemDto: {
-            inventoryId: number;
-            quantity: number;
-            unitPrice: number;
-            lineTotal: number;
-            product: components["schemas"]["CartItemProductDto"];
-        };
-        ShoppingCartResponseDto: {
-            /** @description Present when the customer has a cart row; omitted until the first cart is created (e.g. on first add-to-cart). */
-            cartId?: number | null;
-            customerId: number;
-            items: components["schemas"]["CartItemDto"][];
-            subtotal: number;
-            totalItems: number;
-        };
-        GetCartQtyResponseDto: {
-            readonly cartId: number;
-            readonly qty: number;
-        };
-        AddItemToCartRequestDto: {
-            productId: number;
-            quantity: number;
-        };
-        UpdateItemQuantityRequestDto: {
-            inventoryId: number;
-            quantity: number;
-        };
-        RemoveItemFromCartRequestDto: {
-            inventoryId: number;
-            quantity: number;
-        };
-        DeletedMessageResponse: {
-            statusCode: number;
-            message: string;
-            data?: {
-                [key: string]: unknown;
-            };
-        };
-        OrderCustomerDto: {
-            id: number;
-            email: string;
-            name: string;
-        };
-        OrderListResponseDto: {
-            id: number;
-            customer: components["schemas"]["OrderCustomerDto"];
-            /** Format: date-time */
-            orderDate: string;
-            itemCount: number;
-            totalAmount: number;
-        };
-        OrderDetailsResponseAddress: {
-            addressId: number | null;
-            line1?: string | null;
-            line2: string | null;
-            city: string | null;
-            state: string | null;
-            zipCode: string | null;
-            country: string | null;
-        };
-        OrderDetailsResponsePayment: {
-            id: number;
-            method: string;
-            /** @enum {string} */
-            status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED";
-        };
-        OrderDetailsResponseShippingDetails: {
-            id: number;
-            cost: number;
-            /** Format: date-time */
-            shippedOn: string | null;
-            /** Format: date-time */
-            expectedBy: string | null;
-            /** @enum {string} */
-            status: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
-            carrier: string;
-            trackingNumber: string;
-        };
-        OrderDetailsResponseDiscount: {
-            id: number;
-            type: string;
-            amount: number;
-        };
-        OrderDetailsResponseDto: {
-            id: number;
-            customer: components["schemas"]["OrderCustomerDto"];
-            shippingAddress: components["schemas"]["OrderDetailsResponseAddress"];
-            billingAddress: components["schemas"]["OrderDetailsResponseAddress"];
-            items: components["schemas"]["OrderDetailsResponseAddress"];
-            payment: components["schemas"]["OrderDetailsResponsePayment"];
-            shipping: components["schemas"]["OrderDetailsResponseShippingDetails"] | null;
-            discounts: components["schemas"]["OrderDetailsResponseDiscount"];
-            /** Format: date-time */
-            orderDate: string;
-            totalAmount: number;
-        };
-        CreateOrderCommandCreditCardDto: {
-            cardNumber: string;
-            expiryMonth: number;
-            expiryYear: number;
-            cvc: number;
-        };
-        CreateOrderCommandDto: {
-            cartId: number;
-            shippingAddressId: number;
-            billingAddressId: number;
-            /** @enum {string} */
-            paymentMethod: "CREDIT_CARD" | "GOOGLE_PAY" | "APPLE_PAY";
-            creditCard?: components["schemas"]["CreateOrderCommandCreditCardDto"];
-            shippingCost: number;
-        };
-        CreatedMessageResponse: {
-            statusCode: number;
-            message: string;
-            data?: {
-                [key: string]: unknown;
-            };
-        };
-        RegisterPushTokenRequestDto: {
-            /**
-             * @description The client device's Expo push token.
-             * @example ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
-             */
-            token: string;
-        };
-        ProductCategoryDto: {
-            categoryId: number;
-            categoryName: string;
-        };
-        ProductListItemDto: {
-            productId: number;
-            productName: string;
-            imageUrl?: string | null;
-            category: components["schemas"]["ProductCategoryDto"] | null;
-            unitPrice: number;
-            inStock: boolean;
-        };
-        ProductSupplierDto: {
-            supplierId: number;
-            supplierName: string;
-        };
-        ProductInventoryDto: {
-            inventoryId: number;
-            quantity: number;
-            unitPrice: number;
-            inStock: boolean;
-        };
-        ProductDiscountDto: {
-            discountId: number;
-            /** @enum {string} */
-            discountType: "Percentage" | "Flat";
-            amount: number;
-            /** Format: date-time */
-            startDate: string;
-            /** Format: date-time */
-            endDate: string;
-        };
-        ProductDetailDto: {
-            productId: number;
-            productName: string;
-            productDescription?: string | null;
-            imageUrl?: string | null;
-            category: components["schemas"]["ProductCategoryDto"] | null;
-            supplier: components["schemas"]["ProductSupplierDto"];
-            inventory: components["schemas"]["ProductInventoryDto"][];
-            discounts: components["schemas"]["ProductDiscountDto"][];
-            lowestPrice: number;
-            inStock: boolean;
-        };
-        ObjectRef: {
-            key: string;
-            value: string;
-        };
-        AddressResponseDto: {
-            id: number;
-            line1: string;
-            line2?: string;
-            city: string;
-            state: string;
-            zipcode: string;
-            country?: string;
-            customerRef: components["schemas"]["ObjectRef"];
-        };
-        AddAddressRequestDto: {
-            line1: string;
-            line2?: string;
-            city: string;
-            state: string;
-            zipcode: string;
-            country?: string;
-        };
-        UpdateAddressRequestDto: {
-            line1?: string;
-            line2?: string;
-            city?: string;
-            state?: string;
-            zipcode?: string;
-            country?: string;
-        };
+  schemas: {
+    BadRequestException: Record<string, never>;
+    UnauthorizedException: Record<string, never>;
+    ForbiddenException: Record<string, never>;
+    NotFoundException: Record<string, never>;
+    ConflictException: Record<string, never>;
+    InternalServerErrorException: Record<string, never>;
+    AuthUserDto: {
+      /** @description The customer's primary key. */
+      id: number;
+      /** @description The customer's email address (unique, used as login identifier). */
+      email: string;
+      /** @description The customer's full name (`First_Name + Last_Name`). */
+      name: string;
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    LoginUserCommandRequestDto: {
+      email: string;
+      password: string;
+    };
+    TokenResponse: {
+      accessToken: string;
+    };
+    RegisterUserCommandRequestDto: {
+      email: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      phone?: string;
+    };
+    CustomerMemberDetailsResponseDto: {
+      /** @enum {string} */
+      memberShipLevel: 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM';
+      discountRate: number;
+    };
+    CustomerDetailsResponseDto: {
+      id: number;
+      email: string;
+      firstName: string;
+      lastName: string;
+      fullName: string;
+      phone?: string | null;
+      memberDetails: components['schemas']['CustomerMemberDetailsResponseDto'];
+    };
+    UpdateCustomerRequestDto: {
+      firstName: string;
+      lastName?: string;
+      phone?: string;
+    };
+    UpdatedMessageResponse: {
+      statusCode: number;
+      message: string;
+      data?: {
+        [key: string]: unknown;
+      };
+    };
+    CartItemDiscountDto: {
+      discountId: number;
+      /** @enum {string} */
+      discountType: 'Percentage' | 'Flat';
+      amount: number;
+      /** Format: date-time */
+      startDate: string;
+      /** Format: date-time */
+      endDate: string;
+    };
+    CartItemProductDto: {
+      productId: number;
+      productName: string;
+      productDescription?: string | null;
+      imageUrl?: string | null;
+      categoryName: string;
+      discounts: components['schemas']['CartItemDiscountDto'][];
+    };
+    CartItemDto: {
+      inventoryId: number;
+      quantity: number;
+      unitPrice: number;
+      lineTotal: number;
+      product: components['schemas']['CartItemProductDto'];
+    };
+    ShoppingCartResponseDto: {
+      /** @description Present when the customer has a cart row; omitted until the first cart is created (e.g. on first add-to-cart). */
+      cartId?: number | null;
+      customerId: number;
+      items: components['schemas']['CartItemDto'][];
+      subtotal: number;
+      totalItems: number;
+    };
+    GetCartQtyResponseDto: {
+      readonly cartId: number;
+      readonly qty: number;
+    };
+    AddItemToCartRequestDto: {
+      productId: number;
+      quantity: number;
+    };
+    UpdateItemQuantityRequestDto: {
+      inventoryId: number;
+      quantity: number;
+    };
+    RemoveItemFromCartRequestDto: {
+      inventoryId: number;
+      quantity: number;
+    };
+    DeletedMessageResponse: {
+      statusCode: number;
+      message: string;
+      data?: {
+        [key: string]: unknown;
+      };
+    };
+    OrderCustomerDto: {
+      id: number;
+      email: string;
+      name: string;
+    };
+    OrderListResponseDto: {
+      id: number;
+      customer: components['schemas']['OrderCustomerDto'];
+      /** Format: date-time */
+      orderDate: string;
+      itemCount: number;
+      totalAmount: number;
+    };
+    OrderDetailsResponseAddress: {
+      addressId: number | null;
+      line1?: string | null;
+      line2: string | null;
+      city: string | null;
+      state: string | null;
+      zipCode: string | null;
+      country: string | null;
+    };
+    OrderDetailsResponsePayment: {
+      id: number;
+      method: string;
+      /** @enum {string} */
+      status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+    };
+    OrderDetailsResponseShippingDetails: {
+      id: number;
+      cost: number;
+      /** Format: date-time */
+      shippedOn: string | null;
+      /** Format: date-time */
+      expectedBy: string | null;
+      /** @enum {string} */
+      status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+      carrier: string;
+      trackingNumber: string;
+    };
+    OrderDetailsResponseDiscount: {
+      id: number;
+      type: string;
+      amount: number;
+    };
+    OrderDetailsResponseDto: {
+      id: number;
+      customer: components['schemas']['OrderCustomerDto'];
+      shippingAddress: components['schemas']['OrderDetailsResponseAddress'];
+      billingAddress: components['schemas']['OrderDetailsResponseAddress'];
+      items: components['schemas']['OrderDetailsResponseAddress'];
+      payment: components['schemas']['OrderDetailsResponsePayment'];
+      shipping: components['schemas']['OrderDetailsResponseShippingDetails'] | null;
+      discounts: components['schemas']['OrderDetailsResponseDiscount'];
+      /** Format: date-time */
+      orderDate: string;
+      totalAmount: number;
+    };
+    CreateOrderCommandCreditCardDto: {
+      cardNumber: string;
+      expiryMonth: number;
+      expiryYear: number;
+      cvc: number;
+    };
+    CreateOrderCommandDto: {
+      cartId: number;
+      shippingAddressId: number;
+      billingAddressId: number;
+      /** @enum {string} */
+      paymentMethod: 'CREDIT_CARD' | 'GOOGLE_PAY' | 'APPLE_PAY';
+      creditCard?: components['schemas']['CreateOrderCommandCreditCardDto'];
+      shippingCost: number;
+    };
+    CreatedMessageResponse: {
+      statusCode: number;
+      message: string;
+      data?: {
+        [key: string]: unknown;
+      };
+    };
+    RegisterPushTokenRequestDto: {
+      /**
+       * @description The client device's Expo push token.
+       * @example ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
+       */
+      token: string;
+    };
+    ProductCategoryDto: {
+      categoryId: number;
+      categoryName: string;
+    };
+    ProductListItemDto: {
+      productId: number;
+      productName: string;
+      imageUrl?: string | null;
+      category: components['schemas']['ProductCategoryDto'] | null;
+      unitPrice: number;
+      inStock: boolean;
+    };
+    ProductSupplierDto: {
+      supplierId: number;
+      supplierName: string;
+    };
+    ProductInventoryDto: {
+      inventoryId: number;
+      quantity: number;
+      unitPrice: number;
+      inStock: boolean;
+    };
+    ProductDiscountDto: {
+      discountId: number;
+      /** @enum {string} */
+      discountType: 'Percentage' | 'Flat';
+      amount: number;
+      /** Format: date-time */
+      startDate: string;
+      /** Format: date-time */
+      endDate: string;
+    };
+    ProductDetailDto: {
+      productId: number;
+      productName: string;
+      productDescription?: string | null;
+      imageUrl?: string | null;
+      category: components['schemas']['ProductCategoryDto'] | null;
+      supplier: components['schemas']['ProductSupplierDto'];
+      inventory: components['schemas']['ProductInventoryDto'][];
+      discounts: components['schemas']['ProductDiscountDto'][];
+      lowestPrice: number;
+      inStock: boolean;
+    };
+    ObjectRef: {
+      key: string;
+      value: string;
+    };
+    AddressResponseDto: {
+      id: number;
+      line1: string;
+      line2?: string;
+      city: string;
+      state: string;
+      zipcode: string;
+      country?: string;
+      customerRef: components['schemas']['ObjectRef'];
+    };
+    AddAddressRequestDto: {
+      line1: string;
+      line2?: string;
+      city: string;
+      state: string;
+      zipcode: string;
+      country?: string;
+    };
+    UpdateAddressRequestDto: {
+      line1?: string;
+      line2?: string;
+      city?: string;
+      state?: string;
+      zipcode?: string;
+      country?: string;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    HealthController_health: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  HealthController_health: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    AuthController_me: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description User Info */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthUserDto"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+        content?: never;
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    AuthController_login: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LoginUserCommandRequestDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenResponse"];
-                };
-            };
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  AuthController_me: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    AuthController_register: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description User Info */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegisterUserCommandRequestDto"];
-            };
+        content: {
+          'application/json': components['schemas']['AuthUserDto'];
         };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenResponse"];
-                };
-            };
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    CustomerController_getCurrentCustomerDetails: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CustomerDetailsResponseDto"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  AuthController_login: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    CustomerController_updateCustomerDetails: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                customerId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateCustomerRequestDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LoginUserCommandRequestDto'];
+      };
     };
-    CartController_getCurrentCustomerCart: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ShoppingCartResponseDto"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['TokenResponse'];
         };
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TokenResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    CartController_getCartQty: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GetCartQtyResponseDto"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  AuthController_register: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    CartController_addItemToCart: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddItemToCartRequestDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatedMessageResponse"];
-                };
-            };
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RegisterUserCommandRequestDto'];
+      };
     };
-    CartController_deleteItemFromCart: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                cartId: number;
-            };
-            cookie?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RemoveItemFromCartRequestDto"];
-            };
+        content: {
+          'application/json': components['schemas']['TokenResponse'];
         };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DeletedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          'application/json': components['schemas']['TokenResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    CartController_updateItemQuantity: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                cartId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateItemQuantityRequestDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  CustomerController_getCurrentCustomerDetails: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    CartController_deleteCart: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                cartId: number;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DeletedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['CustomerDetailsResponseDto'];
         };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    OrdersController_getOrders: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrderListResponseDto"][];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  CustomerController_updateCustomerDetails: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        customerId: number;
+      };
+      cookie?: never;
     };
-    OrdersController_createOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateOrderCommandDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreatedMessageResponse"];
-                };
-            };
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreatedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateCustomerRequestDto'];
+      };
     };
-    OrdersController_getOrderDetails: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrderDetailsResponseDto"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['UpdatedMessageResponse'];
         };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    NotificationsController_registerToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegisterPushTokenRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Token registered successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  CartController_getCurrentCustomerCart: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    ProductsController_getProducts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductListItemDto"][];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['ShoppingCartResponseDto'];
         };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    ProductsController_getProductById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductDetailDto"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  CartController_getCartQty: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    AddressesController_getCustomerAddresses: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AddressResponseDto"][];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['GetCartQtyResponseDto'];
         };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    AddressesController_addAddress: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddAddressRequestDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreatedMessageResponse"];
-                };
-            };
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreatedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  CartController_addItemToCart: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    AddressesController_getCustomerAddressesById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                addressId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AddressResponseDto"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AddItemToCartRequestDto'];
+      };
     };
-    AddressesController_deleteAddress: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                addressId: number;
-            };
-            cookie?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DeletedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['UpdatedMessageResponse'];
         };
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UpdatedMessageResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
     };
-    AddressesController_updateAddress: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                addressId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateAddressRequestDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
+  };
+  CartController_deleteItemFromCart: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        cartId: number;
+      };
+      cookie?: never;
     };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RemoveItemFromCartRequestDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['DeletedMessageResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  CartController_updateItemQuantity: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        cartId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateItemQuantityRequestDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UpdatedMessageResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  CartController_deleteCart: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        cartId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['DeletedMessageResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  OrdersController_getOrders: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OrderListResponseDto'][];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  OrdersController_createOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateOrderCommandDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreatedMessageResponse'];
+        };
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreatedMessageResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  OrdersController_getOrderDetails: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OrderDetailsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  NotificationsController_registerToken: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RegisterPushTokenRequestDto'];
+      };
+    };
+    responses: {
+      /** @description Token registered successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  ProductsController_getProducts: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProductListItemDto'][];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  ProductsController_getProductById: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        productId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProductDetailDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  AddressesController_getCustomerAddresses: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AddressResponseDto'][];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  AddressesController_addAddress: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AddAddressRequestDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreatedMessageResponse'];
+        };
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreatedMessageResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  AddressesController_getCustomerAddressesById: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        addressId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AddressResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  AddressesController_deleteAddress: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        addressId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['DeletedMessageResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
+  AddressesController_updateAddress: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        addressId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressRequestDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UpdatedMessageResponse'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UnauthorizedException'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenException'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotFoundException'];
+        };
+      };
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConflictException'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorException'];
+        };
+      };
+    };
+  };
 }

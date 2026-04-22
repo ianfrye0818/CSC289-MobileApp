@@ -13,7 +13,12 @@ type Props = {
   addressType: 'shipping' | 'billing';
 };
 
-export function CheckoutSelectedAddressAddressListRow({ address, selected, onSelect, addressType }: Props) {
+export function CheckoutSelectedAddressAddressListRow({
+  address,
+  selected,
+  onSelect,
+  addressType,
+}: Props) {
   const router = useRouter();
   return (
     <Pressable
