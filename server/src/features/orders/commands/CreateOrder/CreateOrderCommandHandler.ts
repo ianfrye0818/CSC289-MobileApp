@@ -128,7 +128,8 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
       await this.createShipping(
         tx,
         createdOrder.Order_ID,
-        command.dto.addressId,
+        command.dto.shippingAddressId,
+        command.dto.billingAddressId,
         command.dto.shippingCost,
       );
 
@@ -217,7 +218,8 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
   private async createShipping(
     tx: TX,
     orderId: number,
-    addressId: number,
+    shippingAddressId: number,
+    billingAddressId: number,
     shippingCost: number,
   ) {
     //  TODO: these should be optional in the db in production - Shipping team should add these once shipped.
@@ -229,8 +231,8 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
         Cost: shippingCost,
         Ship_Status: ShippingStatus.PENDING,
         Carrier: carrier,
-        Billing_Address_ID: addressId,
-        Shipping_Address_ID: addressId,
+        Billing_Address_ID: billingAddressId,
+        Shipping_Address_ID: shippingAddressId,
         Created_At: new Date(),
         Tracking_Number: trackingNumber,
       },

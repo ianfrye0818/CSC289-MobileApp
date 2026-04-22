@@ -10,9 +10,10 @@ type Props = {
   address: AddressResponseDto;
   selected: boolean;
   onSelect: (address: AddressResponseDto) => void;
+  addressType: 'shipping' | 'billing';
 };
 
-export function CheckoutSelectedAddressAddressListRow({ address, selected, onSelect }: Props) {
+export function CheckoutSelectedAddressAddressListRow({ address, selected, onSelect, addressType }: Props) {
   const router = useRouter();
   return (
     <Pressable
@@ -37,11 +38,14 @@ export function CheckoutSelectedAddressAddressListRow({ address, selected, onSel
             onPress={() =>
               router.dismissTo({
                 pathname: '/checkout',
-                params: { addressId: String(address.id) },
+                params:
+                  addressType === 'shipping'
+                    ? { shippingAddressId: String(address.id) }
+                    : { billingAddressId: String(address.id) },
               })
             }
           >
-            Deliver to this address
+            {addressType === 'shipping' ? 'Deliver to this address' : 'Bill to this address'}
           </Button>
         )}
         <Button

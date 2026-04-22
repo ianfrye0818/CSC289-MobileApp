@@ -9,12 +9,19 @@ export function CheckoutPlaceOrderButton() {
   const form = useFormContext<CheckoutFormValues>();
 
   const onSubmit = async (values: CheckoutFormValues) => {
-    if (!values.addressId) {
-      form.setError('addressId', { message: 'Address is required' });
+    if (!values.shippingAddressId) {
+      form.setError('shippingAddressId', { message: 'Shipping address is required' });
       return;
     }
+
+    if (!values.billingAddressId) {
+      form.setError('billingAddressId', { message: 'Billing address is required' });
+      return;
+    }
+
     checkout({
-      addressId: values.addressId!,
+      shippingAddressId: values.shippingAddressId!,
+      billingAddressId: values.billingAddressId!,
       cartId: values.cartId,
       paymentMethod: values.paymentMethod,
       shippingCost: values.shippingCost,

@@ -9,12 +9,14 @@ type Props = {
   addresses: AddressResponseDto[];
   localSelectedAddress: AddressResponseDto | null;
   setLocalSelectedAddress: (address: AddressResponseDto) => void;
+  addressType: 'shipping' | 'billing';
 };
 
 export function CheckoutSelectAddressAddressList({
   addresses,
   localSelectedAddress,
   setLocalSelectedAddress,
+  addressType,
 }: Props) {
   const SLICE_SIZE = 3;
   const [showAllAddresses, setShowAllAddresses] = useState(false);
@@ -35,6 +37,7 @@ export function CheckoutSelectAddressAddressList({
             address={item}
             selected={item.id === localSelectedAddress?.id}
             onSelect={setLocalSelectedAddress}
+            addressType={addressType}
           />
         )}
         ItemSeparatorComponent={() => <View className='h-px bg-border my-4' />}

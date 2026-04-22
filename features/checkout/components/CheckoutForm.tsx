@@ -6,7 +6,7 @@ import { ShoppingCart } from '@/features/cart/types';
 import useAppForm from '@/hooks/useAppForm';
 import { PaymentMethod } from '@/types/PaymentMethod.enum';
 import { isNil } from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { FlatList, Platform, Text, View } from 'react-native';
 import { CheckoutFormValues, checkoutSchema } from '../checkoutSchema';
@@ -17,15 +17,23 @@ import { CheckoutPaymentMethodRow } from './CheckoutPaymentMethodRow';
 import { CheckoutPlaceOrderButton } from './CheckoutPlaceOrderButton';
 import { CheckoutTotalsRow } from './CheckoutTotalsRow';
 
-export function CheckoutForm({ addressId }: { addressId?: string }) {
+type CheckoutFormProps = {
+  shippingAddressId?: string;
+  billingAddressId?: string;
+};
+
+export function CheckoutForm({ shippingAddressId, billingAddressId }: CheckoutFormProps) {
   const { data, isLoading, error } = useCart();
   const { data: addresses, isLoading: isAddressesLoading } = useGetCurrentCustomerAddresses();
+  const [sameAsBilling, setSameAsBilling] = useState(true);
+
   const form = useAppForm<CheckoutFormValues>({
     formName: 'CheckoutForm',
     resolver: formResolver(checkoutSchema),
     defaultValues: {
       cartId: data?.cartId ?? 0,
-      addressId: undefined,
+      shippingAddressId: undefined,
+      billingAddressId: undefined,
       paymentMethod: Platform.OS === 'ios' ? PaymentMethod.APPLE_PAY : PaymentMethod.GOOGLE_PAY,
       shippingCost: getRandomShippingCost(),
     },
@@ -38,15 +46,43 @@ export function CheckoutForm({ addressId }: { addressId?: string }) {
         cartId: data.cartId,
       });
     }
-  }, [data?.cartId, form]);
+  }, [data?.cartId]);
 
   useEffect(() => {
-    if (!isNil(addressId)) {
-      form.setValue('addressId', Number(addressId));
+    if (!isNil(shippingAddressId)) {
+      form.setValue('shippingAddressId', Number(shippingAddressId));
     } else if (addresses && addresses.length > 0) {
-      form.setValue('addressId', addresses[0].id);
+      form.setValue('shippingAddressId', addresses[0].id);
     }
-  }, [addressId, addresses, form]);
+  }, [shippingAddressId, addresses]);
+
+  useEffect(() => {
+    if (!isNil(billingAddressId)) {
+      form.setValue('billingAddressId', Number(billingAddressId));
+      setSameAsBilling(false);
+    } else if (addresses && addresses.length > 0 && isNil(billingAddressId)) {
+      form.setValue('billingAddressId', addresses[0].id);
+    }
+  }, [billingAddressId, addresses]);
+
+  // Mirror shipping → billing when sameAsBilling is toggled on
+  useEffect(() => {
+    if (sameAsBilling) {
+      const currentShipping = form.getValues('shippingAddressId');
+      form.setValue('billingAddressId', currentShipping);
+    }
+  }, [sameAsBilling]);
+
+  // Keep billing in sync with shipping while sameAsBilling is true
+  useEffect(() => {
+    if (!sameAsBilling) return;
+    const subscription = form.watch((values) => {
+      if (values.billingAddressId !== values.shippingAddressId) {
+        form.setValue('billingAddressId', values.shippingAddressId);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [sameAsBilling]);
 
   return (
     <DataWrapper
@@ -63,7 +99,13 @@ export function CheckoutForm({ addressId }: { addressId?: string }) {
             contentContainerStyle={{ padding: 16, gap: 12 }}
             removeClippedSubviews={false}
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={<ListHeader cart={cart} />}
+            ListHeaderComponent={
+              <ListHeader
+                cart={cart}
+                sameAsBilling={sameAsBilling}
+                setSameAsBilling={setSameAsBilling}
+              />
+            }
           />
         </FormProvider>
       )}
@@ -73,14 +115,21 @@ export function CheckoutForm({ addressId }: { addressId?: string }) {
 
 type ListHeaderProps = {
   cart: ShoppingCart;
+  sameAsBilling: boolean;
+  setSameAsBilling: (value: boolean) => void;
 };
 
-function ListHeader({ cart }: ListHeaderProps) {
+function ListHeader({ cart, sameAsBilling, setSameAsBilling }: ListHeaderProps) {
   return (
     <View className='gap-2'>
       <CheckoutPlaceOrderButton />
       <CheckoutTotalsRow cart={cart} />
-      <CheckoutAddressRow />
+      <CheckoutAddressRow type='shipping' />
+      <CheckoutAddressRow
+        type='billing'
+        sameAsBilling={sameAsBilling}
+        setSameAsBilling={setSameAsBilling}
+      />
       <CheckoutPaymentMethodRow />
       <Text className='text-md font-semibold text-foreground'>Items</Text>
     </View>

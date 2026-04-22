@@ -8,7 +8,10 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SelectAddressScreen() {
-  const { addressId } = useLocalSearchParams() as { addressId?: string };
+  const { addressId, addressType } = useLocalSearchParams() as {
+    addressId?: string;
+    addressType?: 'shipping' | 'billing';
+  };
   const [localSelectedAddress, setLocalSelectedAddress] = useState<AddressResponseDto | null>(null);
   const { data, isLoading, error } = useGetCurrentCustomerAddresses();
 
@@ -33,6 +36,7 @@ export default function SelectAddressScreen() {
             addresses={addresses}
             localSelectedAddress={localSelectedAddress}
             setLocalSelectedAddress={setLocalSelectedAddress}
+            addressType={addressType ?? 'shipping'}
           />
         )}
       </DataWrapper>

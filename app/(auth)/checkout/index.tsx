@@ -4,14 +4,20 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CheckoutScreen() {
-  const { addressId } = useLocalSearchParams() as { addressId?: string };
+  const { shippingAddressId, billingAddressId } = useLocalSearchParams() as {
+    shippingAddressId?: string;
+    billingAddressId?: string;
+  };
 
   return (
     <SafeAreaView
       className='flex-1 bg-background'
       edges={['bottom']}
     >
-      <CheckoutForm addressId={addressId} />
+      <CheckoutForm
+        shippingAddressId={shippingAddressId}
+        billingAddressId={billingAddressId}
+      />
     </SafeAreaView>
   );
 }

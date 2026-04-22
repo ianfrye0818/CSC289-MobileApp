@@ -3,8 +3,10 @@ import { Text } from '@/components/ui/text';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { Link } from 'expo-router';
-import { Image, Pressable, View } from 'react-native';
+import { Trash2 } from 'lucide-react-native';
+import { Alert, Image, Pressable, View } from 'react-native';
 import { CartItem } from '../types';
+import { useRemoveCartItem } from '../hooks/useRemoveCartItem';
 import { QuantityAdjustor } from './QuantityAdjustor';
 
 interface Props {
@@ -19,6 +21,24 @@ export function CartCard({ cartItem, cartId, itemCount }: Props) {
     style: 'currency',
     currency: 'USD',
   }).format(lineTotal);
+
+  const { mutate: removeItem, isPending } = useRemoveCartItem();
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Remove Item',
+      `Remove "${cartItem.product.productName}" from your cart?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () =>
+            removeItem({ cartId, dto: { inventoryId: cartItem.inventoryId, quantity: cartItem.quantity } }),
+        },
+      ],
+    );
+  };
 
   return (
     <Card className='flex-row gap-0 overflow-hidden items-stretch py-0'>
@@ -40,32 +60,48 @@ export function CartCard({ cartItem, cartId, itemCount }: Props) {
           )}
         </Pressable>
       </Link>
-      <View className='flex-1 min-w-0 justify-end items-end p-3 gap-5'>
-        <Link
-          href={`/products/${cartItem.product.productId}`}
-          push
-          asChild
-        >
-          <Pressable
-            className='w-full active:opacity-80'
-            android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
+      <View className='flex-1 min-w-0 p-3 gap-2'>
+        <View className='flex-row items-start justify-between gap-2'>
+          <Link
+            href={`/products/${cartItem.product.productId}`}
+            push
+            asChild
           >
-            <Text
-              className='font-semibold text-lg leading-snug text-right'
-              numberOfLines={2}
+            <Pressable
+              className='flex-1 active:opacity-80'
+              android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
             >
-              {cartItem.product.productName}
-            </Text>
+              <Text
+                className='font-semibold text-base leading-snug'
+                numberOfLines={2}
+              >
+                {cartItem.product.productName}
+              </Text>
+            </Pressable>
+          </Link>
+          <Pressable
+            onPress={handleDelete}
+            disabled={isPending}
+            className='p-1 rounded-md active:opacity-60'
+            android_ripple={{ color: 'rgba(239,68,68,0.15)', radius: 16 }}
+            hitSlop={8}
+          >
+            <Trash2
+              size={18}
+              className={cn('text-muted-foreground', isPending && 'opacity-40')}
+            />
           </Pressable>
-        </Link>
-        <QuantityAdjustor
-          cartItem={cartItem}
-          cartId={cartId}
-        />
-        <Text className='text-muted-foreground text-lg'>
-          {formattedPrice}
-          {itemCount != null && ` · ${itemCount} item${itemCount !== 1 ? 's' : ''}`}
-        </Text>
+        </View>
+        <View className='flex-1 justify-end items-end gap-3'>
+          <QuantityAdjustor
+            cartItem={cartItem}
+            cartId={cartId}
+          />
+          <Text className='text-muted-foreground text-base'>
+            {formattedPrice}
+            {itemCount != null && ` · ${itemCount} item${itemCount !== 1 ? 's' : ''}`}
+          </Text>
+        </View>
       </View>
     </Card>
   );

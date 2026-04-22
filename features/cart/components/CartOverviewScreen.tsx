@@ -37,41 +37,41 @@ export default function CartOverviewScreen() {
           noDataComponent={<NoCartItemsAvailable />}
         >
           {(cartItems: CartItem[]) => (
-            <FlatList
-              data={cartItems}
-              keyExtractor={(item) => String(item.inventoryId)}
-              extraData={{ dataUpdatedAt, cartId }}
-              contentContainerStyle={{ padding: 16, gap: 12 }}
-              removeClippedSubviews={false}
-              renderItem={({ item }) =>
-                cartId != null ? (
-                  <CartCard
-                    cartItem={item}
-                    cartId={cartId}
-                  />
-                ) : null
-              }
-              refreshing={isManualRefreshing}
-              onRefresh={handleRefresh}
-              showsVerticalScrollIndicator={false}
-              ListHeaderComponent={
-                <View className='mb-1'>
-                  <Text className='text-2xl font-bold text-foreground'>Items</Text>
-                </View>
-              }
-              ListEmptyComponent={<NoCartItemsAvailable />}
-            />
+            <View className='flex-1 bg-pur'>
+              <FlatList
+                data={cartItems}
+                keyExtractor={(item) => String(item.inventoryId)}
+                extraData={{ dataUpdatedAt, cartId }}
+                contentContainerStyle={{ padding: 16, gap: 12, flex: 1 }}
+                removeClippedSubviews={false}
+                renderItem={({ item }) =>
+                  cartId != null ? (
+                    <CartCard
+                      cartItem={item}
+                      cartId={cartId}
+                    />
+                  ) : null
+                }
+                refreshing={isManualRefreshing}
+                onRefresh={handleRefresh}
+                showsVerticalScrollIndicator={false}
+                ListHeaderComponent={
+                  <View className='mb-1'>
+                    <Text className='text-2xl font-bold text-foreground'>Items</Text>
+                  </View>
+                }
+                ListEmptyComponent={<NoCartItemsAvailable />}
+              />
+              <CheckoutSection totalPrice={totalPrice} />
+            </View>
           )}
         </DataWrapper>
       </View>
-
-      {/* Checkout button */}
-      <CheckoutButton totalPrice={totalPrice} />
     </SafeAreaView>
   );
 }
 
-function CheckoutButton({ totalPrice }: { totalPrice: number }) {
+function CheckoutSection({ totalPrice }: { totalPrice: number }) {
   const router = useRouter();
   return (
     <View className='border-t border-border bg-background px-4 py-2 gap-2'>

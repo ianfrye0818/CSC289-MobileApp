@@ -51,7 +51,8 @@ export const creditCardSchema = z
 export const checkoutSchema = z
   .object({
     cartId: z.coerce.number(),
-    addressId: z.number().optional(),
+    shippingAddressId: z.number().optional(),
+    billingAddressId: z.number().optional(),
     creditCard: creditCardSchema.optional(),
     paymentMethod: z.enum(PaymentMethod),
     shippingCost: z.number().nonnegative(),

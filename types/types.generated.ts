@@ -494,7 +494,8 @@ export interface components {
         };
         CreateOrderCommandDto: {
             cartId: number;
-            addressId: number;
+            shippingAddressId: number;
+            billingAddressId: number;
             /** @enum {string} */
             paymentMethod: "CREDIT_CARD" | "GOOGLE_PAY" | "APPLE_PAY";
             creditCard?: components["schemas"]["CreateOrderCommandCreditCardDto"];
