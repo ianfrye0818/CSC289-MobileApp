@@ -6,16 +6,18 @@ import { DeleteCartCommand } from './DeleteCartCommand';
 /**
  * Handles `DeleteCartCommand` — deletes the entire shopping cart record.
  *
- * Because `Shopping_Cart_Item` rows have a cascade delete relationship with
- * `Shopping_Cart`, all cart items are automatically removed when the cart is
- * deleted. This is also called internally by `CreateOrderCommandHandler` to
- * clear the cart after a successful checkout.
+ * `Shopping_Cart_Item` FK uses `onDelete: NoAction`, so line items must be
+ * deleted before the cart row (same ordering as checkout in
+ * `CreateOrderCommandHandler.clearCart`).
  */
 @CommandHandler(DeleteCartCommand)
 export class DeleteCartCommandHandler implements ICommandHandler<DeleteCartCommand> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(command: DeleteCartCommand): Promise<DeletedMessageResponse> {
+    await this.prisma.shopping_Cart_Item.deleteMany({
+      where: { Cart_ID: command.cartId },
+    });
     await this.prisma.shopping_Cart.deleteMany({
       where: {
         Cart_ID: command.cartId,

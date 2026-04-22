@@ -486,10 +486,19 @@ export interface components {
             orderDate: string;
             totalAmount: number;
         };
+        CreateOrderCommandCreditCardDto: {
+            cardNumber: string;
+            expiryMonth: number;
+            expiryYear: number;
+            cvc: number;
+        };
         CreateOrderCommandDto: {
             cartId: number;
+            addressId: number;
             /** @enum {string} */
-            paymentMethod: "CREDIT_CARD" | "DEBIT_CARD" | "PAYPAL" | "GOOGLE_PAY" | "APPLE_PAY" | "BANK_TRANSFER" | "CASH_ON_DELIVERY";
+            paymentMethod: "CREDIT_CARD" | "GOOGLE_PAY" | "APPLE_PAY";
+            creditCard?: components["schemas"]["CreateOrderCommandCreditCardDto"];
+            shippingCost: number;
         };
         CreatedMessageResponse: {
             statusCode: number;

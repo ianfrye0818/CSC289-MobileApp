@@ -1,6 +1,6 @@
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router';
 
-import { ElevateAppHeader } from "@/components/elevate-app-header";
+import { ElevateAppHeader } from '@/components/elevate-app-header';
 
 export default function AuthLayout() {
   // Push notification registration moved to the root layout (via the
@@ -10,67 +10,83 @@ export default function AuthLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name="(tabs)"
+        name='(tabs)'
         options={{
           headerShown: true,
           header: () => <ElevateAppHeader />,
         }}
       />
       <Stack.Screen
-        name="products/[id]"
+        name='products/[id]'
         options={{
           headerShown: true,
-          title: "Product Information",
-          headerBackTitle: "Back",
+          title: 'Product Information',
+          headerBackTitle: 'Back',
         }}
       />
       {/* Order detail screen — shows native header with back button */}
       <Stack.Screen
-        name="orders/[id]"
+        name='orders/[id]'
         options={{
           headerShown: true,
-          title: "Order Details",
-          headerBackTitle: "Back",
+          title: 'Order Details',
+          headerBackTitle: 'Back',
         }}
       />
 
       <Stack.Screen
-        name="addresses/index"
+        name='addresses/index'
         options={{
           headerShown: true,
-          title: "Addresses",
-          headerBackTitle: "Back",
+          title: 'Addresses',
+          headerBackTitle: 'Back',
         }}
       />
 
       <Stack.Screen
-        name="addresses/add/index"
+        name='addresses/add/index'
         options={{
           headerShown: true,
-          title: "Add Address",
-          headerBackTitle: "Back",
+          title: 'Add Address',
+          headerBackTitle: 'Back',
         }}
       />
 
       <Stack.Screen
-        name="account/[id]"
+        name='account/[id]'
         options={{
           headerShown: true,
-          title: "Edit Account",
-          headerBackTitle: "Back",
+          title: 'Edit Account',
+          headerBackTitle: 'Back',
         }}
       />
-   
+
       <Stack.Screen
-        name="addresses/edit/[id]"
+        name='addresses/edit/[id]'
         options={{
           headerShown: true,
-          title: "Edit Address",
-          headerBackTitle: "Back",
+          title: 'Edit Address',
+          headerBackTitle: 'Back',
+        }}
+      />
+
+      <Stack.Screen
+        name='checkout/index'
+        options={{
+          headerShown: true,
+          title: 'Checkout',
+          headerBackTitle: 'Back',
+        }}
+      />
+
+      <Stack.Screen
+        name='checkout/select-address'
+        options={{
+          headerShown: true,
+          title: 'Select Address',
+          headerBackTitle: 'Back',
         }}
       />
     </Stack>
-
-    
   );
 }

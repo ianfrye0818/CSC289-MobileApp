@@ -1,7 +1,9 @@
 import { DataWrapper } from '@/components/DataWrapper';
+import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Button, FlatList, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCart } from '../hooks/useCart';
 import { CartItem } from '../types';
@@ -23,7 +25,10 @@ export default function CartOverviewScreen() {
   const cartId = data?.cartId;
 
   return (
-    <SafeAreaView className='flex-1 bg-background'>
+    <SafeAreaView
+      className='flex-1 bg-background'
+      edges={['left', 'right']}
+    >
       <View className='flex-1'>
         <DataWrapper
           data={data?.items}
@@ -61,43 +66,29 @@ export default function CartOverviewScreen() {
       </View>
 
       {/* Checkout button */}
-      <CheckoutButton
-        cartItems={data?.items}
-        totalPrice={totalPrice}
-      />
+      <CheckoutButton totalPrice={totalPrice} />
     </SafeAreaView>
   );
 }
 
-function CheckoutButton({
-  cartItems,
-  totalPrice,
-  button,
-}: {
-  cartItems?: CartItem[];
-  totalPrice: number;
-  button?: React.ReactNode;
-}) {
+function CheckoutButton({ totalPrice }: { totalPrice: number }) {
+  const router = useRouter();
   return (
-    <View className='p-4 border-t bg-background'>
-      <View className='flex-2 items-center justify-between mb-4'>
-        <Text className='text-lg font-medium text-foreground'>Subtotal</Text>
-        <Text className='text-lg font-bold text-foreground'>
+    <View className='border-t border-border bg-background px-4 py-2 gap-2'>
+      <View className='flex-row items-center justify-end gap-2 px-4'>
+        <Text className='text-xs text-muted-foreground'>Subtotal</Text>
+        <Text className='text-base font-bold text-foreground'>
           {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
             totalPrice,
           )}
         </Text>
-        {button ?? (
-          <Button
-            disabled={!cartItems || cartItems.length === 0}
-            onPress={() => {
-              // Placeholder for checkout action
-              alert('Checkout functionality coming soon!');
-            }}
-            title='Checkout button goes here (placeholder)'
-          />
-        )}
       </View>
+      <Button
+        className='w-full'
+        onPress={() => router.push('/checkout')}
+      >
+        Checkout
+      </Button>
     </View>
   );
 }
