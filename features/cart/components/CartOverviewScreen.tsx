@@ -1,7 +1,9 @@
 import { DataWrapper } from '@/components/DataWrapper';
+import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Button, FlatList, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCart } from '../hooks/useCart';
 import { CartItem } from '../types';
@@ -11,6 +13,7 @@ import NoCartItemsAvailable from './NoCartItemsAvailable';
 export default function CartOverviewScreen() {
   const { data, isLoading, error, refetch, dataUpdatedAt } = useCart();
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const router = useRouter();
 
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
@@ -64,6 +67,7 @@ export default function CartOverviewScreen() {
       <CheckoutButton
         cartItems={data?.items}
         totalPrice={totalPrice}
+        router={router}
       />
     </SafeAreaView>
   );
@@ -72,12 +76,13 @@ export default function CartOverviewScreen() {
 function CheckoutButton({
   cartItems,
   totalPrice,
-  button,
+  router,
 }: {
   cartItems?: CartItem[];
   totalPrice: number;
-  button?: React.ReactNode;
+  router: any;
 }) {
+  const { isPending } = useCart();
   return (
     <View className='p-4 border-t bg-background'>
       <View className='flex-2 items-center justify-between mb-4'>
@@ -87,16 +92,21 @@ function CheckoutButton({
             totalPrice,
           )}
         </Text>
-        {button ?? (
-          <Button
-            disabled={!cartItems || cartItems.length === 0}
-            onPress={() => {
-              // Placeholder for checkout action
-              alert('Checkout functionality coming soon!');
-            }}
-            title='Checkout button goes here (placeholder)'
-          />
-        )}
+        <Button
+          disabled={!cartItems || cartItems.length === 0}
+          onPress={() => {
+            router.push('/cart/checkout');
+          }}
+        >
+          {isPending ? (
+            <ActivityIndicator
+              size='small'
+              color='white'
+            />
+          ) : (
+          <Text>Checkout</Text>
+          )}
+        </Button>
       </View>
     </View>
   );
