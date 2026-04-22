@@ -13,6 +13,10 @@ export function CheckoutPaymentMethodRow() {
 
   const setPaymentMethod = (paymentMethod: PaymentMethod) => {
     form.setValue('paymentMethod', paymentMethod);
+    if (paymentMethod !== PaymentMethod.CREDIT_CARD) {
+      form.setValue('creditCard', undefined);
+      form.clearErrors('creditCard');
+    }
   };
 
   const APPLE_PAY_IMAGE = require('@/assets/images/apple_pay.png');
