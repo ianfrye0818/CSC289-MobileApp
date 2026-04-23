@@ -219,7 +219,6 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
     billingAddressId: number,
     shippingCost: number,
   ) {
-    //  TODO: these should be optional in the db in production - Shipping team should add these once shipped.
     const carrier = getRandomShippingCarrier();
     const trackingNumber = getRandomTrackingNumber();
     return await tx.shipping.create({
