@@ -26,7 +26,7 @@ export default function CartOverviewScreen() {
   const cartId = data?.cartId;
 
   return (
-    <SafeAreaView className='flex-1 bg-background'>
+    <SafeAreaView className='flex-1 bg-background' edges={['left', 'right', 'bottom']}>
       <View className='flex-1'>
         <DataWrapper
           data={data?.items}
@@ -84,30 +84,28 @@ function CheckoutButton({
 }) {
   const { isPending } = useCart();
   return (
-    <View className='p-4 border-t bg-background'>
-      <View className='flex-2 items-center justify-between mb-4'>
-        <Text className='text-lg font-medium text-foreground'>Subtotal</Text>
-        <Text className='text-lg font-bold text-foreground'>
-          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
-            totalPrice,
-          )}
-        </Text>
-        <Button
-          disabled={!cartItems || cartItems.length === 0}
-          onPress={() => {
-            router.push('/cart/checkout');
-          }}
-        >
-          {isPending ? (
-            <ActivityIndicator
-              size='small'
-              color='white'
-            />
-          ) : (
-          <Text>Checkout</Text>
-          )}
-        </Button>
-      </View>
+    <View className='px-4 border-t border-border'>
+      <Text className='text-lg font-medium text-center text-foreground'>Subtotal</Text>
+      <Text className='text-lg font-bold text-center text-foreground'>
+        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+          totalPrice,
+        )}
+      </Text>
+      <Button
+        disabled={!cartItems || cartItems.length === 0}
+        onPress={() => {
+          router.push('/cart/checkout');
+        }}
+      >
+        {isPending ? (
+          <ActivityIndicator
+            size='small'
+            color='white'
+          />
+        ) : (
+        <Text>Checkout</Text>
+        )}
+      </Button>
     </View>
   );
 }
