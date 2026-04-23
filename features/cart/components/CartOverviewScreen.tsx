@@ -34,6 +34,7 @@ export default function CartOverviewScreen() {
           data={data?.items}
           isLoading={isLoading}
           error={error}
+          refetch={refetch}
           noDataComponent={<NoCartItemsAvailable />}
         >
           {(cartItems: CartItem[]) => (

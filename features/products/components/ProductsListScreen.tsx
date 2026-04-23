@@ -15,6 +15,7 @@ export default function ProductsListScreen() {
         data={data}
         isLoading={isLoading}
         error={error}
+        refetch={refetch}
         noDataComponent={<NoProductsAvailable />}
       >
         {(products) => (

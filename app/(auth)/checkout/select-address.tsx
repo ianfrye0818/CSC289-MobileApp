@@ -13,7 +13,7 @@ export default function SelectAddressScreen() {
     addressType?: 'shipping' | 'billing';
   };
   const [localSelectedAddress, setLocalSelectedAddress] = useState<AddressResponseDto | null>(null);
-  const { data, isLoading, error } = useGetCurrentCustomerAddresses();
+  const { data, isLoading, error, refetch } = useGetCurrentCustomerAddresses();
 
   useEffect(() => {
     if (!isNil(addressId)) {
@@ -30,6 +30,7 @@ export default function SelectAddressScreen() {
         data={data}
         isLoading={isLoading}
         error={error}
+        refetch={refetch}
       >
         {(addresses) => (
           <CheckoutSelectAddressAddressList

@@ -10,7 +10,7 @@ import { ProductDetail, ProductInventory } from '../types';
 import { ProductHorizontalList } from './ProductHorizontalList';
 
 export function ProductDetails({ product }: { product: ProductDetail }) {
-  const { data, isLoading, error } = useProducts();
+  const { data, isLoading, error, refetch } = useProducts();
   const getFormattedPrice = (price: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
 
@@ -80,6 +80,7 @@ export function ProductDetails({ product }: { product: ProductDetail }) {
           data={data}
           isLoading={isLoading}
           error={error}
+          refetch={refetch}
         >
           {(products) => {
             const suggestions = products

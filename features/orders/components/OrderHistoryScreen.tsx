@@ -26,6 +26,7 @@ export default function OrderHistoryScreen() {
         data={data}
         isLoading={isLoading}
         error={error}
+        refetch={refetch}
         noDataComponent={<NoOrdersAvailable />}
       >
         {(orders: OrderListItem[]) => (

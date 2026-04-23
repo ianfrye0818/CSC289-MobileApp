@@ -7,6 +7,17 @@ import { Colors } from '@/constants/theme';
 import { useGetCartQty } from '@/features/cart/hooks/useGetCartQty';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
+function TabIcon({ name, color, focused }: { name: any; color: string; focused: boolean }) {
+  const primaryColor = '#26603C';
+  return (
+    <IconSymbol
+      size={28}
+      name={name}
+      color={focused ? primaryColor : color}
+    />
+  );
+}
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   // const theme = Colors[colorScheme === 'dark' ? 'dark' : 'light'];
@@ -28,11 +39,11 @@ export default function TabLayout() {
         name='products'
         options={{
           title: 'Store',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol
-              size={28}
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
               name='bag.fill'
               color={color}
+              focused={focused}
             />
           ),
         }}
@@ -43,10 +54,10 @@ export default function TabLayout() {
           title: 'Cart',
           tabBarBadge: badge,
           tabBarIcon: ({ color, focused }) => (
-            <IconSymbol
-              size={28}
+            <TabIcon
               name='cart.fill'
               color={color}
+              focused={focused}
             />
           ),
         }}
@@ -55,11 +66,11 @@ export default function TabLayout() {
         name='orders'
         options={{
           title: 'Orders',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol
-              size={28}
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
               name='list.bullet'
               color={color}
+              focused={focused}
             />
           ),
         }}
@@ -68,11 +79,11 @@ export default function TabLayout() {
         name='account'
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol
-              size={28}
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
               name='person.fill'
               color={color}
+              focused={focused}
             />
           ),
         }}

@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PublicProductDetailScreen() {
   const { id } = useLocalSearchParams() as { id: string };
-  const { data, isLoading, error } = useProductDetails(Number(id));
+  const { data, isLoading, error, refetch } = useProductDetails(Number(id));
   return (
     <SafeAreaView
       className='flex-1 bg-background'
@@ -16,6 +16,7 @@ export default function PublicProductDetailScreen() {
         data={data}
         isLoading={isLoading}
         error={error}
+        refetch={refetch}
       >
         {(product) => <ProductDetails product={product} />}
       </DataWrapper>

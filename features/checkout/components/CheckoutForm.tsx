@@ -23,7 +23,7 @@ type CheckoutFormProps = {
 };
 
 export function CheckoutForm({ shippingAddressId, billingAddressId }: CheckoutFormProps) {
-  const { data, isLoading, error } = useCart();
+  const { data, isLoading, error, refetch } = useCart();
   const { data: addresses, isLoading: isAddressesLoading } = useGetCurrentCustomerAddresses();
   const [sameAsBilling, setSameAsBilling] = useState(true);
 
@@ -88,6 +88,7 @@ export function CheckoutForm({ shippingAddressId, billingAddressId }: CheckoutFo
     <DataWrapper
       data={data}
       isLoading={isLoading || isAddressesLoading}
+      refetch={refetch}
       error={error}
     >
       {(cart) => (

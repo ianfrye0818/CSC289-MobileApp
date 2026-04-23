@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
  */
 export default function AuthOrderDetailScreen() {
   const { id } = useLocalSearchParams();
-  const { data, isLoading, error } = useOrderDetails(Number(id));
+  const { data, isLoading, error, refetch } = useOrderDetails(Number(id));
 
   return (
     <SafeAreaView
@@ -22,6 +22,7 @@ export default function AuthOrderDetailScreen() {
         data={data}
         isLoading={isLoading}
         error={error}
+        refetch={refetch}
       >
         {(order) => <OrderDetailScreen order={order as unknown as OrderDetails} />}
       </DataWrapper>

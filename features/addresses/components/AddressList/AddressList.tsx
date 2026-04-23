@@ -9,7 +9,7 @@ import { useGetCurrentCustomerAddresses } from '../../hooks/useGetCurrentCustome
 import { AddressRow } from './AddressRow';
 
 export default function AddressList() {
-  const { data, isLoading, error } = useGetCurrentCustomerAddresses();
+  const { data, isLoading, error, refetch } = useGetCurrentCustomerAddresses();
   const router = useRouter();
 
   return (
@@ -17,6 +17,7 @@ export default function AddressList() {
       <DataWrapper
         isLoading={isLoading}
         error={error}
+        refetch={refetch}
         data={data}
       >
         {(addresses) => (
@@ -44,7 +45,7 @@ export default function AddressList() {
       </DataWrapper>
       <Button
         className='mt-auto w-full'
-        onPress={() => router.push('/addresses/add') }
+        onPress={() => router.push('/addresses/add')}
       >
         Add Address
       </Button>

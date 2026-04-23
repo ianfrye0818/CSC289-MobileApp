@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EditAddressScreen() {
   const { id } = useLocalSearchParams();
-  const { data, isLoading, error } = useGetCurrentCustomerAddressById(Number(id));
+  const { data, isLoading, error, refetch } = useGetCurrentCustomerAddressById(Number(id));
 
   const router = useRouter();
 
@@ -20,6 +20,7 @@ export default function EditAddressScreen() {
         data={data}
         isLoading={isLoading}
         error={error}
+        refetch={refetch}
       >
         {(address) => (
           <UpdateAddressForm
