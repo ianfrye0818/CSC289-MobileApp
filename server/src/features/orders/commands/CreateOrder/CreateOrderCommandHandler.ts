@@ -3,11 +3,14 @@ import { ExpoPushService } from '@/features/notifications/services/ExpoPushServi
 import { AppLogger } from '@/services/AppLogger.service';
 import { PrismaService, TX } from '@/services/Prisma.service';
 import { CreatedMessageResponse } from '@/types/MessageReponse.type';
+import { ValueOf } from '@/types/ValueOf';
+import { faker } from '@faker-js/faker';
 import { Order_Item, Prisma } from '@generated/prisma/client';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PaymentMethod } from '../../dtos/PaymentMethod.dto';
 import { PaymentStatus } from '../../dtos/PaytmentStatus.enum';
+import { ShippingStatus } from '../../dtos/ShippingStatus.enum';
 import { CreateOrderCommand } from './CreateOrderCommand';
 
 export type DbOrder = Prisma.OrderGetPayload<{
@@ -16,6 +19,35 @@ export type DbOrder = Prisma.OrderGetPayload<{
     payment: true;
   };
 }>;
+
+export const pickRandom = <T>(arr: T[]): T => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
+export const ShippingCarrier = {
+  DHL: 'DHL',
+  UPS: 'UPS',
+  FedEx: 'FedEx',
+  USPS: 'USPS',
+  DPD: 'DPD',
+  Royal_Mail: 'Royal_Mail',
+  Hermes: 'Hermes',
+  DHL_Express: 'DHL_Express',
+  UPS_Express: 'UPS_Express',
+  FedEx_Express: 'FedEx_Express',
+  USPS_Express: 'USPS_Express',
+  DPD_Express: 'DPD_Express',
+} as const;
+
+export type ShippingCarrier = ValueOf<typeof ShippingCarrier>;
+
+export const getRandomShippingCarrier = (): ShippingCarrier => {
+  return pickRandom(Object.values(ShippingCarrier));
+};
+
+export const getRandomTrackingNumber = (): string => {
+  return faker.string.alphanumeric(18).toUpperCase();
+};
 /**
  * Handles `CreateOrderCommand` — converts a shopping cart into a confirmed order.
  *
@@ -214,5 +246,28 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
         },
       });
     }
+  }
+
+  private async createShipping(
+    tx: TX,
+    orderId: number,
+    shippingAddressId: number,
+    billingAddressId: number,
+    shippingCost: number,
+  ) {
+    const carrier = getRandomShippingCarrier();
+    const trackingNumber = getRandomTrackingNumber();
+    return await tx.shipping.create({
+      data: {
+        Order_ID: orderId,
+        Cost: shippingCost,
+        Ship_Status: ShippingStatus.PENDING,
+        Carrier: carrier,
+        Billing_Address_ID: billingAddressId,
+        Shipping_Address_ID: shippingAddressId,
+        Created_At: new Date(),
+        Tracking_Number: trackingNumber,
+      },
+    });
   }
 }
