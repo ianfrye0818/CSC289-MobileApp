@@ -11,6 +11,15 @@ interface AccountCardProps {
   customer: CustomerDetails;
 }
 
+function getInitials(firstName: string, lastName: string): string {
+  const a = firstName.trim().charAt(0);
+  const b = lastName.trim().charAt(0);
+  if (a && b) return (a + b).toUpperCase();
+  if (a) return a.toUpperCase();
+  if (b) return b.toUpperCase();
+  return '?';
+}
+
 export function AccountCard({ customer }: AccountCardProps) {
   const { firstName, lastName, email, phone, id } = customer;
   const router = useRouter();
