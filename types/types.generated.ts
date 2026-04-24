@@ -88,6 +88,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/customers/{customerId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update customer details */
+        patch: operations["CustomerController_updateCustomerDetails"];
+        trace?: never;
+    };
     "/api/cart": {
         parameters: {
             query?: never;
@@ -343,6 +360,18 @@ export interface components {
             phone?: string | null;
             memberDetails: components["schemas"]["CustomerMemberDetailsResponseDto"];
         };
+        UpdateCustomerRequestDto: {
+            firstName: string;
+            lastName?: string;
+            phone?: string;
+        };
+        UpdatedMessageResponse: {
+            statusCode: number;
+            message: string;
+            data?: {
+                [key: string]: unknown;
+            };
+        };
         CartItemDiscountDto: {
             discountId: number;
             /** @enum {string} */
@@ -383,13 +412,6 @@ export interface components {
         AddItemToCartRequestDto: {
             productId: number;
             quantity: number;
-        };
-        UpdatedMessageResponse: {
-            statusCode: number;
-            message: string;
-            data?: {
-                [key: string]: unknown;
-            };
         };
         UpdateItemQuantityRequestDto: {
             inventoryId: number;
@@ -872,6 +894,79 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CustomerDetailsResponseDto"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadRequestException"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedException"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictException"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InternalServerErrorException"];
+                };
+            };
+        };
+    };
+    CustomerController_updateCustomerDetails: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                customerId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCustomerRequestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdatedMessageResponse"];
                 };
             };
             400: {

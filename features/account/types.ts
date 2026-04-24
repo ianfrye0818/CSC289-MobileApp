@@ -7,3 +7,4 @@ import { components } from '@/types/types.generated';
 export type CustomerDetails = components['schemas']['CustomerDetailsResponseDto'];
 export type CustomerMemberDetails = components['schemas']['CustomerMemberDetailsResponseDto'];
 export type MembershipLevel = CustomerMemberDetails['memberShipLevel'];
+export type UpdateCustomerRequestDto = components['schemas']['UpdateCustomerRequestDto'];

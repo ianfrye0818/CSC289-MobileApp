@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { isNil } from 'lodash';
 import { twMerge } from 'tailwind-merge';
 
 /**
@@ -17,4 +18,21 @@ import { twMerge } from 'tailwind-merge';
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function formatPhoneNumber(input?: string | number): string {
+  if (isNil(input)) {
+    return '';
+  }
+  const digits = String(input).replace(/\D/g, '');
+
+  if (digits.length !== 10) {
+    throw new Error('Phone number must contain exactly 10 digits');
+  }
+
+  const areaCode = digits.slice(0, 3);
+  const prefix = digits.slice(3, 6);
+  const lineNumber = digits.slice(6);
+
+  return `(${areaCode}) ${prefix}-${lineNumber}`;
 }

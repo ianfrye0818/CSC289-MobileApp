@@ -53,6 +53,15 @@ export default function AuthLayout() {
       />
 
       <Stack.Screen
+        name="account/[id]"
+        options={{
+          headerShown: true,
+          title: "Edit Account",
+          headerBackTitle: "Back",
+        }}
+      />
+   
+      <Stack.Screen
         name="addresses/edit/[id]"
         options={{
           headerShown: true,
@@ -61,5 +70,7 @@ export default function AuthLayout() {
         }}
       />
     </Stack>
+
+    
   );
 }
