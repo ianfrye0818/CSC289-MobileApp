@@ -6,7 +6,7 @@ import { RegisterPushTokenCommandHandler } from '../commands/RegisterPushToken/R
 // Uncomment this import together with sites 2 (class field) and 3 (send logic
 // in sendToCustomer) once `npm install expo-server-sdk` has been run. All
 // three sites must be uncommented together or the file will not compile.
-// import { Expo, ExpoPushMessage } from 'expo-server-sdk';
+import { Expo, ExpoPushMessage } from 'expo-server-sdk';
 
 /**
  * Sends push notifications to customers via the Expo Push API.
@@ -35,7 +35,7 @@ export class ExpoPushService {
   // Uncomment this field together with sites 1 (import) and 3 (send logic in
   // sendToCustomer) once `npm install expo-server-sdk` has been run. All three
   // sites must be uncommented together or the file will not compile.
-  // private readonly expo = new Expo();
+  private readonly expo = new Expo();
 
   /**
    * Fire-and-forget send to one customer's registered device. Errors are
@@ -65,38 +65,26 @@ export class ExpoPushService {
       return;
     }
 
-    // STUB: log the message that would be sent. Remove this line and
-    // uncomment the real-send block below once expo-server-sdk is installed.
-    this.logger.log(
-      `[push:stub] → customer ${customerId}: title="${title}" body="${body}" data=${JSON.stringify(data ?? {})}`,
-    );
-
-    // --- Expo activation site 3 of 3: send logic ---
-    // Uncomment this block together with sites 1 (import) and 2 (class field)
-    // once `npm install expo-server-sdk` has been run, and remove the stub log
-    // above. All three sites must be uncommented together or the file will not
-    // compile.
-    //
-    // try {
-    //   const messages: ExpoPushMessage[] = [
-    //     { to: token, sound: 'default', title, body, data },
-    //   ];
-    //   const chunks = this.expo.chunkPushNotifications(messages);
-    //   for (const chunk of chunks) {
-    //     const tickets = await this.expo.sendPushNotificationsAsync(chunk);
-    //     for (const ticket of tickets) {
-    //       if (ticket.status === 'error') {
-    //         this.logger.warn(
-    //           `Expo rejected push for customer ${customerId}: ${ticket.message}`,
-    //         );
-    //       }
-    //     }
-    //   }
-    // } catch (err) {
-    //   this.logger.error(
-    //     `Failed to send push to customer ${customerId}: ${(err as Error).message}`,
-    //   );
-    // }
+    try {
+      const messages: ExpoPushMessage[] = [
+        { to: token, sound: 'default', title, body, data },
+      ];
+      const chunks = this.expo.chunkPushNotifications(messages);
+      for (const chunk of chunks) {
+        const tickets = await this.expo.sendPushNotificationsAsync(chunk);
+        for (const ticket of tickets) {
+          if (ticket.status === 'error') {
+            this.logger.warn(
+              `Expo rejected push for customer ${customerId}: ${ticket.message}`,
+            );
+          }
+        }
+      }
+    } catch (err) {
+      this.logger.error(
+        `Failed to send push to customer ${customerId}: ${(err as Error).message}`,
+      );
+    }
   }
 
   /** Convenience wrapper for the order-created event. */
