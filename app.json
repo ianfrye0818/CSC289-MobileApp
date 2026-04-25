@@ -15,6 +15,7 @@
     "android": {
       "softwareKeyboardLayoutMode": "resize",
       "package": "com.csc289sp2026.elevateretail",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
