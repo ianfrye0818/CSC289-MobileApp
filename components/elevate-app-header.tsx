@@ -6,12 +6,13 @@ import { ThemedText } from '@/components/ui/themed-text';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 
-const LOGO = require('@/assets/images/icon_new.png');
+const LOGO = require('@/assets/images/icon.png');
 
 export function ElevateAppHeader() {
   const colorScheme = useColorScheme() ?? 'light';
   const backgroundColor = useThemeColor({}, 'background');
-  const borderColor = colorScheme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)';
+  const borderColor =
+    colorScheme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)';
 
   return (
     <SafeAreaView
@@ -32,14 +33,8 @@ export function ElevateAppHeader() {
           <View style={styles.third} />
           <View style={styles.third} />
         </View>
-        <View
-          style={styles.titleLayer}
-          pointerEvents='none'
-        >
-          <ThemedText
-            type='defaultSemiBold'
-            style={styles.title}
-          >
+        <View style={styles.titleLayer} pointerEvents='none'>
+          <ThemedText type='defaultSemiBold' style={styles.title}>
             Elevate Retail
           </ThemedText>
         </View>

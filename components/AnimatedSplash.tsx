@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, Image, Text, Dimensions } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSequence,
-  withDelay,
   Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withTiming,
 } from 'react-native-reanimated';
 
 // Timing constants — adjust here to tune the whole sequence.
@@ -127,7 +127,7 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
   }));
 
   return (
-    <View style={styles.container} pointerEvents="none">
+    <View style={styles.container} pointerEvents='none'>
       <Animated.View style={[styles.centerOverlay, signatureAnimatedStyle]}>
         <Text style={styles.signatureLine}>The A</Text>
         <Text style={styles.signatureLine}>Team</Text>
@@ -135,9 +135,9 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
 
       <Animated.View style={[styles.centerOverlay, logoAnimatedStyle]}>
         <Image
-          source={require('@/assets/images/icon_new.png')}
+          source={require('@/assets/images/icon.png')}
           style={styles.logo}
-          resizeMode="contain"
+          resizeMode='contain'
         />
       </Animated.View>
     </View>
