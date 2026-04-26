@@ -3,30 +3,30 @@
 DOCKER_REPO="ianfrye/csc289mobile:latest"
 
 # If error exit
-set -3
+set -e
 
 #  Go do the server dir
 cd ../server
 
 # Make sure docker and builx are installed
-if ! command -v docker &> /dev/null; then
-    echo "Docker could not be found"
-    exit 1
+if ! command -v docker &>/dev/null; then
+  echo "Docker could not be found"
+  exit 1
 fi
 
 # docker buildx version
-if ! docker buildx version &> /dev/null; then
-    echo "Buildx could not be found"
-    exit 1
+if ! docker buildx version &>/dev/null; then
+  echo "Buildx could not be found"
+  exit 1
 fi
 
 # Build the server
 docker buildx build --platform linux/amd64 -t $DOCKER_REPO . --no-cache
 
 # Verify the image was built
-if ! docker images | grep -q $DOCKER_REPO; then
-    echo "Image $DOCKER_REPO was not built"
-    exit 1
+if ! docker image inspect $DOCKER_REPO &>/dev/null; then
+  echo "Image $DOCKER_REPO was not built"
+  exit 1
 fi
 
 # Push the image to the repository
