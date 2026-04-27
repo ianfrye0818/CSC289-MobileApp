@@ -32,3 +32,11 @@ export function formatPhoneNumber(input?: string | number): string {
 
   return `(${areaCode}) ${prefix}-${lineNumber}`;
 }
+
+export function formatCurrency(currency?: number): string {
+  if (!currency) return 'N/A';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(currency);
+}
