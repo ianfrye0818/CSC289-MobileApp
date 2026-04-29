@@ -16,10 +16,7 @@ interface Props {
 
 export function CartCard({ cartItem, itemCount, showQuantityAdjustor = true }: Props) {
   const lineTotal = cartItem.unitPrice * cartItem.quantity;
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(lineTotal);
+  const formattedPrice = formatCurrency(lineTotal);
 
   return (
     <Card className='flex-row gap-0 overflow-hidden items-stretch py-0'>

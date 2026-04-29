@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { useCheckout } from '@/features/orders/hooks/useCheckout';
+import { useCheckout } from '@/features/checkout/hooks/useCheckout';
 import { useFormContext } from 'react-hook-form';
 import { ActivityIndicator, View } from 'react-native';
 import { CheckoutFormValues } from '../checkout.schema';

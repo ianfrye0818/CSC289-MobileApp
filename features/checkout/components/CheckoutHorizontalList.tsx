@@ -1,7 +1,7 @@
 import { Text } from '@/components/ui/text';
 import { FlatList, View } from 'react-native';
-import { ShoppingCart } from '../types';
-import { CartCard } from './CartCard';
+import { CartCard } from '../../cart/components/CartCard';
+import { ShoppingCart } from '../../cart/types';
 
 interface Props {
   items: ShoppingCart;
@@ -29,7 +29,7 @@ export function CheckoutHorizontalList({ items, title }: Props) {
         renderItem={({ item }) => (
           <CartCard
             cartItem={item}
-            cartId={items.cartId??0}
+            cartId={items.cartId ?? 0}
             itemCount={item.quantity}
             showQuantityAdjustor={false}
           />

@@ -50,6 +50,6 @@ export function getRandomShippingCost() {
 }
 
 export function formatCurrency(amount: number) {
-  if (!amount || isNaN(amount)) return 'N/A';
+  if (!Number.isFinite(amount)) return 'N/A';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 }

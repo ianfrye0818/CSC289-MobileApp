@@ -1,11 +1,12 @@
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Text } from "@/components/ui/text";
-import { cn } from "@/lib/utils";
-import { Link } from "expo-router";
-import { ChevronRight } from "lucide-react-native";
-import { Pressable, View } from "react-native";
-import { OrderListItem } from "../types";
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Text } from '@/components/ui/text';
+import { cn, formatCurrency } from '@/lib/utils';
+import { formatDate } from 'date-fns';
+import { Link } from 'expo-router';
+import { ChevronRight } from 'lucide-react-native';
+import { Pressable, View } from 'react-native';
+import { OrderListItem } from '../types';
 
 /**
  * Maps a status string to a Badge variant.
@@ -13,18 +14,18 @@ import { OrderListItem } from "../types";
  */
 const statusVariant = (status: string) => {
   switch (status.toUpperCase()) {
-    case "COMPLETED":
-    case "DELIVERED":
-      return "success" as const;
-    case "CANCELLED":
-    case "FAILED":
-      return "destructive" as const;
-    case "PROCESSING":
-    case "SHIPPED":
-      return "default" as const;
-    case "PENDING":
+    case 'COMPLETED':
+    case 'DELIVERED':
+      return 'success' as const;
+    case 'CANCELLED':
+    case 'FAILED':
+      return 'destructive' as const;
+    case 'PROCESSING':
+    case 'SHIPPED':
+      return 'default' as const;
+    case 'PENDING':
     default:
-      return "secondary" as const;
+      return 'secondary' as const;
   }
 };
 
@@ -51,50 +52,43 @@ export function OrderHistoryCard({ order, status }: Props) {
      Guard against invalid or unexpected date formats from the API. */
   const itemCount = order.itemCount;
   const orderDate = new Date(order.orderDate);
-  const formattedDate = isNaN(orderDate.getTime())
-    ? "Date unavailable"
-    : new Intl.DateTimeFormat("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }).format(orderDate);
+  const formattedDate = formatDate(orderDate, 'MMM d, yyyy');
 
-  const formattedTotal = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(order.totalAmount);
+  const formattedTotal = formatCurrency(order.totalAmount);
 
   return (
-    <Link href={`/orders/${order.id}`} push asChild>
-      <Pressable android_ripple={{ color: "rgba(0,0,0,0.05)" }}>
+    <Link
+      href={`/orders/${order.id}`}
+      push
+      asChild
+    >
+      <Pressable android_ripple={{ color: 'rgba(0,0,0,0.05)' }}>
         {({ pressed }) => (
-          <Card className={cn("gap-0 px-4 py-4", pressed && "opacity-80")}>
-            <View className="flex-row items-center justify-between">
+          <Card className={cn('gap-0 px-4 py-4', pressed && 'opacity-80')}>
+            <View className='flex-row items-center justify-between'>
               {/* Left side: order info */}
-              <View className="flex-1 gap-1">
-                <View className="flex-row items-center gap-2">
-                  <Text className="font-semibold text-base text-foreground">
-                    Order #{order.id}
-                  </Text>
+              <View className='flex-1 gap-1'>
+                <View className='flex-row items-center gap-2'>
+                  <Text className='font-semibold text-base text-foreground'>Order #{order.id}</Text>
                   {status != null && (
                     <Badge variant={statusVariant(status)}>
                       <Text>{status}</Text>
                     </Badge>
                   )}
                 </View>
-                <Text className="text-muted-foreground text-sm">
+                <Text className='text-muted-foreground text-sm'>
                   {formattedDate}
-                  {itemCount != null &&
-                    ` · ${itemCount} item${itemCount !== 1 ? "s" : ""}`}
+                  {itemCount != null && ` · ${itemCount} item${itemCount !== 1 ? 's' : ''}`}
                 </Text>
               </View>
 
               {/* Right side: total + chevron */}
-              <View className="flex-row items-center gap-2">
-                <Text className="font-semibold text-foreground text-base">
-                  {formattedTotal}
-                </Text>
-                <ChevronRight size={18} className="text-muted-foreground" />
+              <View className='flex-row items-center gap-2'>
+                <Text className='font-semibold text-foreground text-base'>{formattedTotal}</Text>
+                <ChevronRight
+                  size={18}
+                  className='text-muted-foreground'
+                />
               </View>
             </View>
           </Card>

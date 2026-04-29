@@ -1,9 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
+import { formatCurrency } from '@/lib/utils';
 import { getPaymentLabel } from '@/types/PaymentMethod.enum';
 import { getShippingCarrierLabel } from '@/types/ShippingCarriers.enum';
+import { formatDate } from 'date-fns';
 import { capitalize } from 'lodash';
+import { useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
 import { OrderAddress, OrderDetails } from '../types';
 import { OrderLineItem } from './OrderLineItem';
@@ -56,36 +59,15 @@ interface Props {
  * Rendered inside a DataWrapper by the route at app/(auth)/orders/[id].
  */
 export default function OrderDetailScreen({ order }: Props) {
-  const formattedDate = new Date(order.orderDate);
-  const dateString = isNaN(formattedDate.getTime())
-    ? 'Date unavailable'
-    : new Intl.DateTimeFormat('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      }).format(formattedDate);
-
-  const formattedTotal = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(order.totalAmount);
-
-  const formattedShippingCost = order.shipping?.cost
-    ? new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(order.shipping.cost)
-    : 'N/A';
-
   /* Calculate subtotal and tax from line items */
-  const subtotal = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const totalTax = order.items.reduce((sum, item) => sum + (item.tax ?? 0), 0);
-
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
+  const subtotal = useMemo(
+    () => order.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [order.items],
+  );
+  const totalTax = useMemo(
+    () => order.items.reduce((sum, item) => sum + (item.tax ?? 0), 0),
+    [order.items],
+  );
 
   return (
     <ScrollView
@@ -95,7 +77,9 @@ export default function OrderDetailScreen({ order }: Props) {
       {/* Order header */}
       <View className='gap-1'>
         <Text className='text-2xl font-bold text-foreground'>Order #{order.id}</Text>
-        <Text className='text-muted-foreground text-sm'>{dateString}</Text>
+        <Text className='text-muted-foreground text-sm'>
+          {formatDate(new Date(order.orderDate), 'MMM d, yyyy')}
+        </Text>
       </View>
 
       {/* Line items */}
@@ -139,7 +123,7 @@ export default function OrderDetailScreen({ order }: Props) {
             ))}
           <View className='flex-row justify-between pt-2 border-t border-border mt-1'>
             <Text className='font-bold text-foreground'>Total</Text>
-            <Text className='font-bold text-foreground'>{formattedTotal}</Text>
+            <Text className='font-bold text-foreground'>{formatCurrency(order.totalAmount)}</Text>
           </View>
         </View>
       </Card>
@@ -192,11 +176,9 @@ export default function OrderDetailScreen({ order }: Props) {
               <View className='flex-row items-center justify-between'>
                 <Text className='text-muted-foreground text-sm'>Shipped</Text>
                 <Text className='text-foreground text-sm'>
-                  {new Intl.DateTimeFormat('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  }).format(new Date(order.shipping.shippedOn))}
+                  {order.shipping.shippedOn
+                    ? formatDate(new Date(order.shipping.shippedOn), 'MMM d, yyyy')
+                    : 'N/A'}
                 </Text>
               </View>
             )}
@@ -204,11 +186,9 @@ export default function OrderDetailScreen({ order }: Props) {
               <View className='flex-row items-center justify-between'>
                 <Text className='text-muted-foreground text-sm'>Expected by</Text>
                 <Text className='text-foreground text-sm'>
-                  {new Intl.DateTimeFormat('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  }).format(new Date(order.shipping.expectedBy))}
+                  {order.shipping.expectedBy
+                    ? formatDate(new Date(order.shipping.expectedBy), 'MMM d, yyyy')
+                    : 'N/A'}
                 </Text>
               </View>
             )}
