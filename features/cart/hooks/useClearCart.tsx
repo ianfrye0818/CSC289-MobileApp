@@ -10,11 +10,7 @@ export const useClearCart = () => {
 
   return useMutation({
     mutationFn: async (dto: { cartId: number }) =>
-      apiClient
-        .DELETE('/api/cart/{cartId}', {
-          params: { path: { cartId: dto.cartId } },
-        })
-        .then(unwrapResponse),
+      apiClient.DELETE('/api/cart').then(unwrapResponse),
     onError: (error) => {
       appToast.error(error.message);
     },

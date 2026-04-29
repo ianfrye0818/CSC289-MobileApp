@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthUserDto } from '../auth/types/AuthUserDto.type';
 import { AddItemToCartCommand } from './commands/AddItemToCart/AddItemToCartCommand';
-import { DeleteCartCommand } from './commands/DeleteCart/DeleteCartCommand';
+import { DeleteCurrentCustomersCartsCommand } from './commands/DeleteCart/DeleteCurrentUsersCartsCommand';
 import {
   RemoveItemFromCartCommand,
   RemoveItemFromCartRequestDto,
@@ -46,7 +46,6 @@ export class CartController {
     private readonly commandBus: CommandBus,
   ) {}
 
-  // get current users cart GET /cart
   @Get()
   @ApiOperation({ summary: 'Get current users cart' })
   @ApiOkResponse({ type: ShoppingCartResponseDto })
@@ -61,7 +60,6 @@ export class CartController {
     return this.queryBus.execute(new GetCartQtyQuery(user.id));
   }
 
-  // add item to cart POST /cart/items
   @Post('add')
   @ApiOperation({ summary: 'Add item to cart' })
   @ApiBody({ type: AddItemToCartRequestDto })
@@ -73,7 +71,6 @@ export class CartController {
     return this.commandBus.execute(new AddItemToCartCommand(user.id, body));
   }
 
-  // Update quantity of an item in the cart PATCH /cart/itesm/:productId
   @Patch('items/:cartId')
   @ApiOperation({ summary: 'Update quantity of an item in the cart' })
   @ApiBody({ type: UpdateItemQuantityRequestDto })
@@ -88,7 +85,16 @@ export class CartController {
     );
   }
 
-  // Delete an item from the cart DELETE /cart/items/:productId
+  // Delete Cart DELETE /cart
+  @Delete()
+  @ApiOperation({ summary: 'Delete current customers carts' })
+  @ApiOkResponse({ type: DeletedMessageResponse })
+  async deleteCurrentCustomersCarts(@User() user: AuthUserDto) {
+    return this.commandBus.execute(
+      new DeleteCurrentCustomersCartsCommand(user.id),
+    );
+  }
+
   @Delete('items/:cartId')
   @ApiOperation({ summary: 'Delete an item from the cart' })
   @ApiParam({ name: 'cartId', type: Number, required: true })
@@ -101,16 +107,5 @@ export class CartController {
     return this.commandBus.execute(
       new RemoveItemFromCartCommand(cartId, user.id, body),
     );
-  }
-  // Delete Cart DELETE /cart
-  @Delete(':cartId')
-  @ApiOperation({ summary: 'Delete cart' })
-  @ApiOkResponse({ type: DeletedMessageResponse })
-  @ApiParam({ name: 'cartId', type: Number, required: true })
-  async deleteCart(
-    @Param('cartId', ParseIntPipe) cartId: number,
-    @User() user: AuthUserDto,
-  ) {
-    return this.commandBus.execute(new DeleteCartCommand(cartId, user.id));
   }
 }

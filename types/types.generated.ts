@@ -116,7 +116,8 @@ export interface paths {
         get: operations["CartController_getCurrentCustomerCart"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete current customers carts */
+        delete: operations["CartController_deleteCurrentCustomersCarts"];
         options?: never;
         head?: never;
         patch?: never;
@@ -172,23 +173,6 @@ export interface paths {
         head?: never;
         /** Update quantity of an item in the cart */
         patch: operations["CartController_updateItemQuantity"];
-        trace?: never;
-    };
-    "/api/cart/{cartId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete cart */
-        delete: operations["CartController_deleteCart"];
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/api/orders": {
@@ -387,7 +371,7 @@ export interface components {
             productName: string;
             productDescription?: string | null;
             imageUrl?: string | null;
-            category: components["schemas"]["ProductCategoryDto"] | null;
+            categoryName: string;
             discounts: components["schemas"]["CartItemDiscountDto"][];
         };
         CartItemDto: {
@@ -417,16 +401,16 @@ export interface components {
             inventoryId: number;
             quantity: number;
         };
-        RemoveItemFromCartRequestDto: {
-            inventoryId: number;
-            quantity: number;
-        };
         DeletedMessageResponse: {
             statusCode: number;
             message: string;
             data?: {
                 [key: string]: unknown;
             };
+        };
+        RemoveItemFromCartRequestDto: {
+            inventoryId: number;
+            quantity: number;
         };
         OrderCustomerDto: {
             id: number;
@@ -486,10 +470,20 @@ export interface components {
             orderDate: string;
             totalAmount: number;
         };
+        CreateOrderCommandCreditCardDto: {
+            cardNumber: string;
+            expiryMonth: number;
+            expiryYear: number;
+            cvc: number;
+        };
         CreateOrderCommandDto: {
             cartId: number;
+            shippingAddressId: number;
+            billingAddressId: number;
             /** @enum {string} */
-            paymentMethod: "CREDIT_CARD" | "DEBIT_CARD" | "PAYPAL" | "GOOGLE_PAY" | "APPLE_PAY" | "BANK_TRANSFER" | "CASH_ON_DELIVERY";
+            paymentMethod: "CREDIT_CARD" | "PAYPAL" | "GOOGLE_PAY" | "APPLE_PAY";
+            creditCard?: components["schemas"]["CreateOrderCommandCreditCardDto"];
+            shippingCost: number;
         };
         CreatedMessageResponse: {
             statusCode: number;
@@ -1086,6 +1080,73 @@ export interface operations {
             };
         };
     };
+    CartController_deleteCurrentCustomersCarts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeletedMessageResponse"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadRequestException"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedException"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictException"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InternalServerErrorException"];
+                };
+            };
+        };
+    };
     CartController_getCartQty: {
         parameters: {
             query?: never;
@@ -1326,75 +1387,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UpdatedMessageResponse"];
-                };
-            };
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BadRequestException"];
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedException"];
-                };
-            };
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ForbiddenException"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundException"];
-                };
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictException"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InternalServerErrorException"];
-                };
-            };
-        };
-    };
-    CartController_deleteCart: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                cartId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DeletedMessageResponse"];
                 };
             };
             400: {
