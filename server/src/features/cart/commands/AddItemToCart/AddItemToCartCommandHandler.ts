@@ -1,6 +1,6 @@
 import { PrismaService } from '@/services/Prisma.service';
 import { UpdatedMessageResponse } from '@/types/MessageReponse.type';
-import { Shopping_Cart, Shopping_Cart_Item } from '@generated/prisma/client';
+import { Prisma } from '@generated/prisma/client';
 import { BadRequestException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AddItemToCartCommand } from './AddItemToCartCommand';
@@ -16,6 +16,18 @@ import { AddItemToCartCommand } from './AddItemToCartCommand';
  *    - **Exists** → increment `Quantity` by the requested amount.
  *    - **New** → create a new cart item with the requested quantity.
  */
+
+const cartInclude = {
+  items: {
+    include: {
+      inventory: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.Shopping_CartInclude;
 @CommandHandler(AddItemToCartCommand)
 export class AddItemToCartCommandHandler implements ICommandHandler<AddItemToCartCommand> {
   constructor(private readonly prisma: PrismaService) {}
@@ -23,27 +35,15 @@ export class AddItemToCartCommandHandler implements ICommandHandler<AddItemToCar
   async execute(
     command: AddItemToCartCommand,
   ): Promise<UpdatedMessageResponse> {
-    let cart: Shopping_Cart | null = null;
-
     // Get cart or create a new one - For simplicity sake, we are just going to get the latest cart for the customer. Down the road, you could add in a cart id
-    cart = await this.prisma.shopping_Cart.findFirst({
+    let cart = await this.prisma.shopping_Cart.findFirst({
       where: {
         Customer_ID: command.userId,
       },
       orderBy: {
         Created_At: 'desc',
       },
-      include: {
-        items: {
-          include: {
-            inventory: {
-              include: {
-                product: true,
-              },
-            },
-          },
-        },
-      },
+      include: cartInclude,
     });
 
     if (!cart) {
@@ -51,6 +51,7 @@ export class AddItemToCartCommandHandler implements ICommandHandler<AddItemToCar
         data: {
           Customer_ID: command.userId,
         },
+        include: cartInclude,
       });
     }
 
@@ -67,9 +68,7 @@ export class AddItemToCartCommandHandler implements ICommandHandler<AddItemToCar
     if (!inventory || inventory.Quantity <= 0)
       throw new BadRequestException('Product is out of stock');
 
-    let cartItem: Shopping_Cart_Item | null = null;
-
-    cartItem = await this.prisma.shopping_Cart_Item.findFirst({
+    let cartItem = await this.prisma.shopping_Cart_Item.findFirst({
       where: {
         Cart_ID: cart.Cart_ID,
         Inventory_ID: inventory.Inventory_ID,

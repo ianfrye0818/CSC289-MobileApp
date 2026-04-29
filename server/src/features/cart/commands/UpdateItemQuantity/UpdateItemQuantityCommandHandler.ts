@@ -5,7 +5,8 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
+import { GetCurrentCustomerCartQuery } from '../../queries/GetCurrentCustomerCart/GetCurrentCustomerCartQuery';
 import { UpdateItemQuantityCommand } from './UpdateItemQuantityCommand';
 
 /**
@@ -17,15 +18,22 @@ import { UpdateItemQuantityCommand } from './UpdateItemQuantityCommand';
  */
 @CommandHandler(UpdateItemQuantityCommand)
 export class UpdateItemQuantityCommandHandler implements ICommandHandler<UpdateItemQuantityCommand> {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly querybus: QueryBus,
+  ) {}
 
   async execute(
     command: UpdateItemQuantityCommand,
   ): Promise<UpdatedMessageResponse> {
+    const cart = await this.querybus.execute(
+      new GetCurrentCustomerCartQuery(command.userId),
+    );
+
     const cartItem = await this.prisma.shopping_Cart_Item.findUnique({
       where: {
         Cart_ID_Inventory_ID: {
-          Cart_ID: command.cartId,
+          Cart_ID: cart.cartId,
           Inventory_ID: command.dto.inventoryId,
         },
       },
@@ -49,7 +57,7 @@ export class UpdateItemQuantityCommandHandler implements ICommandHandler<UpdateI
     await this.prisma.shopping_Cart_Item.update({
       where: {
         Cart_ID_Inventory_ID: {
-          Cart_ID: command.cartId,
+          Cart_ID: cart.cartId,
           Inventory_ID: command.dto.inventoryId,
         },
       },
@@ -60,7 +68,7 @@ export class UpdateItemQuantityCommandHandler implements ICommandHandler<UpdateI
 
     return new UpdatedMessageResponse(
       'Cart item quantity updated successfully',
-      command.cartId,
+      cart.cartId,
     );
   }
 }

@@ -6,6 +6,8 @@ import { ProductCard } from './ProductCard';
 interface Props {
   products: ProductListItem[];
   title?: string;
+  /** Use on product detail suggestions so each tap swaps the current detail, not the stack. */
+  navigateFromProductDetail?: boolean;
 }
 
 /**
@@ -16,7 +18,7 @@ interface Props {
  * @param error - The error to display
  * @returns
  */
-export function ProductHorizontalList({ products, title }: Props) {
+export function ProductHorizontalList({ products, title, navigateFromProductDetail }: Props) {
   return (
     <View className='gap-3'>
       {title && <Text className='text-lg font-semibold px-4'>{title}</Text>}
@@ -30,6 +32,7 @@ export function ProductHorizontalList({ products, title }: Props) {
           <ProductCard
             product={item}
             className='w-40 flex-none'
+            navigateFromProductDetail={navigateFromProductDetail}
           />
         )}
       />

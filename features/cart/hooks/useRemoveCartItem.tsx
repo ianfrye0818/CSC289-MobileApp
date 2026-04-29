@@ -9,9 +9,8 @@ export const useRemoveCartItem = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (payload: { cartId: number; dto: RemoveItemFromCartRequest }) => {
-      const { data, error } = await apiClient.DELETE('/api/cart/items/{cartId}', {
-        params: { path: { cartId: payload.cartId } },
+    mutationFn: async (payload: { dto: RemoveItemFromCartRequest }) => {
+      const { data, error } = await apiClient.DELETE('/api/cart/item', {
         body: payload.dto,
       });
       if (error) throw error;

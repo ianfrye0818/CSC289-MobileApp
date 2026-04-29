@@ -48,3 +48,8 @@ export function getRandomShippingCost() {
   const lo = Math.min(MIN, MAX);
   return Math.floor(Math.random() * (hi - lo + 1)) + lo;
 }
+
+export function formatCurrency(amount: number) {
+  if (!amount || isNaN(amount)) return 'N/A';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+}

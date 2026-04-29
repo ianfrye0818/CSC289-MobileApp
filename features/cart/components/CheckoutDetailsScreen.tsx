@@ -1,206 +1,190 @@
-import { DataWrapper } from "@/components/DataWrapper";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Text } from "@/components/ui/text";
-import { useGetCurrentCustomerAddresses } from "@/features/addresses/hooks/useGetCurrentCustomerAddresses";
-import { AddressResponseDto } from "@/features/addresses/types";
-import { useCheckout } from "@/features/orders/hooks/useCheckout";
-import { TAX_RATE } from "@/server/src/constants";
-import { useEffect, useState } from "react";
-import { Platform, ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useCart } from "../hooks/useCart";
-import { ShoppingCart } from "../types";
-import { CheckoutHorizontalList } from "./CheckoutHorizontalList";
+import { Card } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Text } from '@/components/ui/text';
+import { useGetCurrentCustomerAddresses } from '@/features/addresses/hooks/useGetCurrentCustomerAddresses';
+import { AddressResponseDto } from '@/features/addresses/types';
+import { TAX_RATE } from '@/lib/constants';
+import { formatCurrency, getRandomShippingCost } from '@/lib/utils';
+import { getPaymentLabel, PaymentMethod } from '@/types/PaymentMethod.enum';
+import { upperCase } from 'lodash';
+import { useEffect, useMemo } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Platform, ScrollView, View } from 'react-native';
+import { CheckoutFormValues } from '../checkout.schema';
+import { ShoppingCart } from '../types';
+import { CheckoutHorizontalList } from './CheckoutHorizontalList';
+import { PurchaseButton } from './PurchaseButton';
 
 export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
-  const { data, isLoading, error } = useCart();
-  const cartItems = data?.items ?? [];
-  const totalPrice = cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
-  const taxAmount = totalPrice * TAX_RATE;
+  const items = cart.items;
+  const totalPrice = useMemo(
+    () => items.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
+    [items],
+  );
+  const taxAmount = useMemo(() => totalPrice * TAX_RATE, [totalPrice]);
   const shippingCost = getRandomShippingCost();
-  const finalAmount = totalPrice + taxAmount + shippingCost;
-  const { data: addresses } = useGetCurrentCustomerAddresses();
-  const [selectedAddress, setSelectedAddress] = useState<AddressResponseDto | null>(null);
-  const [selectedPayment, setSelectedPayment] = useState<string>("");
+  const finalAmount = useMemo(
+    () => totalPrice + taxAmount + shippingCost,
+    [totalPrice, taxAmount, shippingCost],
+  );
 
-  useEffect(() => {
-    if (addresses && addresses.length > 0 && !selectedAddress) {
-      setSelectedAddress(addresses[0]);
-    }
-  }, [addresses, selectedAddress]);
-
-  const paymentTypes = ["Credit Card", Platform.OS === "ios" ? "Apple Pay" : "Google Pay", "PayPal"];
-
-  const formatAddress = (address: AddressResponseDto | null): string => {
-    const parts = [
-      address?.line1,
-      address?.line2,
-      [address?.city, address?.state, address?.zipcode].filter(Boolean).join(", "),
-      address?.country,
-    ].filter(Boolean);
-  
-    return parts.length > 0 ? parts.join("\n") : "No address on file";
-  };
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={["bottom"]}>
-      <ScrollView
-        contentContainerStyle={{ padding: 16, gap: 16 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <DataWrapper
-          data={cartItems}
-          isLoading={isLoading}
-          error={error}
-        >
-          <View className="gap-3">
-            <Text className="text-2xl font-bold text-foreground">Cart</Text>
-            <CheckoutHorizontalList items={cart} />
-          </View>
-        </DataWrapper>
-        {/* Summary card */}
-        <Card className="gap-0 px-4 py-3">
-          <Text className="text-2xl font-bold text-foreground">Summary</Text>
-          <View className="pt-3 gap-1">
-            <View className="flex-row justify-between">
-              <Text className="text-lg font-medium text-foreground">Subtotal</Text>
-              <Text className="text-lg font-bold text-foreground">
-                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
-                  totalPrice,
-                )}
-              </Text>
-            </View>
-            {taxAmount > 0 && (
-              <View className="flex-row justify-between">
-                <Text className="text-lg font-medium text-foreground">Tax</Text>
-                <Text className="text-lg font-bold text-foreground">
-                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
-                    taxAmount,
-                  )}
-                </Text>
-              </View>
-            )}
-            {shippingCost > 0 && (
-              <View className="flex-row justify-between">
-                <Text className="text-lg font-medium text-foreground">Shipping</Text>
-                <Text className="text-lg font-bold text-foreground">
-                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
-                    shippingCost,
-                  )}
-                </Text>
-              </View>
-            )}
-            {finalAmount > 0 && (
-              <View className="flex-row justify-between">
-                <Text className="text-lg font-bold text-foreground">Total</Text>
-                <Text className="text-lg font-bold text-foreground">
-                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
-                    finalAmount,
-                  )}
-                </Text>
-              </View>
-            )}
-          </View>
-        </Card>
+    <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
+      <View className='gap-3'>
+        <Text className='text-2xl font-bold text-foreground'>Cart</Text>
+        <CheckoutHorizontalList items={cart} />
+      </View>
+      {/* Summary card */}
+      <Card className='gap-0 px-4 py-3'>
+        <Text className='text-2xl font-bold text-foreground'>Summary</Text>
+        <View className='pt-3 gap-1'>
+          <SummaryCardRow
+            label='Subtotal'
+            value={totalPrice}
+          />
+          <SummaryCardRow
+            label='Tax'
+            value={taxAmount}
+          />
+          <SummaryCardRow
+            label='Shipping'
+            value={shippingCost}
+          />
+          <SummaryCardRow
+            label='Total'
+            value={finalAmount}
+          />
+        </View>
+      </Card>
 
-        {/* Shipping address */}
-        <Card className="gap-0 px-4 py-3">
-          <Text className="text-2xl font-bold text-foreground">Shipping Address</Text>
-          <View className="gap-1">
-            <Text className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-              Shipping
-            </Text>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <View className="min-h-12 bg-muted rounded px-3 py-3">
-                  <Text className="text-foreground text-sm">
-                    {formatAddress(selectedAddress)}
-                  </Text>
-                </View>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuRadioGroup
-                  value={selectedAddress?.id.toString()}
-                  onValueChange={(value) => {
-                    const addr = addresses?.find(a => a.id.toString() === value);
-                    setSelectedAddress(addr ?? null);
-                  }}
-                >
-                  {addresses?.map((addr) => (
-                    <DropdownMenuRadioItem key={addr.id} value={addr.id.toString()}>
-                      <Text className="text-foreground text-sm">
-                        {formatAddress(addr)}
-                      </Text>
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </View>
-        </Card>
-        
-        {/* Payment methods */}
-        <Card className="gap-0 px-4 py-3">
-          <Text className="text-2xl font-bold text-foreground">Payment Type</Text>
-          <View className="pt-3 gap-1">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <View className="h-12 bg-muted rounded px-3 justify-center">
-                  <Text className="text-foreground text-sm">
-                    {selectedPayment || "Select payment method"}
-                  </Text>
-                </View>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuRadioGroup
-                  value={selectedPayment}
-                  onValueChange={setSelectedPayment}
-                >
-                  {paymentTypes.map((type) => (
-                    <DropdownMenuRadioItem key={type} value={type}>
-                      <Text className="text-foreground text-sm">{type}</Text>
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </View>
-        </Card>
-      </ScrollView>
-      {/* Purchase button */}
-        <PurchaseButton
-          disabled={!selectedAddress || !selectedPayment}
-        />
-    </SafeAreaView>
+      {/* Shipping address */}
+      <AddressCard type='shipping' />
+
+      {/* Billing Address */}
+      {/* TODO: add checkbox to toggle billing address */}
+      <AddressCard type='billing' />
+
+      {/* Payment methods */}
+      <SelectPaymentCard />
+
+      <PurchaseButton />
+    </ScrollView>
   );
 }
 
-function PurchaseButton({
-  disabled,
-}: {
-  disabled: boolean;
-}) {
+function SummaryCardRow({ label, value }: { label: string; value: number }) {
   return (
-    <View className="px-4 py-3">
-      <Button
-        disabled={disabled}
-        onPress={useCheckout}
-      >
-        <Text>Purchase</Text>
-      </Button>
+    <View className='flex-row justify-between'>
+      <Text className='text-lg font-medium text-foreground'>{label}</Text>
+      <Text className='text-lg font-bold text-foreground'>{formatCurrency(value)}</Text>
     </View>
   );
 }
 
-function getRandomShippingCost() {
-  const maxRaw = process.env.EXPO_PUBLIC_MAX_SHIPPING_COST ?? process.env.MAX_SHIPPING_COST;
-  const minRaw = process.env.EXPO_PUBLIC_MIN_SHIPPING_COST ?? process.env.MIN_SHIPPING_COST;
-  const maxParsed = maxRaw != null && maxRaw !== '' ? Number(maxRaw) : Number.NaN;
-  const minParsed = minRaw != null && minRaw !== '' ? Number(minRaw) : Number.NaN;
-  const MAX = Number.isFinite(maxParsed) ? maxParsed : 25;
-  const MIN = Number.isFinite(minParsed) ? minParsed : 0;
-  const hi = Math.max(MIN, MAX);
-  const lo = Math.min(MIN, MAX);
-  return Math.floor(Math.random() * (hi - lo + 1)) + lo;
+function AddressCard({ type }: { type: 'shipping' | 'billing' }) {
+  const { data: addresses } = useGetCurrentCustomerAddresses();
+  const defaultAddress = addresses?.[0];
+  const form = useFormContext<CheckoutFormValues>();
+  const selectedAddressId = useWatch({ control: form.control, name: `${type}AddressId` });
+
+  const handleSelect = (addressId: string | undefined) => {
+    if (!addressId) return;
+    form.setValue(`${type}AddressId`, Number(addressId));
+  };
+
+  useEffect(() => {
+    if (!selectedAddressId && defaultAddress) {
+      form.setValue(`${type}AddressId`, defaultAddress.id);
+    }
+  }, [selectedAddressId, defaultAddress, form, type]);
+
+  const getAddressLabel = (address: AddressResponseDto) => {
+    return upperCase(
+      `${address.line1}, ${address.line2 || ''} ${address.city}, ${address.state} ${address.zipcode}`,
+    );
+  };
+
+  return (
+    <Card className='gap-0 px-4 py-3'>
+      <Text className='text-2xl font-bold text-foreground'>Shipping Address</Text>
+      <View className='gap-1'>
+        <Text className='text-xs text-muted-foreground font-medium uppercase tracking-wide'>
+          Shipping
+        </Text>
+        <Controller
+          control={form.control}
+          name={`${type}AddressId`}
+          render={({ field }) => (
+            <Select
+              value={{ label: field.value?.toString() ?? '', value: field.value?.toString() ?? '' }}
+              onValueChange={field.onChange}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder='Select an address' />
+              </SelectTrigger>
+              <SelectContent className='w-[180px]'>
+                {(addresses ?? []).map((ad) => (
+                  <SelectItem
+                    value={ad.id.toString()}
+                    key={ad.id}
+                    label={getAddressLabel(ad)}
+                  />
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </View>
+    </Card>
+  );
+}
+
+function SelectPaymentCard() {
+  const form = useFormContext<CheckoutFormValues>();
+  const defaultPaymentMethod =
+    Platform.OS === 'ios'
+      ? PaymentMethod.APPLE_PAY
+      : Platform.OS === 'android'
+        ? PaymentMethod.GOOGLE_PAY
+        : PaymentMethod.PAYPAL;
+
+  useEffect(() => {
+    if (!form.getValues('paymentMethod') && defaultPaymentMethod) {
+      form.setValue('paymentMethod', defaultPaymentMethod);
+    }
+  }, [form.getValues('paymentMethod'), defaultPaymentMethod, form]);
+
+  return (
+    <Card className='gap-0 px-4 py-3'>
+      <Text className='text-2xl font-bold text-foreground'>Payment Type</Text>
+      <View className='pt-3 gap-1'>
+        <Controller
+          control={form.control}
+          name='paymentMethod'
+          render={({ field }) => (
+            <Select value={{ label: field.value, value: field.value }}>
+              <SelectTrigger>
+                <SelectValue placeholder='Select a payment method' />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(PaymentMethod).map((method) => (
+                  <SelectItem
+                    key={method}
+                    value={method}
+                    label={getPaymentLabel(method)}
+                  />
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </View>
+    </Card>
+  );
 }

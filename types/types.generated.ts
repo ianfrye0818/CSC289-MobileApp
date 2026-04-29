@@ -157,7 +157,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/cart/items/{cartId}": {
+    "/api/cart/item": {
         parameters: {
             query?: never;
             header?: never;
@@ -383,7 +383,7 @@ export interface components {
         };
         ShoppingCartResponseDto: {
             /** @description Present when the customer has a cart row; omitted until the first cart is created (e.g. on first add-to-cart). */
-            cartId?: number | null;
+            cartId: number;
             customerId: number;
             items: components["schemas"]["CartItemDto"][];
             subtotal: number;
@@ -410,7 +410,6 @@ export interface components {
         };
         RemoveItemFromCartRequestDto: {
             inventoryId: number;
-            quantity: number;
         };
         OrderCustomerDto: {
             id: number;
@@ -1297,9 +1296,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                cartId: number;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody: {
@@ -1370,9 +1367,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                cartId: number;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody: {

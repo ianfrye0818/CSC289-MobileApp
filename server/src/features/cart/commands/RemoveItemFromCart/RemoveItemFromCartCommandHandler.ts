@@ -1,7 +1,8 @@
 import { PrismaService } from '@/services/Prisma.service';
 import { DeletedMessageResponse } from '@/types/MessageReponse.type';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { NotFoundException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
+import { GetCurrentCustomerCartQuery } from '../../queries/GetCurrentCustomerCart/GetCurrentCustomerCartQuery';
 import { RemoveItemFromCartCommand } from './RemoveItemFromCartCommand';
 
 /**
@@ -13,33 +14,32 @@ import { RemoveItemFromCartCommand } from './RemoveItemFromCartCommand';
  */
 @CommandHandler(RemoveItemFromCartCommand)
 export class RemoveItemFromCartCommandHandler implements ICommandHandler<RemoveItemFromCartCommand> {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly querybus: QueryBus,
+  ) {}
 
   async execute(
     command: RemoveItemFromCartCommand,
   ): Promise<DeletedMessageResponse> {
+    const cart = await this.querybus.execute(
+      new GetCurrentCustomerCartQuery(command.userId),
+    );
     const cartItem = await this.prisma.shopping_Cart_Item.findUnique({
       where: {
         Cart_ID_Inventory_ID: {
-          Cart_ID: command.cartId,
+          Cart_ID: cart.cartId,
           Inventory_ID: command.dto.inventoryId,
         },
-      },
-      include: {
-        cart: true,
       },
     });
 
     if (!cartItem) throw new NotFoundException('Cart item not found');
-    if (cartItem.cart.Customer_ID !== command.userId)
-      throw new ForbiddenException(
-        'You are not authorized to remove an item from this cart.',
-      );
 
     await this.prisma.shopping_Cart_Item.delete({
       where: {
         Cart_ID_Inventory_ID: {
-          Cart_ID: command.cartId,
+          Cart_ID: cart.cartId,
           Inventory_ID: command.dto.inventoryId,
         },
       },

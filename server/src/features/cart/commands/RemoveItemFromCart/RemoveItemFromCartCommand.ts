@@ -8,16 +8,10 @@ export class RemoveItemFromCartRequestDto {
   @IsNumber()
   @IsNotEmpty()
   inventoryId: number;
-
-  @ApiProperty({ type: Number, required: true })
-  @IsNumber()
-  @IsNotEmpty()
-  quantity: number;
 }
 
 export class RemoveItemFromCartCommand extends Command<DeletedMessageResponse> {
   constructor(
-    public readonly cartId: number,
     public readonly userId: number,
     public readonly dto: RemoveItemFromCartRequestDto,
   ) {

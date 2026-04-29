@@ -3,24 +3,9 @@ import {
   DeletedMessageResponse,
   UpdatedMessageResponse,
 } from '@/types/MessageReponse.type';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import {
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUserDto } from '../auth/types/AuthUserDto.type';
 import { AddItemToCartCommand } from './commands/AddItemToCart/AddItemToCartCommand';
 import { DeleteCurrentCustomersCartsCommand } from './commands/DeleteCart/DeleteCurrentUsersCartsCommand';
@@ -71,17 +56,16 @@ export class CartController {
     return this.commandBus.execute(new AddItemToCartCommand(user.id, body));
   }
 
-  @Patch('items/:cartId')
+  @Patch('item')
   @ApiOperation({ summary: 'Update quantity of an item in the cart' })
   @ApiBody({ type: UpdateItemQuantityRequestDto })
   @ApiOkResponse({ type: UpdatedMessageResponse })
   async updateItemQuantity(
-    @Param('cartId', ParseIntPipe) cartId: number,
     @Body() body: UpdateItemQuantityRequestDto,
     @User() user: AuthUserDto,
   ) {
     return this.commandBus.execute(
-      new UpdateItemQuantityCommand(cartId, user.id, body),
+      new UpdateItemQuantityCommand(user.id, body),
     );
   }
 
@@ -95,17 +79,15 @@ export class CartController {
     );
   }
 
-  @Delete('items/:cartId')
+  @Delete('item')
   @ApiOperation({ summary: 'Delete an item from the cart' })
-  @ApiParam({ name: 'cartId', type: Number, required: true })
   @ApiOkResponse({ type: DeletedMessageResponse })
   async deleteItemFromCart(
-    @Param('cartId', ParseIntPipe) cartId: number,
     @Body() body: RemoveItemFromCartRequestDto,
     @User() user: AuthUserDto,
   ) {
     return this.commandBus.execute(
-      new RemoveItemFromCartCommand(cartId, user.id, body),
+      new RemoveItemFromCartCommand(user.id, body),
     );
   }
 }

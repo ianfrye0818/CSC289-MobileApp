@@ -16,7 +16,7 @@ export class DeleteCurrentUsersCartsCommandHandler implements ICommandHandler<De
       },
     });
 
-    this.prisma.$transaction(async (tx) => {
+    await this.prisma.$transaction(async (tx) => {
       // Go through and delete all customers cart items and carts
       // This way we have no orphaned carts and potential orphaned cart items
       for (const cart of carts) {

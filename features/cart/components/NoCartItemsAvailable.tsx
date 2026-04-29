@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import { ShoppingCart } from 'lucide-react-native';
 import React from 'react';
 import { Text, View } from 'react-native';
@@ -11,8 +12,15 @@ export default function NoCartItemsAvailable() {
       />
       <Text className='text-foreground text-center text-lg font-semibold'>Your cart is empty</Text>
       <Text className='text-muted-foreground text-center text-base'>
-        Add products from the Store to get started.
+        Add products from the{' '}
+        <Link
+          href={'/products'}
+          className='text-blue-500'
+        >
+          Store
+        </Link>{' '}
+        to get started.
       </Text>
     </View>
-);
+  );
 }

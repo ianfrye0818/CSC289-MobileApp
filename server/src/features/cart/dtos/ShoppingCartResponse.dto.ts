@@ -55,8 +55,8 @@ export class CartItemDto {
 
 export class ShoppingCartResponseDto {
   /** Present when the customer has a cart row; omitted until the first cart is created (e.g. on first add-to-cart). */
-  @ApiProperty({ type: Number, required: false, nullable: true })
-  cartId: number | null;
+  @ApiProperty({ type: Number, required: true })
+  cartId: number;
   @ApiProperty({ type: Number, required: true })
   customerId: number;
   @ApiProperty({ type: [CartItemDto], required: true })
