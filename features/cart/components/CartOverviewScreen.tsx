@@ -75,7 +75,6 @@ export default function CartOverviewScreen() {
         <CheckoutButton
           cartItems={data?.items}
           totalPrice={totalPrice}
-          router={router}
         />
       </SafeAreaView>
   );
@@ -89,6 +88,7 @@ function ClearCartButton({
   const removeCartItem = useRemoveCartItem();
   const clearCart = useClearCart();
   const [dialogOpen, setDialogOpen] = useState(false);
+  
   const confirmClear = async () => {
     if (!data?.cartId || !data?.items) return;
 
@@ -104,7 +104,7 @@ function ClearCartButton({
     clearCart.mutate({ cartId: data.cartId });
     
     setDialogOpen(false);
-};
+  };
 
   return (
     <>
@@ -150,13 +150,12 @@ function ClearCartButton({
 function CheckoutButton({
   cartItems,
   totalPrice,
-  router,
 }: {
   cartItems?: CartItem[];
   totalPrice: number;
-  router: any;
 }) {
   const { isPending } = useCart();
+  const router = useRouter();
   return (
     <View className='px-4 border-t border-border'>
       <Text className='text-lg font-medium text-center text-foreground'>Subtotal</Text>

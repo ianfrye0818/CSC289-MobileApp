@@ -6,6 +6,7 @@ import { Text } from "@/components/ui/text";
 import { useGetCurrentCustomerAddresses } from "@/features/addresses/hooks/useGetCurrentCustomerAddresses";
 import { AddressResponseDto } from "@/features/addresses/types";
 import { useCheckout } from "@/features/orders/hooks/useCheckout";
+import { getRandomShippingCost } from "@/lib/utils";
 import { TAX_RATE } from "@/server/src/constants";
 import { useEffect, useState } from "react";
 import { Platform, ScrollView, View } from "react-native";
@@ -34,14 +35,15 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
   const paymentTypes = ["Credit Card", Platform.OS === "ios" ? "Apple Pay" : "Google Pay", "PayPal"];
 
   const formatAddress = (address: AddressResponseDto | null): string => {
-    const parts = [
-      address?.line1,
-      address?.line2,
-      [address?.city, address?.state, address?.zipcode].filter(Boolean).join(", "),
-      address?.country,
-    ].filter(Boolean);
-  
-    return parts.length > 0 ? parts.join("\n") : "No address on file";
+    if (!address) return "No Address on file";
+
+      const parts = [
+        address?.line1,
+        address?.line2,
+        [address?.city, address?.state, address?.zipcode].filter(Boolean).join(", "),
+        address?.country,
+      ].filter(Boolean);
+      return parts.join("\n");
   };
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["bottom"]}>
@@ -191,16 +193,4 @@ function PurchaseButton({
       </Button>
     </View>
   );
-}
-
-function getRandomShippingCost() {
-  const maxRaw = process.env.EXPO_PUBLIC_MAX_SHIPPING_COST ?? process.env.MAX_SHIPPING_COST;
-  const minRaw = process.env.EXPO_PUBLIC_MIN_SHIPPING_COST ?? process.env.MIN_SHIPPING_COST;
-  const maxParsed = maxRaw != null && maxRaw !== '' ? Number(maxRaw) : Number.NaN;
-  const minParsed = minRaw != null && minRaw !== '' ? Number(minRaw) : Number.NaN;
-  const MAX = Number.isFinite(maxParsed) ? maxParsed : 25;
-  const MIN = Number.isFinite(minParsed) ? minParsed : 0;
-  const hi = Math.max(MIN, MAX);
-  const lo = Math.min(MIN, MAX);
-  return Math.floor(Math.random() * (hi - lo + 1)) + lo;
 }
