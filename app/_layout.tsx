@@ -7,8 +7,10 @@ import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Appearance, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+Appearance.setColorScheme('light');
 import Toast from 'react-native-toast-message';
 import '../global.css';
 

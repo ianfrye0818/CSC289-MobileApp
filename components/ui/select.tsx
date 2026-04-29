@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import * as SelectPrimitive from '@rn-primitives/select';
 import { Check, ChevronDown, ChevronDownIcon, ChevronUpIcon } from 'lucide-react-native';
 import * as React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, useColorScheme } from 'react-native';
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { FullWindowOverlay as RNFullWindowOverlay } from 'react-native-screens';
 
@@ -88,12 +88,17 @@ function SelectContent({
   }) {
   const { triggerPosition } = SelectPrimitive.useRootContext();
   const widthStyle = triggerPosition ? { width: triggerPosition.width } : undefined;
+  const colorScheme = useColorScheme();
+  // CSS variables (bg-background, text-popover-foreground, etc.) don't resolve inside
+  // portals on native because the portal renders outside the NativeWind context tree.
+  // Use literal colors via inline style so the dropdown is always readable.
+  const nativeBg = colorScheme === 'dark' ? '#18181b' : '#ffffff';
 
   return (
     <SelectPrimitive.Portal hostName={portalHost}>
       <FullWindowOverlay>
         <SelectPrimitive.Overlay style={Platform.select({ native: StyleSheet.absoluteFill })}>
-          <TextClassContext.Provider value='text-popover-foreground'>
+          <TextClassContext.Provider value={colorScheme === 'dark' ? 'text-zinc-50' : 'text-zinc-900'}>
             <NativeOnlyAnimatedView
               className='z-50'
               entering={FadeIn}
@@ -101,7 +106,10 @@ function SelectContent({
             >
               <SelectPrimitive.Content
                 // @ts-expect-error - style array is valid for View but types are strict
-                style={widthStyle ? [style, widthStyle].filter(Boolean) : style}
+                style={Platform.select({
+                  native: [{ backgroundColor: nativeBg }, widthStyle, style].filter(Boolean),
+                  default: widthStyle ? [style, widthStyle].filter(Boolean) : style,
+                })}
                 className={cn(
                   'overflow-hidden relative z-[9999] min-w-[8rem] rounded-md border border-gray-200 bg-white shadow-md shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900',
                   Platform.select({
@@ -186,7 +194,7 @@ function SelectItem({
           />
         </SelectPrimitive.ItemIndicator>
       </View>
-      <SelectPrimitive.ItemText className='text-foreground group-active:text-accent-foreground select-none text-sm' />
+      <SelectPrimitive.ItemText className='text-zinc-900 dark:text-zinc-50 group-active:text-accent-foreground select-none text-sm' />
     </SelectPrimitive.Item>
   );
 }
