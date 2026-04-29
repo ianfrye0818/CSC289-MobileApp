@@ -27,14 +27,14 @@ export function formatPhoneNumber(input?: string | number): string {
   const digits = String(input).replace(/\D/g, '');
 
   if (digits.length !== 10) {
-    throw new Error('Phone number must contain exactly 10 digits');
+    return digits;
   }
 
-  const areaCode = digits.slice(0, 3);
-  const prefix = digits.slice(3, 6);
-  const lineNumber = digits.slice(6);
+  const areaCode = digits.slice(0, 3);
+  const prefix = digits.slice(3, 6);
+  const lineNumber = digits.slice(6);
 
-  return `(${areaCode}) ${prefix}-${lineNumber}`;
+  return `(${areaCode}) ${prefix}-${lineNumber}`;
 }
 
 export function getRandomShippingCost() {
@@ -47,4 +47,9 @@ export function getRandomShippingCost() {
   const hi = Math.max(MIN, MAX);
   const lo = Math.min(MIN, MAX);
   return Math.floor(Math.random() * (hi - lo + 1)) + lo;
+}
+
+export function formatCurrency(amount: number) {
+  if (!Number.isFinite(amount)) return 'N/A';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 }

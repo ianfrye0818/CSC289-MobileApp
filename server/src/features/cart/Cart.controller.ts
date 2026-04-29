@@ -3,27 +3,12 @@ import {
   DeletedMessageResponse,
   UpdatedMessageResponse,
 } from '@/types/MessageReponse.type';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import {
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUserDto } from '../auth/types/AuthUserDto.type';
 import { AddItemToCartCommand } from './commands/AddItemToCart/AddItemToCartCommand';
-import { DeleteCartCommand } from './commands/DeleteCart/DeleteCartCommand';
+import { DeleteCurrentCustomersCartsCommand } from './commands/DeleteCart/DeleteCurrentUsersCartsCommand';
 import {
   RemoveItemFromCartCommand,
   RemoveItemFromCartRequestDto,
@@ -46,7 +31,6 @@ export class CartController {
     private readonly commandBus: CommandBus,
   ) {}
 
-  // get current users cart GET /cart
   @Get()
   @ApiOperation({ summary: 'Get current users cart' })
   @ApiOkResponse({ type: ShoppingCartResponseDto })
@@ -61,7 +45,6 @@ export class CartController {
     return this.queryBus.execute(new GetCartQtyQuery(user.id));
   }
 
-  // add item to cart POST /cart/items
   @Post('add')
   @ApiOperation({ summary: 'Add item to cart' })
   @ApiBody({ type: AddItemToCartRequestDto })
@@ -73,44 +56,38 @@ export class CartController {
     return this.commandBus.execute(new AddItemToCartCommand(user.id, body));
   }
 
-  // Update quantity of an item in the cart PATCH /cart/itesm/:productId
-  @Patch('items/:cartId')
+  @Patch('item')
   @ApiOperation({ summary: 'Update quantity of an item in the cart' })
   @ApiBody({ type: UpdateItemQuantityRequestDto })
   @ApiOkResponse({ type: UpdatedMessageResponse })
   async updateItemQuantity(
-    @Param('cartId', ParseIntPipe) cartId: number,
     @Body() body: UpdateItemQuantityRequestDto,
     @User() user: AuthUserDto,
   ) {
     return this.commandBus.execute(
-      new UpdateItemQuantityCommand(cartId, user.id, body),
+      new UpdateItemQuantityCommand(user.id, body),
     );
   }
 
-  // Delete an item from the cart DELETE /cart/items/:productId
-  @Delete('items/:cartId')
+  // Delete Cart DELETE /cart
+  @Delete()
+  @ApiOperation({ summary: 'Delete current customers carts' })
+  @ApiOkResponse({ type: DeletedMessageResponse })
+  async deleteCurrentCustomersCarts(@User() user: AuthUserDto) {
+    return this.commandBus.execute(
+      new DeleteCurrentCustomersCartsCommand(user.id),
+    );
+  }
+
+  @Delete('item')
   @ApiOperation({ summary: 'Delete an item from the cart' })
-  @ApiParam({ name: 'cartId', type: Number, required: true })
   @ApiOkResponse({ type: DeletedMessageResponse })
   async deleteItemFromCart(
-    @Param('cartId', ParseIntPipe) cartId: number,
     @Body() body: RemoveItemFromCartRequestDto,
     @User() user: AuthUserDto,
   ) {
     return this.commandBus.execute(
-      new RemoveItemFromCartCommand(cartId, user.id, body),
+      new RemoveItemFromCartCommand(user.id, body),
     );
-  }
-  // Delete Cart DELETE /cart
-  @Delete(':cartId')
-  @ApiOperation({ summary: 'Delete cart' })
-  @ApiOkResponse({ type: DeletedMessageResponse })
-  @ApiParam({ name: 'cartId', type: Number, required: true })
-  async deleteCart(
-    @Param('cartId', ParseIntPipe) cartId: number,
-    @User() user: AuthUserDto,
-  ) {
-    return this.commandBus.execute(new DeleteCartCommand(cartId, user.id));
   }
 }

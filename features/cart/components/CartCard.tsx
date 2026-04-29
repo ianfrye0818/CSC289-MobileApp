@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { Link } from 'expo-router';
 import { Image, Pressable, View } from 'react-native';
 import { CartItem } from '../types';
@@ -14,12 +14,9 @@ interface Props {
   showQuantityAdjustor?: boolean;
 }
 
-export function CartCard({ cartItem, cartId, itemCount, showQuantityAdjustor }: Props) {
+export function CartCard({ cartItem, itemCount, showQuantityAdjustor = true }: Props) {
   const lineTotal = cartItem.unitPrice * cartItem.quantity;
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(lineTotal);
+  const formattedPrice = formatCurrency(lineTotal);
 
   return (
     <Card className='flex-row gap-0 overflow-hidden items-stretch py-0'>
@@ -61,18 +58,10 @@ export function CartCard({ cartItem, cartId, itemCount, showQuantityAdjustor }: 
         </Link>
         {cartItem.quantity >= 2 && (
           <Text className='text-sm text-muted-foreground'>
-            {new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              }).format(cartItem.unitPrice)}/unit
+            {formatCurrency(cartItem.unitPrice)}/unit
           </Text>
         )}
-        {showQuantityAdjustor && (
-          <QuantityAdjustor
-            cartItem={cartItem}
-            cartId={cartId}
-          />
-        )}
+        {showQuantityAdjustor && <QuantityAdjustor cartItem={cartItem} />}
         <Text className='text-muted-foreground text-lg'>
           {formattedPrice}
           {itemCount != null && ` · ${itemCount} item${itemCount !== 1 ? 's' : ''}`}

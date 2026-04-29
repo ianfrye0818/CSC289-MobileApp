@@ -1,47 +1,46 @@
 import { DataWrapper } from '@/components/DataWrapper';
 import { Button } from '@/components/ui/button';
-import * as DBox from '@/components/ui/dialog';
 import { Text } from '@/components/ui/text';
+import { formatCurrency } from '@/lib/utils';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, View } from 'react-native';
+import { useMemo } from 'react';
+import { Alert, FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCart } from '../hooks/useCart';
 import { useClearCart } from '../hooks/useClearCart';
-import { useRemoveCartItem } from '../hooks/useRemoveCartItem';
-import { CartItem, ShoppingCart } from '../types';
+import { CartItem } from '../types';
 import { CartCard } from './CartCard';
 import NoCartItemsAvailable from './NoCartItemsAvailable';
 
 export default function CartOverviewScreen() {
-  const { data, isLoading, error, refetch, dataUpdatedAt } = useCart();
-  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
-  const router = useRouter();
-
-  const handleRefresh = async () => {
-    setIsManualRefreshing(true);
-    await refetch();
-    setIsManualRefreshing(false);
-  };
-  const totalPrice = data?.items.reduce((total, item) => total + item.unitPrice * item.quantity, 0) ?? 0;
+  const queryClient = useQueryClient();
+  const { data, isLoading, error, refetch } = useCart();
 
   const cartId = data?.cartId;
 
   return (
-      <SafeAreaView className='flex-1 bg-background' edges={['left', 'right', 'bottom']}>
-        <View className='flex-1'>
-          <DataWrapper
-            data={data?.items}
-            isLoading={isLoading}
-            error={error}
-            noDataComponent={<NoCartItemsAvailable />}
-          >
-            {(cartItems: CartItem[]) => (
+    <SafeAreaView
+      className='flex-1 bg-background'
+      edges={['left', 'right', 'bottom']}
+    >
+      <View className='flex-1'>
+        <DataWrapper
+          data={data?.items}
+          isLoading={isLoading}
+          error={error}
+          noDataComponent={<NoCartItemsAvailable />}
+        >
+          {(cartItems: CartItem[]) => (
+            <>
               <FlatList
                 data={cartItems}
                 keyExtractor={(item) => String(item.inventoryId)}
-                extraData={{ dataUpdatedAt, cartId }}
-                contentContainerStyle={{ padding: 16, gap: 12 }}
+                contentContainerStyle={{
+                  padding: 16,
+                  gap: 12,
+                  flexGrow: 1,
+                }}
                 removeClippedSubviews={false}
                 renderItem={({ item }) =>
                   cartId != null ? (
@@ -52,8 +51,8 @@ export default function CartOverviewScreen() {
                     />
                   ) : null
                 }
-                refreshing={isManualRefreshing}
-                onRefresh={handleRefresh}
+                refreshing={isLoading}
+                onRefresh={refetch}
                 showsVerticalScrollIndicator={false}
                 ListHeaderComponent={
                   <View className='mb-1'>
@@ -62,123 +61,142 @@ export default function CartOverviewScreen() {
                 }
                 ListEmptyComponent={<NoCartItemsAvailable />}
               />
-            )}
-          </DataWrapper>
-        </View>
-
-        {/* Clear cart button */}
-        <ClearCartButton
-          data={data}
-        />
-
-        {/* Checkout button */}
-        <CheckoutButton
-          cartItems={data?.items}
-          totalPrice={totalPrice}
-        />
-      </SafeAreaView>
+              <Footer cartItems={cartItems} />
+            </>
+          )}
+        </DataWrapper>
+      </View>
+    </SafeAreaView>
   );
 }
 
-function ClearCartButton({ 
-  data,
-}: { 
-  data?: ShoppingCart;
-}) {
-  const removeCartItem = useRemoveCartItem();
-  const clearCart = useClearCart();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  
-  const confirmClear = async () => {
-    if (!data?.cartId || !data?.items) return;
-
-    await Promise.all(
-      data.items.map(item =>
-        removeCartItem.mutate({
-          cartId: data.cartId!,
-          dto: { inventoryId: item.inventoryId , quantity: item.quantity },
-        })
-      )
-    );
-
-    clearCart.mutate({ cartId: data.cartId });
-    
-    setDialogOpen(false);
-  };
-
-  return (
-    <>
-      <DBox.Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DBox.DialogContent>
-            <DBox.DialogHeader>
-              <DBox.DialogTitle>Clear Cart?</DBox.DialogTitle>
-            </DBox.DialogHeader>
-
-            <Text>All items will be removed from your cart.</Text>
-
-            <DBox.DialogFooter>
-              <DBox.DialogClose asChild>
-                <Pressable
-                  className="px-4 py-2 rounded bg-slate-200"
-                  android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
-                >
-                  <Text>Cancel</Text>
-                </Pressable>
-              </DBox.DialogClose>
-
-              <Pressable
-                className="px-4 py-2 rounded bg-red-500"
-                android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
-                onPress={confirmClear}
-              >
-                <Text className="text-white">Clear</Text>
-              </Pressable>
-            </DBox.DialogFooter>
-          </DBox.DialogContent>
-        </DBox.Dialog>
-
-        <Button
-          disabled={!data || !data.items || data.items.length === 0}
-          onPress={() => setDialogOpen(true)}
-        >
-          <Text>Clear Cart</Text>
-        </Button>
-      </>
-  );
-}
-
-function CheckoutButton({
-  cartItems,
-  totalPrice,
-}: {
-  cartItems?: CartItem[];
-  totalPrice: number;
-}) {
-  const { isPending } = useCart();
+function CheckoutButton({ disabled = false }: { disabled?: boolean }) {
   const router = useRouter();
   return (
-    <View className='px-4 border-t border-border'>
-      <Text className='text-lg font-medium text-center text-foreground'>Subtotal</Text>
-      <Text className='text-lg font-bold text-center text-foreground'>
-        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
-          totalPrice,
-        )}
-      </Text>
+    <Button
+      disabled={disabled}
+      onPress={() => {
+        router.push('/checkout');
+      }}
+    >
+      <Text>Checkout</Text>
+    </Button>
+  );
+}
+
+function Footer({ cartItems }: { cartItems: CartItem[] }) {
+  const totalPrice = useMemo(
+    () => cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
+    [cartItems],
+  );
+
+  function ClearCartButton() {
+    const { mutate: clearCart } = useClearCart();
+
+    const onConfirm = () => {
+      Alert.alert(
+        'Clear Cart',
+        'Are you sure you want to clear your cart? This action cannot be undone.',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {
+            text: 'Clear',
+            onPress: () => clearCart(),
+            style: 'destructive',
+          },
+        ],
+      );
+    };
+
+    return (
       <Button
-        disabled={!cartItems || cartItems.length === 0}
-        onPress={() => {
-          router.push('/cart/checkout');
-        }}
+        onPress={onConfirm}
+        variant={'destructive'}
       >
-        {isPending ? (
-          <ActivityIndicator
-            size='small'
-            color='white'
-          />
-        ) : (
-        <Text>Checkout</Text>
-        )}
+        Clear Cart
       </Button>
+    );
+  }
+
+  return (
+    <View className='px-4 border-t border-border'>
+      <View>
+        <View className='flex-row justify-between'>
+          <Text className='text-lg font-medium text-center text-foreground'>Subtotal</Text>
+          <Text className='text-lg font-bold text-center text-foreground'>
+            {formatCurrency(totalPrice)}
+          </Text>
+        </View>
+      </View>
+      <View className='gap-2'>
+        <CheckoutButton />
+        <ClearCartButton />
+      </View>
     </View>
   );
 }
+
+// const clearCart = useClearCart();
+// const [dialogOpen, setDialogOpen] = useState(false);
+// const confirmClear = async () => {
+//   if (!data?.cartId || !data?.items) return;
+
+//   await Promise.all(
+//     data.items.map((item) =>
+//       removeCartItem.mutate({
+//         cartId: data.cartId!,
+//         dto: { inventoryId: item.inventoryId, quantity: item.quantity },
+//       }),
+//     ),
+//   );
+
+//   clearCart.mutate({ cartId: data.cartId });
+
+//   setDialogOpen(false);
+// };
+
+// return (
+//   <>
+//     <DBox.Dialog
+//       open={dialogOpen}
+//       onOpenChange={setDialogOpen}
+//     >
+//       <DBox.DialogContent>
+//         <DBox.DialogHeader>
+//           <DBox.DialogTitle>Clear Cart?</DBox.DialogTitle>
+//         </DBox.DialogHeader>
+
+//         <Text>All items will be removed from your cart.</Text>
+
+//         <DBox.DialogFooter>
+//           <DBox.DialogClose asChild>
+//             <Pressable
+//               className='px-4 py-2 rounded bg-slate-200'
+//               android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
+//             >
+//               <Text>Cancel</Text>
+//             </Pressable>
+//           </DBox.DialogClose>
+
+//           <Pressable
+//             className='px-4 py-2 rounded bg-red-500'
+//             android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
+//             onPress={confirmClear}
+//           >
+//             <Text className='text-white'>Clear</Text>
+//           </Pressable>
+//         </DBox.DialogFooter>
+//       </DBox.DialogContent>
+//     </DBox.Dialog>
+
+//     <Button
+//       disabled={!data || !data.items || data.items.length === 0}
+//       onPress={() => setDialogOpen(true)}
+//     >
+//       <Text>Clear Cart</Text>
+//     </Button>
+//   </>

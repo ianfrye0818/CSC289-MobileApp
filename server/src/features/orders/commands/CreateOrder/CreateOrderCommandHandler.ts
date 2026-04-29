@@ -6,10 +6,18 @@ import { CreatedMessageResponse } from '@/types/MessageReponse.type';
 import { ValueOf } from '@/types/ValueOf';
 import { faker } from '@faker-js/faker';
 import { Order_Item, Prisma } from '@generated/prisma/client';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { PaymentMethod } from '../../dtos/PaymentMethod.dto';
+import { PaymentMethod } from '../../dtos/PaymentMethod.enum';
 import { PaymentStatus } from '../../dtos/PaytmentStatus.enum';
+import {
+  getRandomShippingCarrier,
+  getRandomTrackingNumber,
+} from '../../dtos/ShippingCarrier.enum';
 import { ShippingStatus } from '../../dtos/ShippingStatus.enum';
 import { CreateOrderCommand } from './CreateOrderCommand';
 
@@ -60,7 +68,7 @@ export const getRandomTrackingNumber = (): string => {
  *    capturing the unit price and applying `TAX_RATE` at the time of purchase.
  * 3. **Mock payment** — creates a `Payment` record with status `COMPLETED`.
  *    In a real app this is where a payment gateway (Stripe, etc.) would be called.
- * 4. **Clear cart** — deletes the cart (cascades to its items).
+ * 4. **Clear cart** — deletes cart line items, then the cart row (FK is not cascading).
  * 5. **Update inventory** — decrements the `Quantity` on each `Inventory` record
  *    by the purchased amount.
  */
@@ -69,10 +77,7 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
   private readonly logger = new AppLogger(CreateOrderCommandHandler.name);
   constructor(
     private readonly prisma: PrismaService,
-    // Direct-send path for order.created push notification (ticket 53).
-    // Ian's webhook emitter below is intentionally left commented-out.
     private readonly expoPush: ExpoPushService,
-    // private readonly commandBus: CommandBus,
   ) {}
 
   async execute(command: CreateOrderCommand): Promise<CreatedMessageResponse> {
@@ -98,6 +103,14 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
         'You are not authorized to create an order for this cart',
       );
 
+    for (const line of cart.items) {
+      if (line.inventory.Quantity < line.Quantity) {
+        throw new BadRequestException(
+          `Insufficient stock for inventory ${line.Inventory_ID}: requested ${line.Quantity}, available ${line.inventory.Quantity}`,
+        );
+      }
+    }
+
     const orderData: Prisma.OrderCreateInput = {
       customer: {
         connect: {
@@ -106,14 +119,18 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
       },
       items: {
         createMany: {
-          data: cart.items.map((i) => ({
-            Inventory_ID: i.Inventory_ID,
-            Quantity: i.Quantity,
-            Amount: i.inventory.Unit_Price,
-            Tax: i.inventory.Unit_Price?.toNumber() ?? 0 * TAX_RATE,
-            Created_At: new Date(),
-            Updated_At: new Date(),
-          })),
+          data: cart.items.map((i) => {
+            const unit = i.inventory.Unit_Price?.toNumber() ?? 0;
+            return {
+              Inventory_ID: i.Inventory_ID,
+              Quantity: i.Quantity,
+              Amount: i.inventory.Unit_Price,
+              // Line tax in dollars (matches client: subtotal × TAX_RATE, allocated per line).
+              Tax: unit * i.Quantity * TAX_RATE,
+              Created_At: new Date(),
+              Updated_At: new Date(),
+            };
+          }),
         },
       },
     };
@@ -149,8 +166,6 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
       // Update the inventory quantites
       await this.updateInventory(tx, createdOrder.items);
 
-      // await this.emitWebhook(createdOrder);
-
       return createdOrder;
     });
 
@@ -167,44 +182,6 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
       transaction.Order_ID,
     );
   }
-
-  /**
-   * Emits a webhook event for the order creation.
-   * @param order - The order to emit the webhook event for.
-   * @error - Fail silently so that we don't block the order creation.
-   */
-  // private async emitWebhook(order: DbOrder): Promise<void> {
-  //   try {
-  //     await this.commandBus.execute(
-  //       new EmitWebhookEventCommand({
-  //         event: 'order.created',
-  //         payload: {
-  //           orderId: order.Order_ID,
-  //           customerId: order.Customer_ID,
-  //           paymentMethod: order.payment?.Method as PaymentMethod,
-  //           totalAmount: order.items.reduce(
-  //             (acc, item) =>
-  //               acc +
-  //               item.Amount.toNumber() *
-  //                 item.Quantity *
-  //                 (1 + item.Tax.toNumber()),
-  //             0,
-  //           ),
-  //           items: order.items.map((item) => ({
-  //             inventoryId: item.Inventory_ID,
-  //             quantity: item.Quantity,
-  //             amount: item.Amount,
-  //             tax: item.Tax,
-  //           })),
-  //         },
-  //       }),
-  //     );
-  //   } catch (error) {
-  //     this.logger.error(
-  //       `Error emitting webhook event for order ${order.Order_ID}: ${error}`,
-  //     );
-  //   }
-  // }
 
   /**
    * Creates a mock payment record for the order.
@@ -228,12 +205,17 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
     });
   }
 
-  /** Deletes the shopping cart (cascade removes all items). */
+  /**
+   * Deletes the shopping cart and its line items.
+   * `Shopping_Cart_Item` → `Shopping_Cart` uses `onDelete: NoAction`, so the DB
+   * does not cascade; items must be removed before the parent cart row.
+   */
   private async clearCart(tx: TX, cartId: number): Promise<void> {
+    await tx.shopping_Cart_Item.deleteMany({
+      where: { Cart_ID: cartId },
+    });
     await tx.shopping_Cart.delete({
-      where: {
-        Cart_ID: cartId,
-      },
+      where: { Cart_ID: cartId },
     });
   }
 
@@ -244,16 +226,20 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
    */
   private async updateInventory(tx: TX, items: Order_Item[]): Promise<void> {
     for (const item of items) {
-      await tx.inventory.update({
+      const { count } = await tx.inventory.updateMany({
         where: {
           Inventory_ID: item.Inventory_ID,
+          Quantity: { gte: item.Quantity },
         },
         data: {
-          Quantity: {
-            decrement: item.Quantity,
-          },
+          Quantity: { decrement: item.Quantity },
         },
       });
+      if (count !== 1) {
+        throw new BadRequestException(
+          `Could not reserve inventory ${item.Inventory_ID} (quantity ${item.Quantity}); it may have sold out`,
+        );
+      }
     }
   }
 

@@ -3,6 +3,7 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { OrderDetailsResponseDto } from '../../dtos/OrderDetailsReponse.dto';
 import { PaymentStatus } from '../../dtos/PaytmentStatus.enum';
+import { ShippingCarrier } from '../../dtos/ShippingCarrier.enum';
 import { ShippingStatus } from '../../dtos/ShippingStatus.enum';
 import { calculateOrderAmount } from '../../utils/CalculateOrderAmount';
 import { GetCurrentUserOrderDetailsQuery } from './GetCurrentUserOrderDetailsQuery';
@@ -96,7 +97,7 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
             shippedOn: order.shipping?.[0]?.Shipped_On ?? null,
             expectedBy: order.shipping?.[0]?.Expected_By ?? null,
             status: order.shipping?.[0]?.Ship_Status as ShippingStatus,
-            carrier: order.shipping?.[0]?.Carrier ?? null,
+            carrier: (order.shipping?.[0]?.Carrier as ShippingCarrier) ?? null,
             trackingNumber: order.shipping?.[0]?.Tracking_Number ?? null,
           }
         : null,
@@ -124,7 +125,10 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
         method: order.payment?.[0]?.Method ?? '',
         status: order.payment?.[0]?.Payment_Status as PaymentStatus,
       },
-      totalAmount: calculateOrderAmount(order.items, order.shipping?.[0]?.Cost.toNumber() ?? 0),
+      totalAmount: calculateOrderAmount(
+        order.items,
+        order.shipping?.[0]?.Cost.toNumber() ?? 0,
+      ),
     };
   }
 }

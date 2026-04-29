@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useAddToCart } from '@/features/cart/hooks/useAddToCart';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
+import { formatCurrency } from '@/lib/utils';
 import { ActivityIndicator, Image, ScrollView, View } from 'react-native';
 import { useProducts } from '../hooks/useProducts';
 import { ProductDetail, ProductInventory } from '../types';
@@ -11,13 +12,11 @@ import { ProductHorizontalList } from './ProductHorizontalList';
 
 export function ProductDetails({ product }: { product: ProductDetail }) {
   const { data, isLoading, error } = useProducts();
-  const getFormattedPrice = (price: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
 
   const getTotalQuantity = (inventory: ProductInventory[]) =>
     inventory?.reduce((sum, inv) => sum + inv.quantity, 0) ?? 0;
   const totalQuantity = getTotalQuantity(product.inventory);
-  const formattedPrice = getFormattedPrice(product.lowestPrice);
+  const formattedPrice = formatCurrency(product.lowestPrice);
   return (
     <View className='flex-1'>
       <ScrollView
@@ -88,7 +87,10 @@ export function ProductDetails({ product }: { product: ProductDetail }) {
             return (
               <View className='gap-3'>
                 <Text className='font-semibold text-base'>Suggested</Text>
-                <ProductHorizontalList products={suggestions} />
+                <ProductHorizontalList
+                  products={suggestions}
+                  navigateFromProductDetail
+                />
               </View>
             );
           }}

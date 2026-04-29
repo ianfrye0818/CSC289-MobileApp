@@ -9,13 +9,8 @@ export const useUpdateCartItem = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (payload: {
-      cartId: number;
-      original: CartItem;
-      dto: UpdateItemQuantityRequest;
-    }) => {
-      const { data, error } = await apiClient.PATCH('/api/cart/items/{cartId}', {
-        params: { path: { cartId: payload.cartId } },
+    mutationFn: async (payload: { original: CartItem; dto: UpdateItemQuantityRequest }) => {
+      const { data, error } = await apiClient.PATCH('/api/cart/item', {
         body: payload.dto,
       });
       if (error) throw error;

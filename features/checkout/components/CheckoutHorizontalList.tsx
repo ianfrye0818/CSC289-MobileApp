@@ -1,13 +1,11 @@
 import { Text } from '@/components/ui/text';
 import { FlatList, View } from 'react-native';
-import { ProductListItem } from '../types';
-import { ProductCard } from './ProductCard';
+import { CartCard } from '../../cart/components/CartCard';
+import { ShoppingCart } from '../../cart/types';
 
 interface Props {
-  products: ProductListItem[];
+  items: ShoppingCart;
   title?: string;
-  /** Use on product detail suggestions so each tap swaps the current detail, not the stack. */
-  navigateFromProductDetail?: boolean;
 }
 
 /**
@@ -18,21 +16,22 @@ interface Props {
  * @param error - The error to display
  * @returns
  */
-export function ProductHorizontalList({ products, title, navigateFromProductDetail }: Props) {
+export function CheckoutHorizontalList({ items, title }: Props) {
   return (
     <View className='gap-3'>
       {title && <Text className='text-lg font-semibold px-4'>{title}</Text>}
       <FlatList
-        data={products}
-        keyExtractor={(item) => String(item.productId)}
+        data={items.items}
+        keyExtractor={(item) => String(item.product.productId)}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
         renderItem={({ item }) => (
-          <ProductCard
-            product={item}
-            className='w-40 flex-none'
-            navigateFromProductDetail={navigateFromProductDetail}
+          <CartCard
+            cartItem={item}
+            cartId={items.cartId ?? 0}
+            itemCount={item.quantity}
+            showQuantityAdjustor={false}
           />
         )}
       />

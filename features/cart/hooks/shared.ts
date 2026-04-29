@@ -10,12 +10,6 @@
  * queryClient.invalidateQueries({ queryKey: cartQueryKeys.cart });
  */
 export const cartQueryKeys = {
-  /** Base key for the current user's cart. */
   cart: ['cart'],
-  /**
-   * Key for the items within a specific cart.
-   * Inherits `cart` as a prefix so invalidating the base key cascades.
-   */
-  cartItems: (cartId: number) => [...cartQueryKeys.cart, cartId],
   qty: () => [...cartQueryKeys.cart, 'qty'] as const,
 };

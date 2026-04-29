@@ -4,7 +4,6 @@ import { UpdateItemQuantityRequestDto } from '../../dtos/UpdateItemQuantityReque
 
 export class UpdateItemQuantityCommand extends Command<UpdatedMessageResponse> {
   constructor(
-    public readonly cartId: number,
     public readonly userId: number,
     public readonly dto: UpdateItemQuantityRequestDto,
   ) {
