@@ -16,8 +16,6 @@ export function QuantityAdjustor({ cartItem }: Props) {
   const { mutate: updateCartItems } = useUpdateCartItem();
   const { mutate: removeCartItem, isPending: isRemovingCartItem } = useRemoveCartItem();
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-
   const editQuantity = (delta: number) => {
     if (!product) return; // Product not loaded yet
     const inventory = product.inventory.find((inv) => inv.inventoryId === cartItem.inventoryId);

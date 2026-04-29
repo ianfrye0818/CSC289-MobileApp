@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenu
 import { Text } from "@/components/ui/text";
 import { useGetCurrentCustomerAddresses } from "@/features/addresses/hooks/useGetCurrentCustomerAddresses";
 import { AddressResponseDto } from "@/features/addresses/types";
-import { useCheckout } from "@/features/orders/hooks/useCheckout";
+import { useCheckout } from "@/features/checkout/hooks/useCheckout";
 import { getRandomShippingCost } from "@/lib/utils";
 import { TAX_RATE } from "@/server/src/constants";
 import { useEffect, useState } from "react";

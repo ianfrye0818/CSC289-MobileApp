@@ -4,7 +4,6 @@ import { AppLogger } from '@/services/AppLogger.service';
 import { PrismaService, TX } from '@/services/Prisma.service';
 import { CreatedMessageResponse } from '@/types/MessageReponse.type';
 import { ValueOf } from '@/types/ValueOf';
-import { faker } from '@faker-js/faker';
 import { Order_Item, Prisma } from '@generated/prisma/client';
 import {
   BadRequestException,
@@ -49,13 +48,6 @@ export const ShippingCarrier = {
 
 export type ShippingCarrier = ValueOf<typeof ShippingCarrier>;
 
-export const getRandomShippingCarrier = (): ShippingCarrier => {
-  return pickRandom(Object.values(ShippingCarrier));
-};
-
-export const getRandomTrackingNumber = (): string => {
-  return faker.string.alphanumeric(18).toUpperCase();
-};
 /**
  * Handles `CreateOrderCommand` — converts a shopping cart into a confirmed order.
  *
