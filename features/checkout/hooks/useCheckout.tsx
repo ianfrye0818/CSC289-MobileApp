@@ -1,8 +1,10 @@
 import { apiClient } from '@/lib/apiClient';
+import { appToast } from '@/lib/toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { cartQueryKeys } from '../../cart/hooks/shared';
-import { type CreateOrderRequest } from '../types';
-import { orderQueryKeys } from './shared';
+import { orderQueryKeys } from '../../orders/hooks/shared';
+import { type CreateOrderRequest } from '../../orders/types';
 
 /**
  * Creates an order from the current cart.
@@ -10,6 +12,7 @@ import { orderQueryKeys } from './shared';
  */
 export const useCheckout = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (payload: CreateOrderRequest) => {
@@ -26,6 +29,8 @@ export const useCheckout = () => {
       await queryClient.invalidateQueries({
         queryKey: cartQueryKeys.cart,
       });
+      appToast.success('Order created successfully');
+      router.push('/orders');
     },
   });
 };

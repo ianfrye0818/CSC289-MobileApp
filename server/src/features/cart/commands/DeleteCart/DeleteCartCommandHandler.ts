@@ -1,31 +1,39 @@
 import { PrismaService } from '@/services/Prisma.service';
 import { DeletedMessageResponse } from '@/types/MessageReponse.type';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DeleteCartCommand } from './DeleteCartCommand';
+import { DeleteCurrentCustomersCartsCommand } from './DeleteCurrentUsersCartsCommand';
 
-/**
- * Handles `DeleteCartCommand` — deletes the entire shopping cart record.
- *
- * Because `Shopping_Cart_Item` rows have a cascade delete relationship with
- * `Shopping_Cart`, all cart items are automatically removed when the cart is
- * deleted. This is also called internally by `CreateOrderCommandHandler` to
- * clear the cart after a successful checkout.
- */
-@CommandHandler(DeleteCartCommand)
-export class DeleteCartCommandHandler implements ICommandHandler<DeleteCartCommand> {
+@CommandHandler(DeleteCurrentCustomersCartsCommand)
+export class DeleteCurrentUsersCartsCommandHandler implements ICommandHandler<DeleteCurrentCustomersCartsCommand> {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(command: DeleteCartCommand): Promise<DeletedMessageResponse> {
-    await this.prisma.shopping_Cart.deleteMany({
+  async execute(
+    command: DeleteCurrentCustomersCartsCommand,
+  ): Promise<DeletedMessageResponse> {
+    const carts = await this.prisma.shopping_Cart.findMany({
       where: {
-        Cart_ID: command.cartId,
         Customer_ID: command.userId,
       },
     });
 
-    return new DeletedMessageResponse(
-      'Cart deleted successfully',
-      command.cartId,
-    );
+    await this.prisma.$transaction(async (tx) => {
+      // Go through and delete all customers cart items and carts
+      // This way we have no orphaned carts and potential orphaned cart items
+      for (const cart of carts) {
+        await tx.shopping_Cart_Item.deleteMany({
+          where: { Cart_ID: cart.Cart_ID },
+        });
+        await tx.shopping_Cart.delete({
+          where: { Cart_ID: cart.Cart_ID },
+        });
+      }
+
+      // Create a new empty cart for the customer so they can use it later
+      await tx.shopping_Cart.create({
+        data: { Customer_ID: command.userId },
+      });
+    });
+
+    return new DeletedMessageResponse('Carts deleted successfully');
   }
 }

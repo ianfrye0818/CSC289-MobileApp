@@ -1,30 +1,27 @@
+import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Text } from '@/components/ui/text';
 import { useRemoveCartItem } from '@/features/cart/hooks/useRemoveCartItem';
 import { useUpdateCartItem } from '@/features/cart/hooks/useUpdateCartItem';
 import { useProductDetails } from '@/features/products/hooks/useProductDetails';
-import { Pressable, View } from 'react-native';
+import { appToast } from '@/lib/toast';
+import { Alert, Pressable, View } from 'react-native';
 import { CartItem } from '../types';
 
 interface Props {
   cartItem: CartItem;
-  cartId?: number;
 }
 
-export function QuantityAdjustor({ cartItem, cartId }: Props) {
+export function QuantityAdjustor({ cartItem }: Props) {
   const { data: product } = useProductDetails(cartItem.product.productId);
-  const updateCartItem = useUpdateCartItem();
-  const removeCartItem = useRemoveCartItem();
+  const { mutate: updateCartItems } = useUpdateCartItem();
+  const { mutate: removeCartItem, isPending: isRemovingCartItem } = useRemoveCartItem();
 
   const editQuantity = (delta: number) => {
     if (!product) return; // Product not loaded yet
-    if (cartId == null) {
-      console.error('Missing cartId for quantity update');
-      return;
-    }
-
     const inventory = product.inventory.find((inv) => inv.inventoryId === cartItem.inventoryId);
+
     if (!inventory) {
-      console.error('Inventory not found for cart item');
+      appToast.error('Inventory not found for cart item');
       return;
     }
 
@@ -32,40 +29,79 @@ export function QuantityAdjustor({ cartItem, cartId }: Props) {
     const newQuantity = Math.max(0, Math.min(cartItem.quantity + delta, stock));
 
     if (newQuantity === 0) {
-      // Remove item from cart
-      removeCartItem.mutate({
-        cartId,
-        dto: { inventoryId: cartItem.inventoryId, quantity: cartItem.quantity },
+      removeCartItem({
+        dto: { inventoryId: cartItem.inventoryId },
       });
     } else {
-      // Update quantity
-      updateCartItem.mutate({
-        cartId,
+      updateCartItems({
         original: cartItem,
         dto: { inventoryId: cartItem.inventoryId, quantity: newQuantity },
       });
     }
   };
 
+  const confirmRemove = () => {
+    Alert.alert('Remove Item', `Are you sure you want to remove ${cartItem.product.productName}?`, [
+      {
+        text: 'Cancel',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Remove',
+        style: 'destructive',
+        onPress: () => {
+          removeCartItem({
+            dto: { inventoryId: cartItem.inventoryId },
+          });
+        },
+      },
+    ]);
+  };
+
   return (
-    <View className='flex-row items-center justify-center h-10 rounded-full bg-slate-200 px-3 gap-5'>
+    <View className='flex-row items-center justify-center h-10 px-3 gap-5'>
       <Pressable
         className='h-8 w-8 items-center justify-center rounded-full bg-slate-500'
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
-        onPress={() => editQuantity(-1)}
+        onPress={() => confirmRemove()}
+        disabled={isRemovingCartItem}
       >
-        <Text className='text-lg font-bold text-white'>-</Text>
+        <IconSymbol
+          size={16}
+          name='trash'
+          color='white'
+        />
       </Pressable>
-      <Text>{cartItem.quantity}</Text>
-      <Pressable
-        className='h-8 w-8 items-center justify-center rounded-full bg-slate-500'
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
-        onPress={() => editQuantity(1)}
-      >
-        <Text className='text-lg font-bold text-white'>+</Text>
-      </Pressable>
+
+      <View className='flex-row items-center justify-center h-10 rounded-full bg-slate-200 px-3 gap-5'>
+        <Pressable
+          className='h-8 w-8 items-center justify-center rounded-full bg-slate-500'
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
+          onPress={() => editQuantity(-1)}
+        >
+          <IconSymbol
+            size={16}
+            name='minus'
+            color='white'
+          />
+        </Pressable>
+        <Text>{cartItem.quantity}</Text>
+        <Pressable
+          className='h-8 w-8 items-center justify-center rounded-full bg-slate-500'
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
+          onPress={() => editQuantity(1)}
+        >
+          <IconSymbol
+            size={16}
+            name='plus'
+            color='white'
+          />
+        </Pressable>
+      </View>
     </View>
   );
 }

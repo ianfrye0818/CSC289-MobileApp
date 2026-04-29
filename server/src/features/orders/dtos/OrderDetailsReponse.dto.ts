@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderCustomerDto } from './OrderCustomer.dto';
 import { PaymentStatus } from './PaytmentStatus.enum';
+import { ShippingCarrier } from './ShippingCarrier.enum';
 import { ShippingStatus } from './ShippingStatus.enum';
 
 export class OrderDetailsResponseAddress {
@@ -61,8 +62,8 @@ export class OrderDetailsResponseShippingDetails {
   expectedBy: Date | null;
   @ApiProperty({ enum: ShippingStatus, required: true })
   status: ShippingStatus;
-  @ApiProperty({ type: String, required: true })
-  carrier: string;
+  @ApiProperty({ type: String, enum: ShippingCarrier, required: true })
+  carrier: ShippingCarrier;
   @ApiProperty({ type: String, required: true })
   trackingNumber: string;
 }

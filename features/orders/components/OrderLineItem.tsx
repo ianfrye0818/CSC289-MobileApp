@@ -1,6 +1,7 @@
-import { Text } from "@/components/ui/text";
-import { View } from "react-native";
-import { OrderItem } from "../types";
+import { Text } from '@/components/ui/text';
+import { formatCurrency } from '@/lib/utils';
+import { View } from 'react-native';
+import { OrderItem } from '../types';
 
 interface Props {
   item: OrderItem;
@@ -16,30 +17,22 @@ interface Props {
 export function OrderLineItem({ item }: Props) {
   const lineTotal = item.price * item.quantity;
 
-  const formattedPrice = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(item.price);
+  const formattedPrice = formatCurrency(item.price);
 
-  const formattedTotal = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(lineTotal);
+  const formattedTotal = formatCurrency(lineTotal);
 
   return (
-    <View className="flex-row items-start justify-between py-3 border-b border-border">
+    <View className='flex-row items-start justify-between py-3 border-b border-border'>
       {/* Left side: product name and quantity */}
-      <View className="flex-1 gap-0.5 pr-4">
-        <Text className="text-foreground text-sm font-medium">{item.name}</Text>
-        <Text className="text-muted-foreground text-xs">
+      <View className='flex-1 gap-0.5 pr-4'>
+        <Text className='text-foreground text-sm font-medium'>{item.name}</Text>
+        <Text className='text-muted-foreground text-xs'>
           {item.quantity} × {formattedPrice}
         </Text>
       </View>
 
       {/* Right side: line total */}
-      <Text className="text-foreground text-sm font-semibold">
-        {formattedTotal}
-      </Text>
+      <Text className='text-foreground text-sm font-semibold'>{formattedTotal}</Text>
     </View>
   );
 }
