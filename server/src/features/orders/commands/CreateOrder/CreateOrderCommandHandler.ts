@@ -135,6 +135,15 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
         command.dto.paymentMethod,
       );
 
+      // Create shipping
+      await this.createShipping(
+        tx,
+        createdOrder.Order_ID,
+        command.dto.shippingAddressId,
+        command.dto.billingAddressId,
+        command.dto.shippingCost,
+      );
+
       // Clear the shopping cart
       await this.clearCart(tx, command.dto.cartId);
       // Update the inventory quantites

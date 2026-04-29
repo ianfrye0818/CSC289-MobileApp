@@ -11,9 +11,10 @@ interface Props {
   cartItem: CartItem;
   cartId: number;
   itemCount?: number;
+  showQuantityAdjustor?: boolean;
 }
 
-export function CartCard({ cartItem, cartId, itemCount }: Props) {
+export function CartCard({ cartItem, cartId, itemCount, showQuantityAdjustor }: Props) {
   const lineTotal = cartItem.unitPrice * cartItem.quantity;
   const formattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -40,7 +41,7 @@ export function CartCard({ cartItem, cartId, itemCount }: Props) {
           )}
         </Pressable>
       </Link>
-      <View className='flex-1 min-w-0 justify-end items-end p-3 gap-5'>
+      <View className='flex-1 min-w-0 justify-evenly items-end p-3 gap-1'>
         <Link
           href={`/products/${cartItem.product.productId}`}
           push
@@ -58,10 +59,20 @@ export function CartCard({ cartItem, cartId, itemCount }: Props) {
             </Text>
           </Pressable>
         </Link>
-        <QuantityAdjustor
-          cartItem={cartItem}
-          cartId={cartId}
-        />
+        {cartItem.quantity >= 2 && (
+          <Text className='text-sm text-muted-foreground'>
+            {new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              }).format(cartItem.unitPrice)}/unit
+          </Text>
+        )}
+        {showQuantityAdjustor && (
+          <QuantityAdjustor
+            cartItem={cartItem}
+            cartId={cartId}
+          />
+        )}
         <Text className='text-muted-foreground text-lg'>
           {formattedPrice}
           {itemCount != null && ` · ${itemCount} item${itemCount !== 1 ? 's' : ''}`}

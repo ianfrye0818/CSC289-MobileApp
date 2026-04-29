@@ -5,21 +5,22 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenu
 import { Text } from "@/components/ui/text";
 import { useGetCurrentCustomerAddresses } from "@/features/addresses/hooks/useGetCurrentCustomerAddresses";
 import { AddressResponseDto } from "@/features/addresses/types";
-import { ProductHorizontalList } from "@/features/products/components/ProductHorizontalList";
-import { ProductListItem } from "@/features/products/types";
+import { useCheckout } from "@/features/orders/hooks/useCheckout";
 import { TAX_RATE } from "@/server/src/constants";
 import { useEffect, useState } from "react";
 import { Platform, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCart } from "../hooks/useCart";
-import { CartItem, ShoppingCart } from "../types";
+import { ShoppingCart } from "../types";
+import { CheckoutHorizontalList } from "./CheckoutHorizontalList";
 
 export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
   const { data, isLoading, error } = useCart();
   const cartItems = data?.items ?? [];
   const totalPrice = cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
   const taxAmount = totalPrice * TAX_RATE;
-  const finalAmount = totalPrice + taxAmount;
+  const shippingCost = getRandomShippingCost();
+  const finalAmount = totalPrice + taxAmount + shippingCost;
   const { data: addresses } = useGetCurrentCustomerAddresses();
   const [selectedAddress, setSelectedAddress] = useState<AddressResponseDto | null>(null);
   const [selectedPayment, setSelectedPayment] = useState<string>("");
@@ -53,20 +54,10 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
           isLoading={isLoading}
           error={error}
         >
-          {(cartItems: CartItem[]) => {
-            const cart = cartItems.map((item) => ({
-              productId: item.product.productId,
-              productName: item.product.productName,
-              imageUrl: item.product.imageUrl,
-              unitPrice: item.unitPrice,
-            })) as ProductListItem[];
-            return (
-              <View className="gap-3">
-                <Text className="text-2xl font-bold text-foreground">Cart</Text>
-                <ProductHorizontalList products={cart} />
-              </View>
-            );
-          }}
+          <View className="gap-3">
+            <Text className="text-2xl font-bold text-foreground">Cart</Text>
+            <CheckoutHorizontalList items={cart} />
+          </View>
         </DataWrapper>
         {/* Summary card */}
         <Card className="gap-0 px-4 py-3">
@@ -86,6 +77,16 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
                 <Text className="text-lg font-bold text-foreground">
                   {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
                     taxAmount,
+                  )}
+                </Text>
+              </View>
+            )}
+            {shippingCost > 0 && (
+              <View className="flex-row justify-between">
+                <Text className="text-lg font-medium text-foreground">Shipping</Text>
+                <Text className="text-lg font-bold text-foreground">
+                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+                    shippingCost,
                   )}
                 </Text>
               </View>
@@ -170,9 +171,6 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
       {/* Purchase button */}
         <PurchaseButton
           disabled={!selectedAddress || !selectedPayment}
-          onPress={() => {
-            // Implement purchase logic here
-          }}
         />
     </SafeAreaView>
   );
@@ -180,19 +178,29 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
 
 function PurchaseButton({
   disabled,
-  onPress,
 }: {
   disabled: boolean;
-  onPress: () => void;
 }) {
   return (
     <View className="px-4 py-3">
       <Button
         disabled={disabled}
-        onPress={onPress}
+        onPress={useCheckout}
       >
-        Purchase
+        <Text>Purchase</Text>
       </Button>
     </View>
   );
+}
+
+function getRandomShippingCost() {
+  const maxRaw = process.env.EXPO_PUBLIC_MAX_SHIPPING_COST ?? process.env.MAX_SHIPPING_COST;
+  const minRaw = process.env.EXPO_PUBLIC_MIN_SHIPPING_COST ?? process.env.MIN_SHIPPING_COST;
+  const maxParsed = maxRaw != null && maxRaw !== '' ? Number(maxRaw) : Number.NaN;
+  const minParsed = minRaw != null && minRaw !== '' ? Number(minRaw) : Number.NaN;
+  const MAX = Number.isFinite(maxParsed) ? maxParsed : 25;
+  const MIN = Number.isFinite(minParsed) ? minParsed : 0;
+  const hi = Math.max(MIN, MAX);
+  const lo = Math.min(MIN, MAX);
+  return Math.floor(Math.random() * (hi - lo + 1)) + lo;
 }

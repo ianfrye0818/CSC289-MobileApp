@@ -12,4 +12,19 @@ export class CreateOrderCommandDto {
   @IsEnum(PaymentMethod)
   @IsNotEmpty()
   paymentMethod: PaymentMethod;
+
+  @ApiProperty({ type: Number, required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  shippingAddressId: number;
+
+  @ApiProperty({ type: Number, required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  billingAddressId: number;
+
+  @ApiProperty({ type: Number, required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  shippingCost: number;
 }
