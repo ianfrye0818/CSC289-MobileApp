@@ -9,7 +9,7 @@ import { getRandomShippingCost } from '@/lib/utils';
 import { PaymentMethod } from '@/types/PaymentMethod.enum';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
-import { Platform, ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { ShoppingCart } from '../../cart/types';
 import { CheckoutFormValues, checkoutSchema } from '../checkout.schema';
 import { AddressSelector } from './AddressSelector';
@@ -68,55 +68,60 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
 
   return (
     <FormProvider {...form}>
-      <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
-        <View className='gap-3'>
-          <Text className='text-2xl font-bold text-foreground'>Cart</Text>
-          <CheckoutHorizontalList items={cart} />
-        </View>
-        {/* Summary card */}
-        <Card className='gap-0 px-4 py-3'>
-          <Text className='text-2xl font-bold text-foreground'>Summary</Text>
-          <View className='pt-3 gap-1'>
-            <SummaryCardRow
-              label='Subtotal'
-              value={totalPrice}
-            />
-            <SummaryCardRow
-              label='Tax'
-              value={taxAmount}
-            />
-            <SummaryCardRow
-              label='Shipping'
-              value={shippingCost}
-            />
-            <SummaryCardRow
-              label='Total'
-              value={finalAmount}
-            />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
+      >
+        <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
+          <View className='gap-3'>
+            <Text className='text-2xl font-bold text-foreground'>Cart</Text>
+            <CheckoutHorizontalList items={cart} />
           </View>
-        </Card>
+          {/* Summary card */}
+          <Card className='gap-0 px-4 py-3'>
+            <Text className='text-2xl font-bold text-foreground'>Summary</Text>
+            <View className='pt-3 gap-1'>
+              <SummaryCardRow
+                label='Subtotal'
+                value={totalPrice}
+              />
+              <SummaryCardRow
+                label='Tax'
+                value={taxAmount}
+              />
+              <SummaryCardRow
+                label='Shipping'
+                value={shippingCost}
+              />
+              <SummaryCardRow
+                label='Total'
+                value={finalAmount}
+              />
+            </View>
+          </Card>
 
-        {/* Shipping address */}
-        <AddressSelector type='shipping' />
-        <View className='flex-row items-center gap-2'>
-          <Checkbox
-            id='billingAddressSameAsShippingAddress'
-            checked={isBillingAddressSameAsShippingAddress}
-            onCheckedChange={handleBillingAddressSameAsShippingAddressChange}
-          />
-          <Label onPress={handleBillingAddressSameAsShippingAddressChange}>
-            Billing address is the same as shipping address
-          </Label>
-        </View>
+          {/* Shipping address */}
+          <AddressSelector type='shipping' />
+          <View className='flex-row items-center gap-2'>
+            <Checkbox
+              id='billingAddressSameAsShippingAddress'
+              checked={isBillingAddressSameAsShippingAddress}
+              onCheckedChange={handleBillingAddressSameAsShippingAddressChange}
+            />
+            <Label onPress={handleBillingAddressSameAsShippingAddressChange}>
+              Billing address is the same as shipping address
+            </Label>
+          </View>
 
-        {/* Billing Address */}
-        {!isBillingAddressSameAsShippingAddress && <AddressSelector type='billing' />}
+          {/* Billing Address */}
+          {!isBillingAddressSameAsShippingAddress && <AddressSelector type='billing' />}
 
-        {/* Payment methods */}
-        <SelectPaymentCard />
+          {/* Payment methods */}
+          <SelectPaymentCard />
 
-        <PurchaseButton />
-      </ScrollView>
+          <PurchaseButton />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </FormProvider>
   );
 }
