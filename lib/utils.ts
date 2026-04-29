@@ -27,7 +27,7 @@ export function formatPhoneNumber(input?: string | number): string {
   const digits = String(input).replace(/\D/g, '');
 
   if (digits.length !== 10) {
-    throw new Error('Phone number must contain exactly 10 digits');
+    return digits;
   }
 
   const areaCode = digits.slice(0, 3);
