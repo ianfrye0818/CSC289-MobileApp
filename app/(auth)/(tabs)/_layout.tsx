@@ -4,8 +4,8 @@ import React from 'react';
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useGetCartQty } from '@/features/cart/hooks/useGetCartQty';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -42,7 +42,7 @@ export default function TabLayout() {
         options={{
           title: 'Cart',
           tabBarBadge: badge,
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color, focused }) => (
             <IconSymbol
               size={28}
               name='cart.fill'

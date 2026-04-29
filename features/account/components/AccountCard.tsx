@@ -18,7 +18,7 @@ export function AccountCard({ customer }: AccountCardProps) {
     <Pressable onPress={() => router.push(`/account/${customer.id}`)}>
     <Card className="w-full">
       <CardHeader>
-        <CardTitle> {firstName} {lastName} </CardTitle>
+        <CardTitle>{firstName} {lastName}</CardTitle>
         <CardDescription>{email}</CardDescription>
         <CardDescription>{formatPhoneNumber(phone?? undefined)}</CardDescription>
       </CardHeader>
