@@ -448,7 +448,8 @@ export interface components {
             expectedBy: string | null;
             /** @enum {string} */
             status: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
-            carrier: string;
+            /** @enum {string} */
+            carrier: "DHL" | "UPS" | "FedEx" | "USPS" | "DPD" | "Royal_Mail" | "Hermes" | "DHL_Express" | "UPS_Express" | "FedEx_Express" | "USPS_Express" | "DPD_Express";
             trackingNumber: string;
         };
         OrderDetailsResponseDiscount: {

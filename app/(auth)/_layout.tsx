@@ -35,7 +35,7 @@ export default function AuthLayout() {
       />
 
       <Stack.Screen
-        name='cart/index'
+        name='checkout/index'
         options={{
           headerShown: true,
           title: 'Checkout',
