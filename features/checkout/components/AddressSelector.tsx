@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
   Select,
@@ -8,6 +9,7 @@ import {
 } from '@/components/ui/select';
 import { useGetCurrentCustomerAddresses } from '@/features/addresses/hooks/useGetCurrentCustomerAddresses';
 import { AddressResponseDto } from '@/features/addresses/types';
+import { useRouter } from 'expo-router';
 import { truncate, upperCase } from 'lodash';
 import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -22,6 +24,7 @@ export function AddressSelector({ type }: Props) {
   const defaultAddress = addresses?.[0];
   const form = useFormContext<CheckoutFormValues>();
   const selectedAddressId = useWatch({ control: form.control, name: `${type}AddressId` });
+  const router = useRouter();
 
   useEffect(() => {
     if (!selectedAddressId && defaultAddress) {
@@ -35,6 +38,20 @@ export function AddressSelector({ type }: Props) {
       `${address.line1}, ${address.line2 || ''} ${address.city}, ${address.state} ${address.zipcode}`,
     );
   };
+
+  if (addresses !== undefined && addresses.length === 0) {
+    return (
+      <Card className='gap-0 px-4 py-3'>
+        <Text className='text-2xl font-bold text-foreground mb-2'>
+          {type === 'shipping' ? 'Shipping' : 'Billing'} Address
+        </Text>
+        <Text className='text-sm text-muted-foreground mb-3'>
+          No addresses saved. Add one to continue.
+        </Text>
+        <Button onPress={() => router.push('/(auth)/addresses/add')}>Add Address</Button>
+      </Card>
+    );
+  }
 
   return (
     <Card className='gap-0 px-4 py-3'>
