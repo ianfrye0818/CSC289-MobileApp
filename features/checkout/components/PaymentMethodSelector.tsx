@@ -34,13 +34,18 @@ export function SelectPaymentCard() {
               <Select
                 value={{ label: getPaymentLabel(field.value), value: field.value }}
                 onValueChange={(option) => {
-                  if (option?.value) field.onChange(option.value as PaymentMethod);
+                  if (option?.value) {
+                    field.onChange(option.value as PaymentMethod);
+                    if (option.value !== PaymentMethod.CREDIT_CARD) {
+                      form.setValue('creditCard', undefined);
+                    }
+                  }
                 }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder='Select a payment method' />
                 </SelectTrigger>
-                <SelectContent className='bg-background'>
+                <SelectContent>
                   {filteredPaymentMethods.map((method) => (
                     <SelectItem
                       key={method}
