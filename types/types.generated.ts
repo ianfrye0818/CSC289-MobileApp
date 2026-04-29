@@ -371,7 +371,7 @@ export interface components {
             productName: string;
             productDescription?: string | null;
             imageUrl?: string | null;
-            category: components["schemas"]["ProductCategoryDto"] | null;
+            categoryName: string;
             discounts: components["schemas"]["CartItemDiscountDto"][];
         };
         CartItemDto: {

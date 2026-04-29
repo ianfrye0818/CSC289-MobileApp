@@ -40,12 +40,13 @@ export function SelectPaymentCard() {
                 <SelectTrigger>
                   <SelectValue placeholder='Select a payment method' />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className='bg-background'>
                   {filteredPaymentMethods.map((method) => (
                     <SelectItem
                       key={method}
                       value={method}
                       label={getPaymentLabel(method)}
+                      className='text-foreground'
                     />
                   ))}
                 </SelectContent>
