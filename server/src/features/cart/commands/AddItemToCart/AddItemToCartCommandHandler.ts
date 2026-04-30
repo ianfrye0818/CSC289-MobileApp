@@ -1,3 +1,4 @@
+import { MOBILE_SESSION_ID } from '@/constants';
 import { PrismaService } from '@/services/Prisma.service';
 import { UpdatedMessageResponse } from '@/types/MessageReponse.type';
 import { Prisma } from '@generated/prisma/client';
@@ -35,10 +36,11 @@ export class AddItemToCartCommandHandler implements ICommandHandler<AddItemToCar
   async execute(
     command: AddItemToCartCommand,
   ): Promise<UpdatedMessageResponse> {
-    // Get cart or create a new one - For simplicity sake, we are just going to get the latest cart for the customer. Down the road, you could add in a cart id
+    // Pass 1: Look for a cart already tagged for 'mobile'
     let cart = await this.prisma.shopping_Cart.findFirst({
       where: {
         Customer_ID: command.userId,
+        Session_ID: MOBILE_SESSION_ID,
       },
       orderBy: {
         Created_At: 'desc',
@@ -47,12 +49,31 @@ export class AddItemToCartCommandHandler implements ICommandHandler<AddItemToCar
     });
 
     if (!cart) {
-      cart = await this.prisma.shopping_Cart.create({
-        data: {
+      // Pass 2: find the latest untagged cart (exisiting data) and adapt it
+      const legacy = await this.prisma.shopping_Cart.findFirst({
+        where: {
           Customer_ID: command.userId,
+          Session_ID: null,
         },
-        include: cartInclude,
       });
+      if (legacy) {
+        cart = await this.prisma.shopping_Cart.update({
+          where: { Cart_ID: legacy.Cart_ID },
+          data: {
+            Session_ID: MOBILE_SESSION_ID,
+          },
+          include: cartInclude,
+        });
+      }
+      if (!cart) {
+        // Pass 3: If there truly is no cart, create a new one
+        cart = await this.prisma.shopping_Cart.create({
+          data: {
+            Customer_ID: command.userId,
+          },
+          include: cartInclude,
+        });
+      }
     }
 
     // Make sure that the inventory qty of the prod they want to add is greater than 0
