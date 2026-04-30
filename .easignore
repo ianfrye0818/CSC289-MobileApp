@@ -35,3 +35,8 @@ yarn-error.*
 
 android/
 ios/
+
+!credentials.json
+!*.keystore
+!google-services.json
+!GoogleService-Info.plist

@@ -1,9 +1,8 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { AppLogger } from '@/services/AppLogger.service';
 import { PrismaService } from '@/services/Prisma.service';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { ExpoPushService } from './ExpoPushService';
-
-const POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
 /**
  * Payment_Status transitions that fire a push notification.
@@ -11,14 +10,18 @@ const POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
  * Silent on: Pending, Processing (internal workflow states).
  * Fires on: Completed, Cancelled, Refunded, Failed.
  */
-const NOTIFY_ON_STATUSES: Record<string, { title: string; body: (orderId: number) => string }> = {
+const NOTIFY_ON_STATUSES: Record<
+  string,
+  { title: string; body: (orderId: number) => string }
+> = {
   Completed: {
     title: 'Payment received',
     body: (orderId) => `Your payment for order #${orderId} has been processed.`,
   },
   Cancelled: {
     title: 'Payment cancelled',
-    body: (orderId) => `The payment for your order #${orderId} has been cancelled.`,
+    body: (orderId) =>
+      `The payment for your order #${orderId} has been cancelled.`,
   },
   Refunded: {
     title: 'Refund issued',
@@ -33,7 +36,7 @@ const NOTIFY_ON_STATUSES: Record<string, { title: string; body: (orderId: number
 
 /**
  * Polls the Payment table for Payment_Status changes on a 5-minute
- * interval and fires a push notification to the owning customer when
+ * cron schedule and fires a push notification to the owning customer when
  * specific transitions are detected.
  *
  * Resolves the customer by joining Payment back through its Order row
@@ -42,12 +45,11 @@ const NOTIFY_ON_STATUSES: Record<string, { title: string; body: (orderId: number
  * scans fire pushes for any new transitions.
  */
 @Injectable()
-export class PaymentStatusNotificationService
-  implements OnModuleInit, OnModuleDestroy
-{
-  private readonly logger = new AppLogger(PaymentStatusNotificationService.name);
+export class PaymentStatusNotificationService implements OnModuleInit {
+  private readonly logger = new AppLogger(
+    PaymentStatusNotificationService.name,
+  );
   private readonly lastKnownStatus = new Map<number, string>();
-  private intervalId: NodeJS.Timeout | null = null;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -60,23 +62,17 @@ export class PaymentStatusNotificationService
     this.logger.log(
       `Initial cache populated with ${this.lastKnownStatus.size} payments`,
     );
-
-    this.intervalId = setInterval(() => {
-      this.scan(true).catch((err) => {
-        this.logger.error('Polling scan failed', err);
-      });
-    }, POLL_INTERVAL_MS);
-
     this.logger.log(
-      `Payment status polling started (interval: ${POLL_INTERVAL_MS}ms)`,
+      `Payment status polling scheduled (${CronExpression.EVERY_5_MINUTES})`,
     );
   }
 
-  onModuleDestroy() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-      this.logger.log('Payment status polling stopped');
+  @Cron(CronExpression.EVERY_5_MINUTES)
+  async pollPaymentStatus(): Promise<void> {
+    try {
+      await this.scan(true);
+    } catch (err) {
+      this.logger.error('Polling scan failed', err);
     }
   }
 
