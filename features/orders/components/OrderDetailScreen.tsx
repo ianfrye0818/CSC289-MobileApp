@@ -16,6 +16,7 @@ import { OrderLineItem } from './OrderLineItem';
  * Used for both payment and shipping status badges.
  */
 const statusVariant = (status: string) => {
+  if (!status) return 'secondary' as const;
   switch (status.toUpperCase()) {
     case 'COMPLETED':
     case 'DELIVERED':

@@ -17,8 +17,8 @@ export default function OrderHistoryScreen() {
 
   return (
     <SafeAreaView
-      className='flex-1 bg-background'
-      edges={['left', 'right', 'bottom']}
+      className='flex-1 bg-background pb-2'
+      edges={['left', 'right']}
     >
       {/* DataWrapper handles loading spinner, error display, and empty state.
           Render function receives typed data only after all checks pass. */}

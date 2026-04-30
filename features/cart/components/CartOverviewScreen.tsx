@@ -21,8 +21,8 @@ export default function CartOverviewScreen() {
 
   return (
     <SafeAreaView
-      className='flex-1 bg-background'
-      edges={['left', 'right', 'bottom']}
+      className='flex-1 bg-background pb-2'
+      edges={['left', 'right']}
     >
       <View className='flex-1'>
         <DataWrapper

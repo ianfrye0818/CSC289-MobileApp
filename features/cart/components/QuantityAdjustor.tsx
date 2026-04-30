@@ -60,7 +60,7 @@ export function QuantityAdjustor({ cartItem }: Props) {
   };
 
   return (
-    <View className='flex-row items-center justify-center h-10 px-3 gap-5'>
+    <View className='flex-row items-center justify-center h-10 px-3 gap-2'>
       <Pressable
         className='h-8 w-8 items-center justify-center rounded-full bg-slate-500'
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
