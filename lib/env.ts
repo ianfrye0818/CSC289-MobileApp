@@ -26,4 +26,4 @@ const envSchema = z.object({
  * import { env } from '@/lib/env';
  * console.log(env.EXPO_PUBLIC_API_URL);
  */
-export const env = envSchema.parse(process.env);
+export const env = envSchema.parse({ EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL, });
