@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+
 import { APP_GUARD } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
-import { JwtAuthGuard } from './features/auth/guards/Auth.guard';
 import { AddressesModule } from './features/addresses/addresses.module';
 import { AuthModule } from './features/auth/Auth.module';
+import { JwtAuthGuard } from './features/auth/guards/Auth.guard';
 import { CartModule } from './features/cart/Cart.module';
 import { CustomerModule } from './features/customers/Customer.module';
 import { NotificationsModule } from './features/notifications/Notifications.module';
@@ -36,6 +38,7 @@ import { GlobalServicesModule } from './services/GlobalServices.module';
       schema: configSchema,
     }),
     CqrsModule.forRoot(),
+    ScheduleModule.forRoot(),
     GlobalServicesModule,
     AuthModule,
     CustomerModule,
@@ -44,6 +47,7 @@ import { GlobalServicesModule } from './services/GlobalServices.module';
     ProductsModule,
     AddressesModule,
     NotificationsModule,
+
     // WebhooksModule,
   ],
   controllers: [HealthController],

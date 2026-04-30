@@ -14,16 +14,19 @@
         "simulator": true
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "__PLACEHOLDER_DEV_API_URL__"
+        "EXPO_PUBLIC_API_URL": "https://mobile.csc-289-760b.org/"
       }
     },
     "preview": {
       "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
       "android": {
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "__PLACEHOLDER_PREVIEW_API_URL__"
+        "EXPO_PUBLIC_API_URL": "https://mobile.csc-289-760b.org/"
       }
     },
     "production": {
@@ -32,19 +35,14 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "__PLACEHOLDER_PROD_API_URL__"
+        "EXPO_PUBLIC_API_URL": "https://mobile.csc-289-760b.org/"
       }
     }
   },
   "submit": {
     "production": {
-      "ios": {
-        "appleId": "__PLACEHOLDER_APPLE_ID_EMAIL__",
-        "ascAppId": "__PLACEHOLDER_ASC_APP_ID__",
-        "appleTeamId": "__PLACEHOLDER_APPLE_TEAM_ID__"
-      },
       "android": {
-        "serviceAccountKeyPath": "./__PLACEHOLDER_GOOGLE_SERVICE_ACCOUNT_PATH__.json",
+        "serviceAccountKeyPath": "./google-service-account.json",
         "track": "internal",
         "releaseStatus": "draft"
       }
