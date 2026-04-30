@@ -16,6 +16,7 @@ export default function ProductsListScreen() {
         isLoading={isLoading}
         error={error}
         noDataComponent={<NoProductsAvailable />}
+        refetch={refetch}
       >
         {(products) => (
           <ProductGrid

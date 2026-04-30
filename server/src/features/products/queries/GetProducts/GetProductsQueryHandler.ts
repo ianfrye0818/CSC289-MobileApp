@@ -20,6 +20,9 @@ export class GetProductsQueryHandler implements IQueryHandler<GetProductsQuery> 
 
   async execute(): Promise<ProductListItemDto[]> {
     const products = await this.prisma.product.findMany({
+      where: {
+        inventory: { some: {} },
+      },
       include: {
         category: true,
         inventory: true,
