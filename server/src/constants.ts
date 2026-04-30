@@ -16,3 +16,5 @@ export const DEFAULT_MEMBERSHIP_LEVEL = 'Regular';
  * TODO: Remove this once we have proper authentication.
  */
 export const DEFAULT_USER_ID = process.env.DEFAULT_USER_ID ?? 9;
+
+export const MOBILE_SESSION_ID = 'mobile';

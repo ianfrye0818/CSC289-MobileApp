@@ -1,3 +1,4 @@
+import { MOBILE_SESSION_ID } from '@/constants';
 import { PrismaService } from '@/services/Prisma.service';
 import { Prisma } from '@generated/prisma/client';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
@@ -54,9 +55,12 @@ export class GetCurrentCustomerCartQueryHandler implements IQueryHandler<GetCurr
     query: GetCurrentCustomerCartQuery,
   ): Promise<ShoppingCartResponseDto> {
     console.log({ query });
+
+    // Pass 1: Look for a cart already tagged for 'mobile'
     let cart = await this.prisma.shopping_Cart.findFirst({
       where: {
         Customer_ID: query.customerId,
+        Session_ID: MOBILE_SESSION_ID,
       },
       include: {
         items: {
@@ -69,17 +73,40 @@ export class GetCurrentCustomerCartQueryHandler implements IQueryHandler<GetCurr
     });
 
     if (!cart) {
-      // Create a new cart
-      cart = await this.prisma.shopping_Cart.create({
-        data: {
+      // Pass 2: find the latest untagged cart (exisiting data) and adapt it
+      const legacy = await this.prisma.shopping_Cart.findFirst({
+        where: {
           Customer_ID: query.customerId,
-        },
-        include: {
-          items: {
-            include: cartLineInclude,
-          },
+          Session_ID: null,
         },
       });
+      if (legacy) {
+        cart = await this.prisma.shopping_Cart.update({
+          where: { Cart_ID: legacy.Cart_ID },
+          data: {
+            Session_ID: MOBILE_SESSION_ID,
+          },
+          include: {
+            items: {
+              include: cartLineInclude,
+            },
+          },
+        });
+      }
+
+      // Pass 3: If there truly is no cart, create a new one
+      if (!cart) {
+        cart = await this.prisma.shopping_Cart.create({
+          data: {
+            Customer_ID: query.customerId,
+          },
+          include: {
+            items: {
+              include: cartLineInclude,
+            },
+          },
+        });
+      }
     }
 
     const items = (cart.items ?? []).map((item) => this.projectCartLine(item));

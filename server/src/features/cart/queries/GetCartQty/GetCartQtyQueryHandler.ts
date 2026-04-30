@@ -1,3 +1,4 @@
+import { MOBILE_SESSION_ID } from '@/constants';
 import { PrismaService } from '@/services/Prisma.service';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetCartQtyQuery, GetCartQtyResponseDto } from './GetCartQtyQuery';
@@ -10,6 +11,7 @@ export class GetCartQtyQueryHandler implements IQueryHandler<GetCartQtyQuery> {
     const cart = await this.prisma.shopping_Cart.findFirst({
       where: {
         Customer_ID: query.customerId,
+        Session_ID: MOBILE_SESSION_ID,
       },
       orderBy: {
         Created_At: 'desc',
@@ -22,6 +24,7 @@ export class GetCartQtyQueryHandler implements IQueryHandler<GetCartQtyQuery> {
         },
       },
     });
+
     if (!cart) return null;
 
     return {

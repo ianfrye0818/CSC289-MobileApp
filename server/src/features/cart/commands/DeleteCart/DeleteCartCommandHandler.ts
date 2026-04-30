@@ -1,3 +1,4 @@
+import { MOBILE_SESSION_ID } from '@/constants';
 import { PrismaService } from '@/services/Prisma.service';
 import { DeletedMessageResponse } from '@/types/MessageReponse.type';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -13,6 +14,7 @@ export class DeleteCurrentUsersCartsCommandHandler implements ICommandHandler<De
     const carts = await this.prisma.shopping_Cart.findMany({
       where: {
         Customer_ID: command.userId,
+        Session_ID: MOBILE_SESSION_ID,
       },
     });
 
@@ -30,7 +32,7 @@ export class DeleteCurrentUsersCartsCommandHandler implements ICommandHandler<De
 
       // Create a new empty cart for the customer so they can use it later
       await tx.shopping_Cart.create({
-        data: { Customer_ID: command.userId },
+        data: { Customer_ID: command.userId, Session_ID: MOBILE_SESSION_ID },
       });
     });
 
