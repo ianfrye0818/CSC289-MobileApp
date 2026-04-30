@@ -17,6 +17,8 @@ export const useProductDetails = (productId: number, options?: QueryOptions<Prod
         .GET('/api/products/{productId}', { params: { path: { productId } } })
         .then(unwrapResponse),
     enabled: !!productId,
+    staleTime: 0,
+    refetchOnMount: true,
     ...options,
   });
 };

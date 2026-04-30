@@ -126,6 +126,7 @@ export default function RegisterForm() {
               returnKeyType='next'
               type='tel'
               name='phone'
+              maxLength={10}
               label='Phone'
               placeholder='123-456-7890'
               required
