@@ -1,5 +1,6 @@
 import { DataWrapper } from '@/components/DataWrapper';
-import { AddToCartButton, ProductDetails } from '@/features/products/components/ProductDetails';
+import { AddToCartButton } from '@/features/products/components/AddToCartButton';
+import { ProductDetails } from '@/features/products/components/ProductDetails';
 import { useGetSuggestedProducts } from '@/features/products/hooks/useGetSuggestedProducts';
 import { useProductDetails } from '@/features/products/hooks/useProductDetails';
 import { useLocalSearchParams } from 'expo-router';
