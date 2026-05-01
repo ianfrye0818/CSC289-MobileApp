@@ -49,7 +49,12 @@ export function getRandomShippingCost() {
   return Math.floor(Math.random() * (hi - lo + 1)) + lo;
 }
 
-export function formatCurrency(amount: number) {
-  if (!Number.isFinite(amount)) return 'N/A';
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+/**
+ * API / raw SQL DECIMAL values are often serialized as strings; coerce before formatting.
+ */
+export function formatCurrency(amount: number | string | null | undefined) {
+  if (amount == null || amount === '') return 'N/A';
+  const n = typeof amount === 'number' ? amount : Number(String(amount).trim());
+  if (!Number.isFinite(n)) return 'N/A';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 }
