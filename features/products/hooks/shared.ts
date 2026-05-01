@@ -18,5 +18,6 @@ export const productQueryKeys = {
   /** Base key for all product list queries. */
   products: ['products'],
   list: () => [...productQueryKeys.products, 'list'] as const,
+  suggested: (productId: number) => [...productQueryKeys.list(), 'suggested', productId] as const,
   details: (productId: number) => [...productQueryKeys.products, 'details', productId] as const,
 };
