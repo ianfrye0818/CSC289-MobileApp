@@ -12,6 +12,8 @@ import {
   LoginUserCommand,
   LoginUserCommandRequestDto,
 } from './commands/LoginUser/LoginUserCommand';
+import { LogoutUserCommand } from './commands/LogoutUser/LogoutUserCommand';
+import { LogoutUserRequestDto } from './commands/LogoutUser/LogoutUserRequestDto';
 import {
   RegisterUserCommand,
   RegisterUserCommandRequestDto,
@@ -50,5 +52,17 @@ export class AuthController {
     @Body() body: RegisterUserCommandRequestDto,
   ): Promise<TokenResponse> {
     return this.commandBus.execute(new RegisterUserCommand(body));
+  }
+
+  @Post('logout')
+  @ApiOperation({ summary: 'Logout User' })
+  @ApiBody({ type: LogoutUserRequestDto, required: true })
+  async logout(
+    @User() user: AuthUserDto,
+    @Body() body: LogoutUserRequestDto,
+  ): Promise<void> {
+    return this.commandBus.execute(
+      new LogoutUserCommand(user.id, body.pushToken),
+    );
   }
 }

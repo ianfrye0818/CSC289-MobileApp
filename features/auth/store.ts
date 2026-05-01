@@ -1,3 +1,4 @@
+import { apiClient } from '@/lib/apiClient';
 import { queryClient } from '@/lib/queryClient';
 import * as SecureStore from 'expo-secure-store';
 import { create } from 'zustand';
@@ -42,7 +43,7 @@ type Actions = {
   /** Persist the user object to SecureStore and update the in-memory state. */
   setUser: (user: AppUser) => Promise<void>;
   /** Clear all credentials from SecureStore and reset the store to its initial state. */
-  logout: () => Promise<void>;
+  logout: (pushToken: string | undefined) => Promise<void>;
   /**
    * Called once on app startup (see `app/_layout.tsx`).
    * Reads any previously stored token and user from SecureStore and hydrates
@@ -96,7 +97,10 @@ export const useAuthStore = create<AuthStore & Actions>((set) => ({
     set({ user });
   },
   setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
-  logout: async () => {
+  logout: async (pushToken: string | undefined) => {
+    // Call the API while the token is still in the store so the request goes
+    // out authenticated. If it fails we still complete the local logout.
+    await apiClient.POST('/api/auth/logout', { body: { pushToken } }).catch(() => {});
     await Promise.all([SecureStore.deleteItemAsync('token'), SecureStore.deleteItemAsync('user')]);
     queryClient.clear();
     set({ ...initialState, isLoading: false });

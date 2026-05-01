@@ -1,7 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { AppLogger } from './AppLogger.service';
 import { PrismaService } from './Prisma.service';
-import { PushNotificationService } from './PushNotification.service';
+import { PushTokenService } from './PushTokenService';
+import { RedisService } from './Redis.service';
 
 /**
  * Global module that makes `PrismaService` and `AppLogger` available
@@ -13,7 +14,7 @@ import { PushNotificationService } from './PushNotification.service';
  */
 @Global()
 @Module({
-  providers: [PrismaService, AppLogger, PushNotificationService],
-  exports: [PrismaService, AppLogger, PushNotificationService],
+  providers: [PrismaService, AppLogger, RedisService, PushTokenService],
+  exports: [PrismaService, AppLogger, RedisService, PushTokenService],
 })
 export class GlobalServicesModule {}

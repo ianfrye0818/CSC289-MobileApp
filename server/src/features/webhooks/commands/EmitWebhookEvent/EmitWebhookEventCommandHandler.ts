@@ -2,6 +2,7 @@ import { AppLogger } from '@/services/AppLogger.service';
 import { RedisService } from '@/services/Redis.service';
 import { sleep } from '@/utils/sleep';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EmitEventRequestDto } from '../../dtos/EmitEventRequestDto';
 import { EmitWebhookEventCommand } from './EmitWebhookEventCommand';
 
@@ -13,10 +14,14 @@ export class EmitWebhookEventCommandHandler implements ICommandHandler<EmitWebho
   private readonly MAX_RETRY_COUNT = 3;
   private readonly logger = new AppLogger(EmitWebhookEventCommandHandler.name);
 
-  constructor(private readonly redisService: RedisService) {}
+  constructor(
+    private readonly redisService: RedisService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async execute(command: EmitWebhookEventCommand): Promise<void> {
     const { dto } = command;
+    this.eventEmitter.emit(dto.event, dto.payload);
     void this.dispatchWebhooks(dto).catch((err) => {
       this.logger.error(
         `Webhook dispatch failed for event ${dto.event}: ${err}`,

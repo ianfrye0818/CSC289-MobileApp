@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ScheduleModule } from '@nestjs/schedule';
-
 import { APP_GUARD } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AddressesModule } from './features/addresses/addresses.module';
 import { AuthModule } from './features/auth/Auth.module';
 import { JwtAuthGuard } from './features/auth/guards/Auth.guard';
@@ -40,6 +40,7 @@ import { GlobalServicesModule } from './services/GlobalServices.module';
     CqrsModule.forRoot(),
     ScheduleModule.forRoot(),
     GlobalServicesModule,
+    EventEmitterModule.forRoot(),
     AuthModule,
     CustomerModule,
     CartModule,
