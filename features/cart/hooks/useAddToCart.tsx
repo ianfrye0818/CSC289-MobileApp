@@ -85,7 +85,6 @@ export const useAddToCart = () => {
       await queryClient.invalidateQueries({
         queryKey: cartQueryKeys.qty(),
       });
-      appToast.success('Added!');
     },
   });
 };
