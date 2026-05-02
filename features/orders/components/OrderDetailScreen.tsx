@@ -7,7 +7,7 @@ import { getShippingCarrierLabel } from '@/types/ShippingCarriers.enum';
 import { formatDate } from 'date-fns';
 import { capitalize } from 'lodash';
 import { useMemo } from 'react';
-import { ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { OrderAddress, OrderDetails } from '../types';
 import { OrderLineItem } from './OrderLineItem';
 
@@ -50,6 +50,8 @@ const formatAddress = (address: OrderAddress): string => {
 
 interface Props {
   order: OrderDetails;
+  onRefresh?: () => void;
+  refreshing?: boolean;
 }
 
 /**
@@ -59,7 +61,7 @@ interface Props {
  *
  * Rendered inside a DataWrapper by the route at app/(auth)/orders/[id].
  */
-export default function OrderDetailScreen({ order }: Props) {
+export default function OrderDetailScreen({ order, onRefresh, refreshing = false }: Props) {
   /* Calculate subtotal and tax from line items */
   const subtotal = useMemo(
     () => order.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
@@ -74,6 +76,14 @@ export default function OrderDetailScreen({ order }: Props) {
     <ScrollView
       contentContainerStyle={{ padding: 16, gap: 16 }}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        ) : undefined
+      }
     >
       {/* Order header */}
       <View className='gap-1'>
