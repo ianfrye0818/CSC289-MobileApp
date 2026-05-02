@@ -4,8 +4,10 @@ import { useCorsOptions } from './configs/useCorsOptions';
 import { useGlobalFilters } from './configs/useCreateGlobalFilters';
 import { useOpenApiConfig } from './configs/useOpenApiConfig';
 import { useValidationPipes } from './configs/useValidationPipes';
+import { AppLogger } from './services/AppLogger.service';
 import { ConfigService } from './services/ConfigService/Config.service';
 
+const logger = new AppLogger('CSC289-Mobile-Server');
 /**
  * Application entry point — bootstraps the NestJS server.
  *
@@ -24,20 +26,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
-  app.use((req, res, next) => {
-    console.log('req.url', req.url);
-    console.log('req.headers', req.headers);
-    next();
-  });
   app.enableCors(useCorsOptions());
   app.setGlobalPrefix('api');
   app.useGlobalPipes(useValidationPipes());
   useOpenApiConfig(configService, app);
   useGlobalFilters(app);
   await app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-    console.log(`API URL: ${configService.get('API_URL')}`);
-    console.log(`Swagger URL: ${configService.get('API_URL')}/api/swagger`);
+    logger.log(`Server is running on port ${port}`);
+    logger.log(`API URL: ${configService.get('API_URL')}`);
+    logger.log(`Swagger URL: ${configService.get('API_URL')}/api/swagger`);
   });
 }
 bootstrap();

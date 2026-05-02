@@ -1,11 +1,10 @@
 import { ValueOf } from '@/types/ValueOf';
 
 export const ShippingStatus = {
-  PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
-  SHIPPED: 'SHIPPED',
-  DELIVERED: 'DELIVERED',
-  CANCELLED: 'CANCELLED',
+  PENDING: 'Pending',
+  SHIPPED: 'Shipped',
+  DELIVERED: 'Delivered',
+  RETURNED: 'Returned',
 } as const;
 
 export type ShippingStatus = ValueOf<typeof ShippingStatus>;

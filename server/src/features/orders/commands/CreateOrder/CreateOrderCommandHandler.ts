@@ -1,5 +1,6 @@
 import { TAX_RATE } from '@/constants';
-import { ExpoPushService } from '@/features/notifications/services/ExpoPushService';
+import { OrderCreatedEvent } from '@/features/webhooks/events/OrderCreatedEvent';
+import { WebhookEvents } from '@/features/webhooks/types/WebhookEvents.type';
 import { AppLogger } from '@/services/AppLogger.service';
 import { PrismaService, TX } from '@/services/Prisma.service';
 import { CreatedMessageResponse } from '@/types/MessageReponse.type';
@@ -11,6 +12,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PaymentMethod } from '../../dtos/PaymentMethod.enum';
 import { PaymentStatus } from '../../dtos/PaytmentStatus.enum';
 import {
@@ -69,7 +71,7 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
   private readonly logger = new AppLogger(CreateOrderCommandHandler.name);
   constructor(
     private readonly prisma: PrismaService,
-    private readonly expoPush: ExpoPushService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(command: CreateOrderCommand): Promise<CreatedMessageResponse> {
@@ -165,9 +167,15 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
     // and errors are swallowed inside ExpoPushService so notification failure
     // never blocks the order-creation response. Direct Expo path (ticket 53)
     // rather than the commented `emitWebhook` call above — that's Ian's work.
-    this.expoPush
-      .notifyOrderCreated(command.customerId, transaction.Order_ID)
-      .catch((e) => this.logger.error('Order notification failed:', e));
+    // this.expoPush
+    //   .notifyOrderCreated(command.customerId, transaction.Order_ID)
+    //   .catch((e) => this.logger.error('Order notification failed:', e));
+
+    this.logger.log(`Emitting ORDER_CREATED event for orderId=${transaction.Order_ID} customerId=${command.customerId}`);
+    this.eventEmitter.emit(
+      WebhookEvents.ORDER_CREATED,
+      new OrderCreatedEvent(transaction.Order_ID, command.customerId),
+    );
 
     return new CreatedMessageResponse(
       'Order created successfully',

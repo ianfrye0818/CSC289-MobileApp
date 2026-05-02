@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useGetCustomer } from '@/features/account/hooks/useGetCustomer';
 import { useAuthStore } from '@/features/auth/store';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useRouter } from 'expo-router';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,6 +12,7 @@ import { MemberCard } from './MemberCard';
 
 export default function AccountScreen() {
   const { data, isPending, error, refetch, isFetching } = useGetCustomer();
+  const { expoPushToken } = usePushNotifications();
   const refreshing = isFetching && !isPending;
   const router = useRouter();
   const logout = useAuthStore((state) => state.logout);
@@ -54,7 +56,7 @@ export default function AccountScreen() {
                 <Button
                   className='mt-auto w-full'
                   variant='default'
-                  onPress={logout}
+                  onPress={() => logout(expoPushToken?.data)}
                 >
                   {' '}
                   Logout

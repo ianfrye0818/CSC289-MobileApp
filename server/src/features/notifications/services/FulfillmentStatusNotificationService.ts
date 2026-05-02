@@ -1,6 +1,6 @@
 import { AppLogger } from '@/services/AppLogger.service';
 import { PrismaService } from '@/services/Prisma.service';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ExpoPushService } from './ExpoPushService';
 
@@ -50,7 +50,7 @@ const NOTIFY_ON_STATUSES: Record<
  * Java app.
  */
 @Injectable()
-export class FulfillmentStatusNotificationService implements OnModuleInit {
+export class FulfillmentStatusNotificationService {
   private readonly logger = new AppLogger(
     FulfillmentStatusNotificationService.name,
   );
@@ -61,19 +61,21 @@ export class FulfillmentStatusNotificationService implements OnModuleInit {
     private readonly expoPush: ExpoPushService,
   ) {}
 
-  async onModuleInit() {
-    // Silent first scan — populate the cache without firing any pushes.
-    this.logger.log('Starting silent first scan of Order.Fulfillment_Status');
-    await this.scan(false);
-    this.logger.log(
-      `Initial cache populated with ${this.lastKnownStatus.size} orders`,
-    );
-    this.logger.log(
-      `Fulfillment status polling scheduled (${CronExpression.EVERY_5_MINUTES})`,
-    );
-  }
+  // async onModuleInit() {
+  //   // Silent first scan — populate the cache without firing any pushes.
+  //   this.logger.log('Starting silent first scan of Order.Fulfillment_Status');
+  //   await this.scan(false);
+  //   this.logger.log(
+  //     `Initial cache populated with ${this.lastKnownStatus.size} orders`,
+  //   );
+  //   this.logger.log(
+  //     `Fulfillment status polling scheduled (${CronExpression.EVERY_5_MINUTES})`,
+  //   );
+  // }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_5_MINUTES, {
+    disabled: true,
+  })
   async pollFulfillmentStatus(): Promise<void> {
     try {
       await this.scan(true);

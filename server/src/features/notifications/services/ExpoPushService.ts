@@ -1,12 +1,12 @@
 import { AppLogger } from '@/services/AppLogger.service';
 import { Injectable } from '@nestjs/common';
-import { RegisterPushTokenCommandHandler } from '../commands/RegisterPushToken/RegisterPushTokenCommandHandler';
 
 // --- Expo activation site 1 of 3: import ---
 // Uncomment this import together with sites 2 (class field) and 3 (send logic
 // in sendToCustomer) once `npm install expo-server-sdk` has been run. All
 // three sites must be uncommented together or the file will not compile.
 import { Expo, ExpoPushMessage } from 'expo-server-sdk';
+import { PushTokenService } from '../../../services/PushTokenService';
 
 /**
  * Sends push notifications to customers via the Expo Push API.
@@ -30,6 +30,7 @@ import { Expo, ExpoPushMessage } from 'expo-server-sdk';
 @Injectable()
 export class ExpoPushService {
   private readonly logger = new AppLogger(ExpoPushService.name);
+  constructor(private readonly tokenHandlerService: PushTokenService) {}
 
   // --- Expo activation site 2 of 3: class field ---
   // Uncomment this field together with sites 1 (import) and 3 (send logic in
@@ -48,27 +49,35 @@ export class ExpoPushService {
     body: string,
     data?: Record<string, unknown>,
   ): Promise<void> {
-    const token = RegisterPushTokenCommandHandler.getToken(customerId);
-    if (!token) {
+    const tokens = await this.tokenHandlerService.getTokens(customerId);
+    this.logger.log(
+      `sendToCustomer — customerId=${customerId} tokenCount=${tokens.length} tokens=[${tokens.join(', ')}]`,
+    );
+    if (!tokens.length) {
       this.logger.warn(
         `No push token registered for customer ${customerId}; skipping notification "${title}"`,
       );
       return;
     }
 
-    // Basic format check — mirrors the DTO-level validation on the register endpoint.
-    // Prevents calling out with obviously-bad tokens (e.g. "DEBUG").
-    if (!/^ExponentPushToken\[[^\]]+\]$/.test(token)) {
+    const validTokens = tokens.filter((token) => this.checkToken(token));
+
+    if (!validTokens.length) {
       this.logger.warn(
-        `Stored token for customer ${customerId} is not a valid Expo push token; skipping.`,
+        `No valid push tokens registered for customer ${customerId}; skipping notification "${title}"`,
       );
       return;
     }
 
     try {
-      const messages: ExpoPushMessage[] = [
-        { to: token, sound: 'default', title, body, data },
-      ];
+      const messages: ExpoPushMessage[] = validTokens.map((token) => ({
+        to: token,
+        sound: 'default',
+        title,
+        body,
+        data,
+      }));
+
       const chunks = this.expo.chunkPushNotifications(messages);
       for (const chunk of chunks) {
         const tickets = await this.expo.sendPushNotificationsAsync(chunk);
@@ -95,5 +104,9 @@ export class ExpoPushService {
       `Your order #${orderId} has been received.`,
       { type: 'order.created', orderId },
     );
+  }
+
+  private checkToken(token: string): boolean {
+    return /^ExponentPushToken\[[^\]]+\]$/.test(token);
   }
 }

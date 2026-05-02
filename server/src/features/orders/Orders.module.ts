@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { NotificationsModule } from '../notifications/Notifications.module';
 import { CreateOrderCommandHandler } from './commands/CreateOrder/CreateOrderCommandHandler';
+import { OrderCreatedNotificationListener } from './listeners/OrderCreatedNotification.listener';
+import { OrderStatusChangedNotificationListener } from './listeners/OrderStatusChanged.listener';
 import { OrdersController } from './Orders.controller';
 import { GetCurrentUserOrderDetailsQueryHandler } from './queries/GetCurrentUsersOrderDetails/GetCurrentUserOrderDetailsQueryHandler';
 import { GetCurrentUsersOrdersQueryHandler } from './queries/GetCurrentUsersOrders/GetCurrentUsersOrdersQueryHandler';
@@ -13,6 +15,8 @@ import { GetCurrentUsersOrdersQueryHandler } from './queries/GetCurrentUsersOrde
     GetCurrentUsersOrdersQueryHandler,
     CreateOrderCommandHandler,
     GetCurrentUserOrderDetailsQueryHandler,
+    OrderStatusChangedNotificationListener,
+    OrderCreatedNotificationListener,
   ],
   controllers: [OrdersController],
 })
