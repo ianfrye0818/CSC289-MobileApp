@@ -50,4 +50,5 @@ export interface OrderItem {
   quantity: number;
   price: number;
   tax: number | null;
+  discount: number;
 }

@@ -32,6 +32,8 @@ export class OrderDetailsResponseItem {
   price: number;
   @ApiProperty({ type: Number, required: true, nullable: true })
   tax: number | null;
+  @ApiProperty({ type: Number, required: true })
+  discount: number;
 }
 
 export class OrderDetailsResponsePayment {

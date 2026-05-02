@@ -111,15 +111,25 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
         type: discount.Discount_Type,
         amount: discount.Amount.toNumber(),
       })),
-      items: order.items.map((item) => ({
-        id: item.Inventory_ID ?? 0,
-        name:
-          item.inventory?.product?.Product_Name ??
-          'Product details unavailable',
-        quantity: item.Quantity,
-        price: item.Amount.toNumber(),
-        tax: item.Tax?.toNumber() ?? null,
-      })),
+      items: order.items.map((item) => {
+        const storedUnitPrice = item.Amount.toNumber();
+        const currentUnitPrice =
+          item.inventory?.Unit_Price?.toNumber() ?? storedUnitPrice;
+        const lineDiscount = Math.max(
+          0,
+          (currentUnitPrice - storedUnitPrice) * item.Quantity,
+        );
+        return {
+          id: item.Inventory_ID ?? 0,
+          name:
+            item.inventory?.product?.Product_Name ??
+            'Product details unavailable',
+          quantity: item.Quantity,
+          price: storedUnitPrice,
+          tax: item.Tax?.toNumber() ?? null,
+          discount: lineDiscount,
+        };
+      }),
       payment: {
         id: order.payment?.[0]?.Payment_ID ?? 0,
         method: order.payment?.[0]?.Method ?? '',

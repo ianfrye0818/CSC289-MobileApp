@@ -1,7 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
-import { useGetCustomer } from '@/features/account/hooks/useGetCustomer';
 import { formatCurrency } from '@/lib/utils';
 import { getPaymentLabel } from '@/types/PaymentMethod.enum';
 import { getShippingCarrierLabel } from '@/types/ShippingCarriers.enum';
@@ -63,23 +62,18 @@ interface Props {
  * Rendered inside a DataWrapper by the route at app/(auth)/orders/[id].
  */
 export default function OrderDetailScreen({ order, onRefresh, refreshing = false }: Props) {
-  const { data: customer } = useGetCustomer();
-  const discountRate = customer?.memberDetails?.discountRate ?? 0;
-
-  /* Calculate subtotal and tax from line items */
+  /* Calculate subtotal, tax, and member discount from line items */
+  // discount per item = max(0, currentInventoryPrice - storedPrice) × qty (computed server-side)
+  const totalDiscount = useMemo(
+    () => order.items.reduce((sum, item) => sum + item.discount, 0),
+    [order.items],
+  );
   const discountedSubtotal = useMemo(
     () => order.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
     [order.items],
   );
-  // Back-calculate savings from the stored discounted prices and current membership rate.
-  // memberSavings = discountedSubtotal * rate / (100 - rate), which recovers the original price.
-  const memberSavings = useMemo(
-    () => (discountRate > 0 ? (discountedSubtotal * discountRate) / (100 - discountRate) : 0),
-    [discountedSubtotal, discountRate],
-  );
-  // Show original (pre-discount) subtotal so the math reads:
-  // Subtotal − Member Discount + Tax + Shipping = Total
-  const subtotal = discountedSubtotal + memberSavings;
+  // Show original subtotal so the math reads: Subtotal − Member Discount + Tax + Shipping = Total
+  const subtotal = discountedSubtotal + totalDiscount;
   const totalTax = useMemo(
     () => order.items.reduce((sum, item) => sum + (item.tax ?? 0), 0),
     [order.items],
@@ -135,12 +129,10 @@ export default function OrderDetailScreen({ order, onRefresh, refreshing = false
             </View>
           )}
           {/* Member discount */}
-          {memberSavings > 0 && (
+          {totalDiscount > 0 && (
             <View className='flex-row justify-between'>
-              <Text className='text-muted-foreground text-sm'>
-                Member Discount ({discountRate}%)
-              </Text>
-              <Text className='text-green-600 text-sm'>-{formatCurrency(memberSavings)}</Text>
+              <Text className='text-muted-foreground text-sm'>Member Discount</Text>
+              <Text className='text-green-600 text-sm'>-{formatCurrency(totalDiscount)}</Text>
             </View>
           )}
           <View className='flex-row justify-between pt-2 border-t border-border mt-1'>
