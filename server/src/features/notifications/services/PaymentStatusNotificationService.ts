@@ -67,7 +67,9 @@ export class PaymentStatusNotificationService implements OnModuleInit {
     );
   }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_5_MINUTES, {
+    disabled: process.env.NODE_ENV === 'development',
+  })
   async pollPaymentStatus(): Promise<void> {
     try {
       await this.scan(true);

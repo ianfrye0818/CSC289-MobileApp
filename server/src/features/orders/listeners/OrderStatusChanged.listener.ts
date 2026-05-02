@@ -41,6 +41,7 @@ export class OrderStatusChangedNotificationListener {
       return;
     }
 
+    this.logger.log(`Ship_Status from DB: "${shipping.Ship_Status}" | customer: ${order.customer?.Customer_ID}`);
     switch (shipping.Ship_Status) {
       case ShippingStatus.SHIPPED:
         await this.notificationService.sendToCustomer(

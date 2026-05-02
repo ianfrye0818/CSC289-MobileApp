@@ -171,6 +171,7 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
     //   .notifyOrderCreated(command.customerId, transaction.Order_ID)
     //   .catch((e) => this.logger.error('Order notification failed:', e));
 
+    this.logger.log(`Emitting ORDER_CREATED event for orderId=${transaction.Order_ID} customerId=${command.customerId}`);
     this.eventEmitter.emit(
       WebhookEvents.ORDER_CREATED,
       new OrderCreatedEvent(transaction.Order_ID, command.customerId),

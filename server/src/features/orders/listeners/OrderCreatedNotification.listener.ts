@@ -20,6 +20,7 @@ export class OrderCreatedNotificationListener {
   @OnEvent(WebhookEvents.ORDER_CREATED)
   async handleOrderCreatedEvent(payload: OrderCreatedEvent) {
     const { orderId, customerId } = payload;
+    this.logger.log(`ORDER_CREATED event received — orderId=${orderId} customerId=${customerId}`);
 
     this.commandBus
       .execute(

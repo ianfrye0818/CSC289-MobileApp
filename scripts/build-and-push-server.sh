@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DOCKER_REPO="ianfrye/csc289mobile:latest"
+DOCKER_REPO="ianfrye/csc289mobile:staging"
 
 # If error exit
 set -e

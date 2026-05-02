@@ -49,8 +49,8 @@ export class ExpoPushService {
     body: string,
     data?: Record<string, unknown>,
   ): Promise<void> {
-    // const token = RegisterPushTokenCommandHandler.getToken(customerId);
     const tokens = await this.tokenHandlerService.getTokens(customerId);
+    this.logger.log(`sendToCustomer — customerId=${customerId} tokenCount=${tokens.length} tokens=[${tokens.join(', ')}]`);
     if (!tokens.length) {
       this.logger.warn(
         `No push token registered for customer ${customerId}; skipping notification "${title}"`,
@@ -75,6 +75,8 @@ export class ExpoPushService {
         body,
         data,
       }));
+
+      console.dir({ messages }, { depth: null });
 
       const chunks = this.expo.chunkPushNotifications(messages);
       for (const chunk of chunks) {
