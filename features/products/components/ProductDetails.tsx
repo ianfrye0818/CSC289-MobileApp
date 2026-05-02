@@ -1,6 +1,7 @@
 import { DataWrapper } from '@/components/DataWrapper';
 import { Badge } from '@/components/ui/badge';
 import { Text } from '@/components/ui/text';
+import { Reviews } from '@/features/reviews/components/Reviews';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
 import { formatCurrency } from '@/lib/utils';
 import { Image, View } from 'react-native';
@@ -50,7 +51,9 @@ export function ProductDetails({
             {product.category?.categoryName ?? '-'}
           </Text>
           <Text className='font-bold text-base leading-snug'>{product.productName ?? '-'}</Text>
-          <Text className='text-muted-foreground text-sm'>Qty: {totalQuantity ?? 0}</Text>
+          <Text className='text-muted-foreground text-sm'>
+            Currently in stock: {totalQuantity ?? 0}
+          </Text>
           <Text className='font-semibold text-foreground text-base'>{formattedPrice ?? 0}</Text>
         </View>
       </View>
@@ -99,6 +102,8 @@ export function ProductDetails({
           );
         }}
       </DataWrapper>
+
+      <Reviews productId={product.productId} />
     </View>
   );
 }
