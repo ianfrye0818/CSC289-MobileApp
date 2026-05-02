@@ -8,7 +8,6 @@ export class LogoutUserCommandHandler implements ICommandHandler<LogoutUserComma
 
   async execute(command: LogoutUserCommand): Promise<void> {
     const { userId, pushToken } = command;
-    console.log({ pushToken });
     if (!pushToken) {
       return;
     }

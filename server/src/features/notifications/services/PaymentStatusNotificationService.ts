@@ -1,6 +1,6 @@
 import { AppLogger } from '@/services/AppLogger.service';
 import { PrismaService } from '@/services/Prisma.service';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ExpoPushService } from './ExpoPushService';
 
@@ -45,7 +45,7 @@ const NOTIFY_ON_STATUSES: Record<
  * scans fire pushes for any new transitions.
  */
 @Injectable()
-export class PaymentStatusNotificationService implements OnModuleInit {
+export class PaymentStatusNotificationService {
   private readonly logger = new AppLogger(
     PaymentStatusNotificationService.name,
   );
@@ -56,16 +56,16 @@ export class PaymentStatusNotificationService implements OnModuleInit {
     private readonly expoPush: ExpoPushService,
   ) {}
 
-  async onModuleInit() {
-    this.logger.log('Starting silent first scan of Payment.Payment_Status');
-    await this.scan(false);
-    this.logger.log(
-      `Initial cache populated with ${this.lastKnownStatus.size} payments`,
-    );
-    this.logger.log(
-      `Payment status polling scheduled (${CronExpression.EVERY_5_MINUTES})`,
-    );
-  }
+  // async onModuleInit() {
+  //   this.logger.log('Starting silent first scan of Payment.Payment_Status');
+  //   await this.scan(false);
+  //   this.logger.log(
+  //     `Initial cache populated with ${this.lastKnownStatus.size} payments`,
+  //   );
+  //   this.logger.log(
+  //     `Payment status polling scheduled (${CronExpression.EVERY_5_MINUTES})`,
+  //   );
+  // }
 
   @Cron(CronExpression.EVERY_5_MINUTES, {
     disabled: true,

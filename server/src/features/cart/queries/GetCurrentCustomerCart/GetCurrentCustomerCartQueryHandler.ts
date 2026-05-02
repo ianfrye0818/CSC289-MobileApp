@@ -54,8 +54,6 @@ export class GetCurrentCustomerCartQueryHandler implements IQueryHandler<GetCurr
   async execute(
     query: GetCurrentCustomerCartQuery,
   ): Promise<ShoppingCartResponseDto> {
-    console.log({ query });
-
     // Pass 1: Look for a cart already tagged for 'mobile'
     let cart = await this.prisma.shopping_Cart.findFirst({
       where: {
