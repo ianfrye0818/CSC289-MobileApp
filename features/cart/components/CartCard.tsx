@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
+import { useMembershipDiscount } from '@/features/account/hooks/useMembershipDiscount';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Link } from 'expo-router';
@@ -15,7 +16,13 @@ interface Props {
 }
 
 export function CartCard({ cartItem, itemCount, showQuantityAdjustor = true }: Props) {
-  const lineTotal = cartItem.unitPrice * cartItem.quantity;
+  // Apply the member's tier discount to the cart-line preview. The server
+  // recalculates this at order-creation time, so the cart number here is
+  // a display-only mirror of what the customer will actually be charged.
+  const { discountRate, applyDiscount } = useMembershipDiscount();
+  const hasDiscount = discountRate > 0;
+  const discountedUnitPrice = applyDiscount(cartItem.unitPrice);
+  const lineTotal = discountedUnitPrice * cartItem.quantity;
   const formattedPrice = formatCurrency(lineTotal);
 
   return (
@@ -57,12 +64,29 @@ export function CartCard({ cartItem, itemCount, showQuantityAdjustor = true }: P
           </Pressable>
         </Link>
         {cartItem.quantity >= 2 && (
-          <Text className='text-sm text-muted-foreground'>
-            {formatCurrency(cartItem.unitPrice)}/unit
-          </Text>
+          <View className='flex-row items-baseline gap-2'>
+            {hasDiscount && (
+              <Text className='text-xs text-muted-foreground line-through'>
+                {formatCurrency(cartItem.unitPrice)}
+              </Text>
+            )}
+            <Text
+              className={cn(
+                'text-sm',
+                hasDiscount ? 'text-primary' : 'text-muted-foreground',
+              )}
+            >
+              {formatCurrency(discountedUnitPrice)}/unit
+            </Text>
+          </View>
         )}
         {showQuantityAdjustor && <QuantityAdjustor cartItem={cartItem} />}
-        <Text className='text-muted-foreground text-lg'>
+        <Text
+          className={cn(
+            'text-lg',
+            hasDiscount ? 'text-primary' : 'text-muted-foreground',
+          )}
+        >
           {formattedPrice}
           {itemCount != null && ` · ${itemCount} item${itemCount !== 1 ? 's' : ''}`}
         </Text>

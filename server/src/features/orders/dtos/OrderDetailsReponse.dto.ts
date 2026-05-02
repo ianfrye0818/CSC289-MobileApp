@@ -28,10 +28,18 @@ export class OrderDetailsResponseItem {
   name: string;
   @ApiProperty({ type: Number, required: true })
   quantity: number;
+  // `price` is the post-discount unit price actually charged; `originalPrice`
+  // is the list price at fetch time and `discount` is the per-unit savings
+  // (clamped at 0). All three are needed so the client can show a strikethrough
+  // without recomputing membership math itself.
   @ApiProperty({ type: Number, required: true })
   price: number;
   @ApiProperty({ type: Number, required: true, nullable: true })
   tax: number | null;
+  @ApiProperty({ type: Number, required: true })
+  originalPrice: number;
+  @ApiProperty({ type: Number, required: true })
+  discount: number;
 }
 
 export class OrderDetailsResponsePayment {

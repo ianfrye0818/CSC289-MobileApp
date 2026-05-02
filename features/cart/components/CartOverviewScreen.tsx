@@ -1,6 +1,7 @@
 import { DataWrapper } from '@/components/DataWrapper';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import { useMembershipDiscount } from '@/features/account/hooks/useMembershipDiscount';
 import { formatCurrency } from '@/lib/utils';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
@@ -92,9 +93,16 @@ function CheckoutButton({ disabled = false }: { disabled?: boolean }) {
 }
 
 function Footer({ cartItems }: { cartItems: CartItem[] }) {
+  // Subtotal must mirror what the server will charge — apply the member's
+  // tier discount per unit so the displayed total matches the eventual order.
+  const { applyDiscount } = useMembershipDiscount();
   const totalPrice = useMemo(
-    () => cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
-    [cartItems],
+    () =>
+      cartItems.reduce(
+        (total, item) => total + applyDiscount(item.unitPrice) * item.quantity,
+        0,
+      ),
+    [cartItems, applyDiscount],
   );
 
   function ClearCartButton() {

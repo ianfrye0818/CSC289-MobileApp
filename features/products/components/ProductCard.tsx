@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
+import { useMembershipDiscount } from '@/features/account/hooks/useMembershipDiscount';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useRouter } from 'expo-router';
@@ -24,6 +25,12 @@ interface Props {
  */
 export function ProductCard({ product, className, navigateFromProductDetail }: Props) {
   const router = useRouter();
+  // Discount math is server-mirrored: server stores the actual charged price
+  // on the order; the catalogue endpoint returns list price only, so we
+  // recompute the member's display price client-side from their tier.
+  const { discountRate, applyDiscount } = useMembershipDiscount();
+  const hasDiscount = discountRate > 0;
+  const discountedPrice = applyDiscount(product.unitPrice);
 
   return (
     <Pressable
@@ -64,9 +71,22 @@ export function ProductCard({ product, className, navigateFromProductDetail }: P
 
             {/* Price + stock row */}
             <View className='flex-row items-center justify-between mt-1 gap-2'>
-              <Text className='font-semibold text-foreground text-sm'>
-                {formatCurrency(product.unitPrice)}
-              </Text>
+              <View className='flex-row items-center gap-2 flex-shrink'>
+                {hasDiscount ? (
+                  <>
+                    <Text className='text-muted-foreground text-xs line-through'>
+                      {formatCurrency(product.unitPrice)}
+                    </Text>
+                    <Text className='font-semibold text-primary text-sm'>
+                      {formatCurrency(discountedPrice)}
+                    </Text>
+                  </>
+                ) : (
+                  <Text className='font-semibold text-foreground text-sm'>
+                    {formatCurrency(product.unitPrice)}
+                  </Text>
+                )}
+              </View>
               {!product.inStock && (
                 <View className='bg-destructive/10 px-2 py-0.5 rounded-full'>
                   <Text className='text-destructive text-xs'>Out of stock</Text>

@@ -3,9 +3,10 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
+import { useMembershipDiscount } from '@/features/account/hooks/useMembershipDiscount';
 import useAppForm from '@/hooks/useAppForm';
 import { TAX_RATE } from '@/lib/constants';
-import { getRandomShippingCost } from '@/lib/utils';
+import { formatCurrency, getRandomShippingCost } from '@/lib/utils';
 import { PaymentMethod } from '@/types/PaymentMethod.enum';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
@@ -37,10 +38,25 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
     },
   });
   const items = cart.items;
-  const totalPrice = useMemo(
+  // Pre-discount subtotal — used as the "list price" on the summary so the
+  // member can see the savings explicitly as its own line.
+  const originalSubtotal = useMemo(
     () => items.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
     [items],
   );
+  const { discountRate, applyDiscount } = useMembershipDiscount();
+  const hasDiscount = discountRate > 0;
+  // Discounted subtotal mirrors what the server will store on Order_Item.Amount.
+  // Tax is then computed on the discounted amount to match the server.
+  const totalPrice = useMemo(
+    () =>
+      items.reduce(
+        (total, item) => total + applyDiscount(item.unitPrice) * item.quantity,
+        0,
+      ),
+    [items, applyDiscount],
+  );
+  const discountAmount = originalSubtotal - totalPrice;
   const taxAmount = useMemo(() => totalPrice * TAX_RATE, [totalPrice]);
   const shippingCost = useWatch({ control: form.control, name: 'shippingCost' });
   const shippingAddressId = useWatch({ control: form.control, name: 'shippingAddressId' });
@@ -83,8 +99,18 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
             <View className='pt-3 gap-1'>
               <SummaryCardRow
                 label='Subtotal'
-                value={totalPrice}
+                value={hasDiscount ? originalSubtotal : totalPrice}
               />
+              {hasDiscount && (
+                <View className='flex-row justify-between'>
+                  <Text className='text-lg font-medium text-foreground'>
+                    Discount ({discountRate}%)
+                  </Text>
+                  <Text className='text-lg font-bold text-primary'>
+                    -{formatCurrency(discountAmount)}
+                  </Text>
+                </View>
+              )}
               <SummaryCardRow
                 label='Tax'
                 value={taxAmount}

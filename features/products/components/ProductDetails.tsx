@@ -1,6 +1,7 @@
 import { DataWrapper } from '@/components/DataWrapper';
 import { Badge } from '@/components/ui/badge';
 import { Text } from '@/components/ui/text';
+import { useMembershipDiscount } from '@/features/account/hooks/useMembershipDiscount';
 import { Reviews } from '@/features/reviews/components/Reviews';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
 import { formatCurrency } from '@/lib/utils';
@@ -27,7 +28,10 @@ export function ProductDetails({
   const getTotalQuantity = (inventory: ProductInventory[]) =>
     inventory?.reduce((sum, inv) => sum + inv.quantity, 0) ?? 0;
   const totalQuantity = getTotalQuantity(product.inventory);
+  const { discountRate, applyDiscount } = useMembershipDiscount();
+  const hasDiscount = discountRate > 0;
   const formattedPrice = formatCurrency(product.lowestPrice);
+  const formattedDiscountedPrice = formatCurrency(applyDiscount(product.lowestPrice));
   return (
     <View className='gap-4'>
       {/* Header row: image + info */}
@@ -55,6 +59,17 @@ export function ProductDetails({
             Currently in stock: {totalQuantity ?? 0}
           </Text>
           <Text className='font-semibold text-foreground text-base'>{formattedPrice ?? 0}</Text>
+          <Text className='text-muted-foreground text-sm'>Qty: {totalQuantity ?? 0}</Text>
+          {hasDiscount ? (
+            <View className='flex-row items-baseline gap-2'>
+              <Text className='text-muted-foreground text-sm line-through'>{formattedPrice}</Text>
+              <Text className='font-semibold text-primary text-base'>
+                {formattedDiscountedPrice}
+              </Text>
+            </View>
+          ) : (
+            <Text className='font-semibold text-foreground text-base'>{formattedPrice ?? 0}</Text>
+          )}
         </View>
       </View>
 

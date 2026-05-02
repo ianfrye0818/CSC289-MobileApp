@@ -85,6 +85,14 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
             inventory: true,
           },
         },
+        // Pull the customer's membership tier alongside the cart so we can
+        // resolve their Discount_Rate without a second round-trip. Discount
+        // is server-derived only — never trust a value sent by the client.
+        customer: {
+          include: {
+            member: true,
+          },
+        },
       },
     });
 
@@ -105,6 +113,12 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
       }
     }
 
+    // Discount_Rate is stored as a percentage (e.g. 10.00 == 10%). Convert to
+    // a multiplier here once so each line item just multiplies by it. Tax is
+    // applied to the discounted price so members aren't taxed on amounts they
+    // never paid.
+    const discountRate = cart.customer.member.Discount_Rate.toNumber();
+
     const orderData: Prisma.OrderCreateInput = {
       customer: {
         connect: {
@@ -115,12 +129,15 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
         createMany: {
           data: cart.items.map((i) => {
             const unit = i.inventory.Unit_Price?.toNumber() ?? 0;
+            const discountedUnit = unit - (unit * discountRate) / 100;
             return {
               Inventory_ID: i.Inventory_ID,
               Quantity: i.Quantity,
-              Amount: i.inventory.Unit_Price,
+              // Persist the post-discount unit price so historical orders
+              // remain accurate even if the customer's tier later changes.
+              Amount: discountedUnit,
               // Line tax in dollars (matches client: subtotal × TAX_RATE, allocated per line).
-              Tax: unit * i.Quantity * TAX_RATE,
+              Tax: discountedUnit * i.Quantity * TAX_RATE,
               Created_At: new Date(),
               Updated_At: new Date(),
             };
