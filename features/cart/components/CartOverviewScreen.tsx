@@ -2,10 +2,9 @@ import { DataWrapper } from '@/components/DataWrapper';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { formatCurrency } from '@/lib/utils';
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { Alert, FlatList, View } from 'react-native';
+import { Alert, FlatList, RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCart } from '../hooks/useCart';
 import { useClearCart } from '../hooks/useClearCart';
@@ -14,10 +13,10 @@ import { CartCard } from './CartCard';
 import NoCartItemsAvailable from './NoCartItemsAvailable';
 
 export default function CartOverviewScreen() {
-  const queryClient = useQueryClient();
   const { data, isLoading, error, refetch } = useCart();
 
   const cartId = data?.cartId;
+  const cartItems = data?.items ?? [];
 
   return (
     <SafeAreaView
@@ -26,12 +25,20 @@ export default function CartOverviewScreen() {
     >
       <View className='flex-1'>
         <DataWrapper
-          data={data?.items}
+          data={data}
           isLoading={isLoading}
           error={error}
-          noDataComponent={<NoCartItemsAvailable />}
+          refetch={refetch}
+          noDataComponent={
+            <ScrollView
+              refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
+              contentContainerStyle={{ flex: 1 }}
+            >
+              <NoCartItemsAvailable />
+            </ScrollView>
+          }
         >
-          {(cartItems: CartItem[]) => (
+          {() => (
             <>
               <FlatList
                 data={cartItems}
@@ -61,7 +68,7 @@ export default function CartOverviewScreen() {
                 }
                 ListEmptyComponent={<NoCartItemsAvailable />}
               />
-              <Footer cartItems={cartItems} />
+              {cartItems.length > 0 && <Footer cartItems={cartItems} />}
             </>
           )}
         </DataWrapper>

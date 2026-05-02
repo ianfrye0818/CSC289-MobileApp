@@ -74,7 +74,7 @@ export class FulfillmentStatusNotificationService implements OnModuleInit {
   }
 
   @Cron(CronExpression.EVERY_5_MINUTES, {
-    disabled: process.env.NODE_ENV === 'development',
+    disabled: true,
   })
   async pollFulfillmentStatus(): Promise<void> {
     try {
