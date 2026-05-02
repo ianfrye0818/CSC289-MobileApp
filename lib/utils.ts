@@ -58,3 +58,7 @@ export function formatCurrency(amount: number | string | null | undefined) {
   if (!Number.isFinite(n)) return 'N/A';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 }
+
+export function generateRandomNumber(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
