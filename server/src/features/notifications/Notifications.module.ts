@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { NotificationsController } from './Notifications.controller';
 import { RegisterPushTokenCommandHandler } from './commands/RegisterPushToken/RegisterPushTokenCommandHandler';
+import { SendNotificationCommandHandler } from './commands/SendNotification/SendNotificationCommandHandler';
 import { ExpoPushService } from './services/ExpoPushService';
 import { FulfillmentStatusNotificationService } from './services/FulfillmentStatusNotificationService';
 import { PaymentStatusNotificationService } from './services/PaymentStatusNotificationService';
@@ -17,6 +18,7 @@ import { PaymentStatusNotificationService } from './services/PaymentStatusNotifi
     ExpoPushService,
     FulfillmentStatusNotificationService,
     PaymentStatusNotificationService,
+    SendNotificationCommandHandler,
   ],
   exports: [ExpoPushService],
 })

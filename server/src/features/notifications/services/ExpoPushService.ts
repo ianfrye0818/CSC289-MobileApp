@@ -75,6 +75,7 @@ export class ExpoPushService {
         body,
         data,
       }));
+
       const chunks = this.expo.chunkPushNotifications(messages);
       for (const chunk of chunks) {
         const tickets = await this.expo.sendPushNotificationsAsync(chunk);

@@ -11,6 +11,7 @@ import { CustomerModule } from './features/customers/Customer.module';
 import { NotificationsModule } from './features/notifications/Notifications.module';
 import { OrdersModule } from './features/orders/Orders.module';
 import { ProductsModule } from './features/products/Products.module';
+import { WebhooksModule } from './features/webhooks/Webhooks.module';
 import { HealthController } from './health.controller';
 import { configSchema } from './services/ConfigService/Config.schema';
 import { CustomConfigModule } from './services/ConfigService/CustomConfig.module';
@@ -48,8 +49,7 @@ import { GlobalServicesModule } from './services/GlobalServices.module';
     ProductsModule,
     AddressesModule,
     NotificationsModule,
-
-    // WebhooksModule,
+    WebhooksModule,
   ],
   controllers: [HealthController],
   providers: [

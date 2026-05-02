@@ -1,10 +1,13 @@
+import { Public } from '@/decorators/Public.decorator';
 import { User } from '@/decorators/User.decorator';
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUserDto } from '../auth/types/AuthUserDto.type';
 import { RegisterPushTokenCommand } from './commands/RegisterPushToken/RegisterPushTokenCommand';
+import { SendNotificationCommand } from './commands/SendNotification/SendNotificationCommand';
 import { RegisterPushTokenRequestDto } from './dtos/RegisterPushTokenRequest.dto';
+import { SendNotificationRequestDto } from './dtos/SendNotificationRequest.dto';
 
 @ApiTags('Notifications')
 @Controller('notifications')
@@ -23,5 +26,13 @@ export class NotificationsController {
     return this.commandBus.execute(
       new RegisterPushTokenCommand(user.id, body.token),
     );
+  }
+
+  @Post('send-notification')
+  @Public()
+  @ApiOperation({ summary: 'Send a notification to a user' })
+  @ApiBody({ type: SendNotificationRequestDto })
+  async sendNotification(@Body() dto: SendNotificationRequestDto) {
+    return this.commandBus.execute(new SendNotificationCommand(dto));
   }
 }

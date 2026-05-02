@@ -8,8 +8,10 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { ShippingStatus } from '../dtos/ShippingStatus.enum';
 
 @Injectable()
-export class OrderStatusChangedListener {
-  private readonly logger = new AppLogger(OrderStatusChangedListener.name);
+export class OrderStatusChangedNotificationListener {
+  private readonly logger = new AppLogger(
+    OrderStatusChangedNotificationListener.name,
+  );
 
   constructor(
     private readonly prisma: PrismaService,
@@ -41,7 +43,7 @@ export class OrderStatusChangedListener {
 
     switch (shipping.Ship_Status) {
       case ShippingStatus.SHIPPED:
-        this.notificationService.sendToCustomer(
+        await this.notificationService.sendToCustomer(
           order.customer.Customer_ID,
           'Order shipped',
           `Your order ${orderId} has been shipped`,
