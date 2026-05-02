@@ -1,6 +1,7 @@
 import { DataWrapper } from '@/components/DataWrapper';
 import { Badge } from '@/components/ui/badge';
 import { Text } from '@/components/ui/text';
+import { useGetCustomer } from '@/features/account/hooks/useGetCustomer';
 import { Reviews } from '@/features/reviews/components/Reviews';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
 import { formatCurrency } from '@/lib/utils';
@@ -24,10 +25,16 @@ export function ProductDetails({
 }) {
   const { data, isLoading, error, refetch } = suggested;
 
+  const { data: customer } = useGetCustomer();
+  const discountRate = customer?.memberDetails?.discountRate ?? 0;
+  const discountedPrice =
+    discountRate > 0 && product.lowestPrice != null
+      ? product.lowestPrice * (1 - discountRate / 100)
+      : null;
+
   const getTotalQuantity = (inventory: ProductInventory[]) =>
     inventory?.reduce((sum, inv) => sum + inv.quantity, 0) ?? 0;
   const totalQuantity = getTotalQuantity(product.inventory);
-  const formattedPrice = formatCurrency(product.lowestPrice);
   return (
     <View className='gap-4'>
       {/* Header row: image + info */}
@@ -54,7 +61,9 @@ export function ProductDetails({
           <Text className='text-muted-foreground text-sm'>
             Currently in stock: {totalQuantity ?? 0}
           </Text>
-          <Text className='font-semibold text-foreground text-base'>{formattedPrice ?? 0}</Text>
+          <Text className='font-semibold text-foreground text-base'>
+            {formatCurrency(discountedPrice ?? product.lowestPrice)}
+          </Text>
         </View>
       </View>
 

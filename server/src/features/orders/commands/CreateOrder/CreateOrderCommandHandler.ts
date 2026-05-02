@@ -85,6 +85,11 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
             inventory: true,
           },
         },
+        customer: {
+          include: {
+            member: true,
+          },
+        },
       },
     });
 
@@ -105,6 +110,9 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
       }
     }
 
+    const discountRate = cart.customer.member?.Discount_Rate?.toNumber() ?? 0;
+    const discountMultiplier = 1 - discountRate / 100;
+
     const orderData: Prisma.OrderCreateInput = {
       customer: {
         connect: {
@@ -115,12 +123,13 @@ export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCom
         createMany: {
           data: cart.items.map((i) => {
             const unit = i.inventory.Unit_Price?.toNumber() ?? 0;
+            const discounted = unit * discountMultiplier;
             return {
               Inventory_ID: i.Inventory_ID,
               Quantity: i.Quantity,
-              Amount: i.inventory.Unit_Price,
-              // Line tax in dollars (matches client: subtotal × TAX_RATE, allocated per line).
-              Tax: unit * i.Quantity * TAX_RATE,
+              Amount: discounted,
+              // Tax on discounted price in dollars.
+              Tax: discounted * i.Quantity * TAX_RATE,
               Created_At: new Date(),
               Updated_At: new Date(),
             };

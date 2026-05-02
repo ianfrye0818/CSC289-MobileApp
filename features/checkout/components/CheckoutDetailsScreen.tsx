@@ -3,9 +3,10 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
+import { useGetCustomer } from '@/features/account/hooks/useGetCustomer';
 import useAppForm from '@/hooks/useAppForm';
 import { TAX_RATE } from '@/lib/constants';
-import { getRandomShippingCost } from '@/lib/utils';
+import { formatCurrency, getRandomShippingCost } from '@/lib/utils';
 import { PaymentMethod } from '@/types/PaymentMethod.enum';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
@@ -36,12 +37,22 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
             : PaymentMethod.PAYPAL,
     },
   });
+  const { data: customer } = useGetCustomer();
+  const discountRate = customer?.memberDetails?.discountRate ?? 0;
+
   const items = cart.items;
   const totalPrice = useMemo(
     () => items.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
     [items],
   );
-  const taxAmount = useMemo(() => totalPrice * TAX_RATE, [totalPrice]);
+  const memberDiscountAmount = useMemo(
+    () => totalPrice * (discountRate / 100),
+    [totalPrice, discountRate],
+  );
+  const taxAmount = useMemo(
+    () => (totalPrice - memberDiscountAmount) * TAX_RATE,
+    [totalPrice, memberDiscountAmount],
+  );
   const shippingCost = useWatch({ control: form.control, name: 'shippingCost' });
   const shippingAddressId = useWatch({ control: form.control, name: 'shippingAddressId' });
 
@@ -53,8 +64,8 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
   }, [form, isBillingAddressSameAsShippingAddress, shippingAddressId]);
 
   const finalAmount = useMemo(
-    () => totalPrice + taxAmount + shippingCost,
-    [totalPrice, taxAmount, shippingCost],
+    () => totalPrice - memberDiscountAmount + taxAmount + shippingCost,
+    [totalPrice, memberDiscountAmount, taxAmount, shippingCost],
   );
 
   const handleBillingAddressSameAsShippingAddressChange = () => {
@@ -85,6 +96,16 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
                 label='Subtotal'
                 value={totalPrice}
               />
+              {memberDiscountAmount > 0 && (
+                <View className='flex-row justify-between'>
+                  <Text className='text-lg font-medium text-foreground'>
+                    Member Discount ({discountRate}%)
+                  </Text>
+                  <Text className='text-lg font-bold text-green-600'>
+                    -{formatCurrency(memberDiscountAmount)}
+                  </Text>
+                </View>
+              )}
               <SummaryCardRow
                 label='Tax'
                 value={taxAmount}

@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
+import { useGetCustomer } from '@/features/account/hooks/useGetCustomer';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useRouter } from 'expo-router';
@@ -24,6 +25,9 @@ interface Props {
  */
 export function ProductCard({ product, className, navigateFromProductDetail }: Props) {
   const router = useRouter();
+  const { data: customer } = useGetCustomer();
+  const discountRate = customer?.memberDetails?.discountRate ?? 0;
+  const discountedPrice = discountRate > 0 ? product.unitPrice * (1 - discountRate / 100) : null;
 
   return (
     <Pressable
@@ -64,9 +68,22 @@ export function ProductCard({ product, className, navigateFromProductDetail }: P
 
             {/* Price + stock row */}
             <View className='flex-row items-center justify-between mt-1 gap-2'>
-              <Text className='font-semibold text-foreground text-sm'>
-                {formatCurrency(product.unitPrice)}
-              </Text>
+              <View className='gap-0.5'>
+                {discountedPrice != null ? (
+                  <>
+                    <Text className='text-muted-foreground text-xs line-through'>
+                      {formatCurrency(product.unitPrice)}
+                    </Text>
+                    <Text className='font-semibold text-foreground text-sm'>
+                      {formatCurrency(discountedPrice)}
+                    </Text>
+                  </>
+                ) : (
+                  <Text className='font-semibold text-foreground text-sm'>
+                    {formatCurrency(product.unitPrice)}
+                  </Text>
+                )}
+              </View>
               {!product.inStock && (
                 <View className='bg-destructive/10 px-2 py-0.5 rounded-full'>
                   <Text className='text-destructive text-xs'>Out of stock</Text>

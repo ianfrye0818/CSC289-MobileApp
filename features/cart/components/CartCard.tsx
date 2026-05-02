@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
+import { useGetCustomer } from '@/features/account/hooks/useGetCustomer';
 import { PRODUCT_PLACEHOLDER_IMAGE_URL } from '@/lib/constants';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Link } from 'expo-router';
@@ -15,7 +16,12 @@ interface Props {
 }
 
 export function CartCard({ cartItem, itemCount, showQuantityAdjustor = true }: Props) {
-  const lineTotal = cartItem.unitPrice * cartItem.quantity;
+  const { data: customer } = useGetCustomer();
+  const discountRate = customer?.memberDetails?.discountRate ?? 0;
+  const discountedUnitPrice =
+    discountRate > 0 ? cartItem.unitPrice * (1 - discountRate / 100) : null;
+
+  const lineTotal = (discountedUnitPrice ?? cartItem.unitPrice) * cartItem.quantity;
   const formattedPrice = formatCurrency(lineTotal);
 
   return (
@@ -57,9 +63,16 @@ export function CartCard({ cartItem, itemCount, showQuantityAdjustor = true }: P
           </Pressable>
         </Link>
         {cartItem.quantity >= 2 && (
-          <Text className='text-sm text-muted-foreground'>
-            {formatCurrency(cartItem.unitPrice)}/unit
-          </Text>
+          <View className='items-end'>
+            {discountedUnitPrice != null && (
+              <Text className='text-xs text-muted-foreground line-through'>
+                {formatCurrency(cartItem.unitPrice)}/unit
+              </Text>
+            )}
+            <Text className='text-sm text-muted-foreground'>
+              {formatCurrency(discountedUnitPrice ?? cartItem.unitPrice)}/unit
+            </Text>
+          </View>
         )}
         {showQuantityAdjustor && <QuantityAdjustor cartItem={cartItem} />}
         <Text className='text-muted-foreground text-lg'>
