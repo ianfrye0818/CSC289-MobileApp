@@ -30,11 +30,10 @@ export const useCheckout = () => {
         queryKey: cartQueryKeys.cart,
       });
       appToast.success('Order created successfully');
+      router.push('/orders');
       const orderId = data?.data?.id;
       if (orderId) {
         router.push(`/orders/${orderId}`);
-      } else {
-        router.push('/orders');
       }
     },
   });
