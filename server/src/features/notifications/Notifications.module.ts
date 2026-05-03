@@ -4,8 +4,6 @@ import { NotificationsController } from './Notifications.controller';
 import { RegisterPushTokenCommandHandler } from './commands/RegisterPushToken/RegisterPushTokenCommandHandler';
 import { SendNotificationCommandHandler } from './commands/SendNotification/SendNotificationCommandHandler';
 import { ExpoPushService } from './services/ExpoPushService';
-import { FulfillmentStatusNotificationService } from './services/FulfillmentStatusNotificationService';
-import { PaymentStatusNotificationService } from './services/PaymentStatusNotificationService';
 
 @Module({
   imports: [CqrsModule],
@@ -16,8 +14,6 @@ import { PaymentStatusNotificationService } from './services/PaymentStatusNotifi
   providers: [
     RegisterPushTokenCommandHandler,
     ExpoPushService,
-    FulfillmentStatusNotificationService,
-    PaymentStatusNotificationService,
     SendNotificationCommandHandler,
   ],
   exports: [ExpoPushService],

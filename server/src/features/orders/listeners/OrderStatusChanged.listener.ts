@@ -48,6 +48,7 @@ export class OrderStatusChangedNotificationListener {
           order.customer.Customer_ID,
           'Order shipped',
           `Your order ${orderId} has been shipped`,
+          { type: 'shipping.status.updated', orderId, url: `csc289mobile://orders/${orderId}` },
         );
         break;
       case ShippingStatus.DELIVERED:
@@ -55,6 +56,7 @@ export class OrderStatusChangedNotificationListener {
           order.customer.Customer_ID,
           'Order delivered',
           `Your order ${orderId} has been delivered`,
+          { type: 'shipping.status.updated', orderId, url: `csc289mobile://orders/${orderId}` },
         );
         break;
       case ShippingStatus.RETURNED:
@@ -62,6 +64,7 @@ export class OrderStatusChangedNotificationListener {
           order.customer.Customer_ID,
           'Order returned',
           `Your order ${orderId} has been received and a refund will be issued shortly`,
+          { type: 'shipping.status.updated', orderId, url: `csc289mobile://orders/${orderId}` },
         );
         break;
       default:

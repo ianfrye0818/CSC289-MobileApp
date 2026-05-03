@@ -96,16 +96,6 @@ export class ExpoPushService {
     }
   }
 
-  /** Convenience wrapper for the order-created event. */
-  async notifyOrderCreated(customerId: number, orderId: number): Promise<void> {
-    await this.sendToCustomer(
-      customerId,
-      'Order confirmed',
-      `Your order #${orderId} has been received.`,
-      { type: 'order.created', orderId },
-    );
-  }
-
   private checkToken(token: string): boolean {
     return /^ExponentPushToken\[[^\]]+\]$/.test(token);
   }

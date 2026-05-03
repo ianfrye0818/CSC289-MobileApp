@@ -36,6 +36,7 @@ export class OrderCreatedNotificationListener {
         customerId,
         'Order created',
         `Congratulations! Your order #${orderId} has been received. We will notify you when it is ready to be shipped.`,
+        { type: 'order.created', orderId, url: `csc289mobile://orders/${orderId}` },
       )
       .catch((err) =>
         this.logger.error('Error sending order created notification', err),
