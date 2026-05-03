@@ -58,7 +58,6 @@ export function ProductDetails({
           <Text className='text-muted-foreground text-sm'>
             Currently in stock: {totalQuantity ?? 0}
           </Text>
-          <Text className='font-semibold text-foreground text-base'>{formattedPrice ?? 0}</Text>
           {hasDiscount ? (
             <View className='flex-row items-baseline gap-2'>
               <Text className='text-muted-foreground text-sm line-through'>{formattedPrice}</Text>
