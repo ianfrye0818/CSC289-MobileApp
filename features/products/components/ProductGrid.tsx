@@ -12,6 +12,25 @@ interface Props {
   isRefetching: boolean;
 }
 
+/**
+ * Normalize text for substring search. Strips soft hyphens (U+00AD) and other
+ * invisible/format chars — those often sit before the “last word” when names are
+ * pasted from Word/CMS and break naive `.includes('console')` on “Game\u00ADConsole”.
+ */
+function normalizeForSearch(value: string): string {
+  return value
+    .normalize('NFKC')
+    .replace(/[\u00AD\u034F\u200B-\u200D\u2060\uFEFF]/g, '')
+    .trim()
+    .toLowerCase();
+}
+
+function productMatchesQuery(product: ProductListItem, needle: string): boolean {
+  const nameHaystack = normalizeForSearch(product.productName ?? '');
+  const categoryHaystack = normalizeForSearch(product.category?.categoryName ?? '');
+  return nameHaystack.includes(needle) || categoryHaystack.includes(needle);
+}
+
 export function ProductGrid({ products, refetch, isRefetching }: Props) {
   const { width } = useWindowDimensions();
   const numColumns = width >= 768 ? 3 : 2;
@@ -34,8 +53,9 @@ export function ProductGrid({ products, refetch, isRefetching }: Props) {
 
   const displayedProducts = useMemo(() => {
     let result = products ?? [];
-    if (query) {
-      result = result.filter((p) => p.productName.toLowerCase().includes(query.toLowerCase()));
+    const needle = normalizeForSearch(query);
+    if (needle) {
+      result = result.filter((p) => productMatchesQuery(p, needle));
     }
     if (activeCategory !== null) {
       result = result.filter((p) => p.category?.categoryId === activeCategory);
@@ -64,8 +84,7 @@ export function ProductGrid({ products, refetch, isRefetching }: Props) {
       columnWrapperStyle={numColumns > 1 ? { gap: 12 } : undefined}
       renderItem={({ item, index }) => {
         const isLonelyLastItem =
-          displayedProducts.length % numColumns !== 0 &&
-          index === displayedProducts.length - 1;
+          displayedProducts.length % numColumns !== 0 && index === displayedProducts.length - 1;
         if (isLonelyLastItem) {
           return (
             <View style={{ width: itemWidth }}>

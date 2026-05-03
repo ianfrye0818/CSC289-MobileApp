@@ -19,19 +19,19 @@ export class GetRandomReviewsQueryHandler implements IQueryHandler<GetRandomRevi
       },
     });
 
-    const randomReviews: Review[] = Array.from({ length: limit ?? 10 }).map(
-      () => {
-        const customer = pickRandom(customers);
-        const review = pickRandom(reviews);
-        return {
-          ...review,
-          customer: {
-            key: customer.Customer_ID.toString(),
-            value: `${customer.First_Name} ${customer.Last_Name}`,
-          },
-        };
-      },
-    );
+    const count = Math.min(limit ?? 10, reviews.length);
+    const shuffledReviews = [...reviews].sort(() => Math.random() - 0.5).slice(0, count);
+
+    const randomReviews: Review[] = shuffledReviews.map((review) => {
+      const customer = pickRandom(customers);
+      return {
+        ...review,
+        customer: {
+          key: customer.Customer_ID.toString(),
+          value: `${customer.First_Name} ${customer.Last_Name}`,
+        },
+      };
+    });
     return randomReviews;
   }
 }

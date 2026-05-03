@@ -61,13 +61,15 @@ export function ProductCard({ product, className, navigateFromProductDetail }: P
               {product.category?.categoryName ?? '-'}
             </Text>
 
-            {/* Name */}
-            <Text
-              className='font-semibold text-sm leading-snug'
-              numberOfLines={2}
-            >
-              {product.productName}
-            </Text>
+            {/* Name — fixed height reserves space for 2 lines so all cards in a row stay equal height */}
+            <View className='h-10 justify-start'>
+              <Text
+                className='font-semibold text-sm leading-snug'
+                numberOfLines={2}
+              >
+                {product.productName}
+              </Text>
+            </View>
 
             {/* Price + stock row */}
             <View className='flex-row items-center justify-between mt-1 gap-2'>
