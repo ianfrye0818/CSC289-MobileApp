@@ -62,18 +62,15 @@ interface Props {
  * Rendered inside a DataWrapper by the route at app/(auth)/orders/[id].
  */
 export default function OrderDetailScreen({ order, onRefresh, refreshing = false }: Props) {
-  /* Calculate subtotal, tax, and member discount from line items */
-  // discount per item = max(0, currentInventoryPrice - storedPrice) × qty (computed server-side)
-  const totalDiscount = useMemo(
-    () => order.items.reduce((sum, item) => sum + item.discount, 0),
-    [order.items],
-  );
-  const discountedSubtotal = useMemo(
+  /* Use server-recorded values — no client-side back-calculation */
+  const subtotal = useMemo(
     () => order.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
     [order.items],
   );
-  // Show original subtotal so the math reads: Subtotal − Member Discount + Tax + Shipping = Total
-  const subtotal = discountedSubtotal + totalDiscount;
+  const totalDiscount = useMemo(
+    () => order.discounts.reduce((sum, d) => sum + d.amount, 0),
+    [order.discounts],
+  );
   const totalTax = useMemo(
     () => order.items.reduce((sum, item) => sum + (item.tax ?? 0), 0),
     [order.items],
@@ -128,7 +125,7 @@ export default function OrderDetailScreen({ order, onRefresh, refreshing = false
               <Text className='text-foreground text-sm'>{formatCurrency(order.shipping.cost)}</Text>
             </View>
           )}
-          {/* Member discount */}
+          {/* Member discount — only shown when the server recorded an applied discount */}
           {totalDiscount > 0 && (
             <View className='flex-row justify-between'>
               <Text className='text-muted-foreground text-sm'>Member Discount</Text>

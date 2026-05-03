@@ -61,9 +61,20 @@ export function ProductDetails({
           <Text className='text-muted-foreground text-sm'>
             Currently in stock: {totalQuantity ?? 0}
           </Text>
-          <Text className='font-semibold text-foreground text-base'>
-            {formatCurrency(discountedPrice ?? product.lowestPrice)}
-          </Text>
+          {discountedPrice != null ? (
+            <>
+              <Text className='text-muted-foreground text-xs line-through'>
+                {formatCurrency(product.lowestPrice)}
+              </Text>
+              <Text className='font-semibold text-foreground text-base'>
+                {formatCurrency(discountedPrice)}
+              </Text>
+            </>
+          ) : (
+            <Text className='font-semibold text-foreground text-base'>
+              {formatCurrency(product.lowestPrice)}
+            </Text>
+          )}
         </View>
       </View>
 
