@@ -4,6 +4,9 @@ import z from 'zod';
 /** Expiry must be strictly after “now” (year > this year, or same year with month ≥ current month). */
 export const creditCardSchema = z
   .object({
+    cardholderName: z
+      .string()
+      .min(1, 'Cardholder name is required'),
     cardNumber: z
       .string()
       .length(16, 'Card number must be 16 digits')
