@@ -111,15 +111,26 @@ export class GetCurrentUserOrderDetailsQueryHandler implements IQueryHandler<Get
         type: discount.Discount_Type,
         amount: discount.Amount.toNumber(),
       })),
-      items: order.items.map((item) => ({
-        id: item.Inventory_ID ?? 0,
-        name:
-          item.inventory?.product?.Product_Name ??
-          'Product details unavailable',
-        quantity: item.Quantity,
-        price: item.Amount.toNumber(),
-        tax: item.Tax?.toNumber() ?? null,
-      })),
+      items: order.items.map((item) => {
+        // Order_Item.Amount is the discounted unit price stored at checkout;
+        // Inventory.Unit_Price is the current list price. The diff exposes
+        // the per-unit savings to the client. Clamp at 0 so a price drop
+        // after the order was placed doesn't surface as a negative discount.
+        const originalPrice = item.inventory?.Unit_Price?.toNumber() ?? 0;
+        const price = item.Amount.toNumber();
+        const discount = Math.max(0, originalPrice - price);
+        return {
+          id: item.Inventory_ID ?? 0,
+          name:
+            item.inventory?.product?.Product_Name ??
+            'Product details unavailable',
+          quantity: item.Quantity,
+          price,
+          tax: item.Tax?.toNumber() ?? null,
+          originalPrice,
+          discount,
+        };
+      }),
       payment: {
         id: order.payment?.[0]?.Payment_ID ?? 0,
         method: order.payment?.[0]?.Method ?? '',

@@ -43,6 +43,11 @@ export interface OrderDetails {
 /**
  * Single line item in an order. Matches OrderDetailsResponseItem
  * from the backend DTO (which the generated schema gets wrong).
+ *
+ * `originalPrice` and `discount` are server-computed: `originalPrice` is the
+ * current Inventory.Unit_Price and `discount` is the per-unit savings the
+ * member received at order time (clamped at 0). Optional so older order
+ * payloads cached pre-rollout still parse.
  */
 export interface OrderItem {
   id: number;
@@ -50,4 +55,6 @@ export interface OrderItem {
   quantity: number;
   price: number;
   tax: number | null;
+  originalPrice?: number;
+  discount?: number;
 }
