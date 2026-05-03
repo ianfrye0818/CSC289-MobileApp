@@ -2,6 +2,7 @@ import AnimatedSplash from '@/components/AnimatedSplash';
 import { toastConfig } from '@/components/ToastConfig';
 import { useAuthStore } from '@/features/auth/store';
 import { useNotificationSetup } from '@/features/notifications/hooks/useNotificationSetup';
+import { useNotificationLinking } from '@/hooks/useNotificationLinking';
 import { queryClient } from '@/lib/queryClient';
 import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -9,10 +10,10 @@ import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Appearance, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-Appearance.setColorScheme('light');
 import Toast from 'react-native-toast-message';
 import '../global.css';
+
+Appearance.setColorScheme('light');
 
 /**
  * Thin wrapper that calls `useNotificationSetup` inside the React Query
@@ -51,6 +52,8 @@ export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
   const [splashDone, setSplashDone] = useState(false);
+
+  useNotificationLinking(!isLoading && isAuthenticated);
 
   // Hydrate the auth store from SecureStore once on startup
   useEffect(() => {

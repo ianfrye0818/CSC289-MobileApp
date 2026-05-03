@@ -70,6 +70,7 @@ export const usePushNotifications = (): PushNotificationState => {
       });
     }
 
+    console.log('token', token);
     return token;
   }
 
