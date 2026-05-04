@@ -22,7 +22,7 @@ export const useCheckout = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await queryClient.invalidateQueries({
         queryKey: orderQueryKeys.orders,
       });
@@ -31,6 +31,10 @@ export const useCheckout = () => {
       });
       appToast.success('Order created successfully');
       router.push('/orders');
+      const orderId = data?.data?.id;
+      if (orderId) {
+        router.push(`/orders/${orderId}`);
+      }
     },
   });
 };

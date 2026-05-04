@@ -6,6 +6,11 @@ export function CreditCardForm() {
   return (
     <View className='py-2 my-4 border border-border rounded-md gap-2 px-2'>
       <InputField<typeof checkoutSchema>
+        name='creditCard.cardholderName'
+        label='Cardholder Name'
+        required
+      />
+      <InputField<typeof checkoutSchema>
         name='creditCard.cardNumber'
         label='Card Number'
         maxLength={16}

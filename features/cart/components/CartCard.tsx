@@ -81,15 +81,22 @@ export function CartCard({ cartItem, itemCount, showQuantityAdjustor = true }: P
           </View>
         )}
         {showQuantityAdjustor && <QuantityAdjustor cartItem={cartItem} />}
-        <Text
-          className={cn(
-            'text-lg',
-            hasDiscount ? 'text-primary' : 'text-muted-foreground',
+        <View className='flex-row items-baseline gap-2'>
+          {hasDiscount && (
+            <Text className='text-base text-muted-foreground line-through'>
+              {formatCurrency(cartItem.unitPrice * cartItem.quantity)}
+            </Text>
           )}
-        >
-          {formattedPrice}
-          {itemCount != null && ` · ${itemCount} item${itemCount !== 1 ? 's' : ''}`}
-        </Text>
+          <Text
+            className={cn(
+              'text-lg',
+              hasDiscount ? 'text-primary' : 'text-muted-foreground',
+            )}
+          >
+            {formattedPrice}
+            {itemCount != null && ` · ${itemCount} item${itemCount !== 1 ? 's' : ''}`}
+          </Text>
+        </View>
       </View>
     </Card>
   );
