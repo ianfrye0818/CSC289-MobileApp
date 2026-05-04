@@ -9,6 +9,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+const Sound: any = require('react-native-sound');
+
 // Timing constants — adjust here to tune the whole sequence.
 const TIMING = {
   // Stage 1: "The A Team" signature
@@ -61,9 +63,22 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
   const signatureTranslateY = useSharedValue(TIMING.signatureRiseFrom);
   const logoOpacity = useSharedValue(0);
   const logoTranslateY = useSharedValue(TIMING.logoRiseFrom);
+  const sound: any = new Sound(require('@/assets/sounds/SplashJingle.wav'), (error: any) => {
+    if (error) {
+      console.log('Failed to load sound', error);
+      return;
+    }
+  });
 
   useEffect(() => {
     // Stage 1 — signature rises and fades in, holds, fades out.
+    if (sound && sound.isLoaded && sound.isLoaded()) {
+      sound.play((success: boolean) => {
+        if (!success) {
+          console.log('Sound playback failed');
+        }
+      });
+    }
     signatureOpacity.value = withSequence(
       withTiming(1, {
         duration: TIMING.signatureRiseIn,
@@ -112,7 +127,10 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
       onFinish();
     }, DERIVED.totalDuration);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      sound.release();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
