@@ -66,7 +66,7 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
     const playSound = async () => {
       try {
         const { sound: playbackObject } = await Audio.Sound.createAsync(
-          require('@/assets/sounds/SplashJingle.wav'),
+          require('@/assets/sounds/splashjingle.wav'),
         );
         sound = playbackObject;
         await sound.playAsync();

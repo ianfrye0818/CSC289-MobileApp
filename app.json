@@ -36,7 +36,7 @@
           "color": "#ffffff",
           "androidMode": "default",
           "androidCollapsedTitle": "csc289mobile",
-          "sounds": ["./assets/sounds/NotifJingle.wav"]
+          "sounds": ["./assets/sounds/notifjingle.wav"]
         }
       ],
       "expo-router",
