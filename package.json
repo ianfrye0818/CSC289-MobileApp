@@ -8,7 +8,7 @@
   "packageManager": "npm@11.0.0",
   "scripts": {
     "dev": "expo start",
-    "build:android": "eas build --platform android --profile preview --local",
+    "build:android": "eas build --platform android --profile preview --local --clear-cache",
     "build:ios": "eas build --platform ios --profile preview --local",
     "dev:concurrent": "concurrently -n app,server -c blue,green \"pnpm run start\" \"pnpm -C server run dev\"",
     "start": "expo start",

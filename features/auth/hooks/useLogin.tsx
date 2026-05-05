@@ -3,7 +3,6 @@ import { appToast } from '@/lib/toast';
 import { unwrapResponse } from '@/lib/unwrapResponse';
 import { useMutation } from '@tanstack/react-query';
 import Constants from 'expo-constants';
-import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { useAuthStore } from '../store';
@@ -12,7 +11,7 @@ import { LoginUserPayload } from '../types';
 // Returns the device push token only if permission is already granted — never
 // prompts. The permission flow lives in usePushNotifications.
 async function getGrantedPushToken(): Promise<string | null> {
-  if (Platform.OS === 'web' || (!Device.isDevice && !__DEV__)) return null;
+  if (Platform.OS === 'web') return null;
   try {
     const { status } = await Notifications.getPermissionsAsync();
     if (status !== 'granted') return null;
