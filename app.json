@@ -10,9 +10,13 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.csc289sp2026.elevateretail",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "permissions": ["android.permission.POST_NOTIFICATIONS"],
       "softwareKeyboardLayoutMode": "resize",
       "package": "com.csc289sp2026.elevateretail",
       "googleServicesFile": "./google-services.json",

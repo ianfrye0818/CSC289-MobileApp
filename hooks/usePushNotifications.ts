@@ -1,8 +1,7 @@
 import Constants from 'expo-constants';
-import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useState } from 'react';
-import { Platform } from 'react-native';
+import { AppState, Platform } from 'react-native';
 
 export interface PushNotificationState {
   notification?: Notifications.Notification;
@@ -35,48 +34,54 @@ export const usePushNotifications = (): PushNotificationState => {
   );
 
   async function registerForPushNotificationsAsync(): Promise<Notifications.ExpoPushToken | null> {
-    let token: Notifications.ExpoPushToken | null = null;
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web') return null;
+
+    try {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if (finalStatus !== 'granted') return null;
+
+      // Set channel before fetching token — channel must exist on Android first
+      if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+          sound: 'notifjingle',
+        });
+      }
+
+      const projectId =
+        Constants.easConfig?.projectId ?? Constants.expoConfig?.extra?.eas?.projectId;
+
+      if (!projectId) return null;
+
+      const token = await Notifications.getExpoPushTokenAsync({ projectId });
+      return token;
+    } catch (err) {
+      console.error('[PushNotif] getExpoPushTokenAsync failed:', err);
       return null;
     }
-    if (!Device.isDevice && !__DEV__) {
-      console.warn('ERROR: Must use a physical device');
-      return null;
-    }
-
-    const { status: exisitingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = exisitingStatus;
-
-    if (exisitingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notifications!');
-      return null;
-    }
-
-    token = await Notifications.getExpoPushTokenAsync({
-      projectId: Constants.expoConfig?.extra?.eas?.projectId,
-    });
-
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-        sound: 'notifjingle',
-      });
-    }
-
-    console.log('token', token);
-    return token;
   }
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token ?? undefined));
+
+    // Re-check when the user returns from Android Settings after granting permission
+    const appStateListener = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') {
+        registerForPushNotificationsAsync().then((token) => {
+          if (token) setExpoPushToken(token);
+        });
+      }
+    });
 
     const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
@@ -87,6 +92,7 @@ export const usePushNotifications = (): PushNotificationState => {
     });
 
     return () => {
+      appStateListener.remove();
       notificationListener.remove();
       responseListener.remove();
     };
