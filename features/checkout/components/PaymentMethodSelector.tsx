@@ -1,11 +1,5 @@
 import { Card } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { Text } from '@/components/ui/text';
 import { PaymentMethod, getPaymentLabel } from '@/types/PaymentMethod.enum';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -13,7 +7,7 @@ import { Platform, View } from 'react-native';
 import { CheckoutFormValues } from '../checkout.schema';
 import { CreditCardForm } from './CreditCardForm';
 
-export function SelectPaymentCard() {
+export function PaymentMethodSelector() {
   const form = useFormContext<CheckoutFormValues>();
 
   const filteredPaymentMethods = Object.values(PaymentMethod).filter((method) => {
@@ -21,6 +15,11 @@ export function SelectPaymentCard() {
     if (Platform.OS === 'android' && method === PaymentMethod.APPLE_PAY) return false;
     return true;
   });
+
+  const items = filteredPaymentMethods.map((method) => ({
+    label: getPaymentLabel(method),
+    value: method,
+  }));
 
   return (
     <Card className='gap-0 px-4 py-3'>
@@ -31,31 +30,19 @@ export function SelectPaymentCard() {
           name='paymentMethod'
           render={({ field }) => (
             <View>
-              <Select
-                value={{ label: getPaymentLabel(field.value), value: field.value }}
-                onValueChange={(option) => {
-                  if (option?.value) {
-                    field.onChange(option.value as PaymentMethod);
-                    if (option.value !== PaymentMethod.CREDIT_CARD) {
-                      form.setValue('creditCard', undefined);
-                    }
+              <Combobox<PaymentMethod>
+                items={items}
+                placeholder='Select a payment method'
+                searchPlaceholder='Search payment methods'
+                value={field.value}
+                onChange={(value) => {
+                  field.onChange(value);
+                  if (value !== PaymentMethod.CREDIT_CARD) {
+                    form.setValue('creditCard', undefined);
                   }
                 }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder='Select a payment method' />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredPaymentMethods.map((method) => (
-                    <SelectItem
-                      key={method}
-                      value={method}
-                      label={getPaymentLabel(method)}
-                      className='text-foreground'
-                    />
-                  ))}
-                </SelectContent>
-              </Select>
+                multiple={false}
+              />
               {field.value === 'CREDIT_CARD' && <CreditCardForm />}
             </View>
           )}

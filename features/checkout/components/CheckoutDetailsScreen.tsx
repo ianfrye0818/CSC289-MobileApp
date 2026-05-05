@@ -15,7 +15,7 @@ import { ShoppingCart } from '../../cart/types';
 import { CheckoutFormValues, checkoutSchema } from '../checkout.schema';
 import { AddressSelector } from './AddressSelector';
 import { CheckoutHorizontalList } from './CheckoutHorizontalList';
-import { SelectPaymentCard } from './PaymentMethodSelector';
+import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { PurchaseButton } from './PurchaseButton';
 import { SummaryCardRow } from './SummaryCardRow';
 
@@ -49,11 +49,7 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
   // Discounted subtotal mirrors what the server will store on Order_Item.Amount.
   // Tax is then computed on the discounted amount to match the server.
   const totalPrice = useMemo(
-    () =>
-      items.reduce(
-        (total, item) => total + applyDiscount(item.unitPrice) * item.quantity,
-        0,
-      ),
+    () => items.reduce((total, item) => total + applyDiscount(item.unitPrice) * item.quantity, 0),
     [items, applyDiscount],
   );
   const discountAmount = originalSubtotal - totalPrice;
@@ -143,7 +139,7 @@ export function CheckoutDetails({ cart }: { cart: ShoppingCart }) {
           {!isBillingAddressSameAsShippingAddress && <AddressSelector type='billing' />}
 
           {/* Payment methods */}
-          <SelectPaymentCard />
+          <PaymentMethodSelector />
 
           <PurchaseButton />
         </ScrollView>
