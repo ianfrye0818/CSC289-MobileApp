@@ -72,10 +72,11 @@ export class ExpoPushService {
     try {
       const messages: ExpoPushMessage[] = validTokens.map((token) => ({
         to: token,
-        sound: 'default',
+        sound: 'notifjingle',
         title,
         body,
         data,
+        channelId: 'default',
       }));
 
       const chunks = this.expo.chunkPushNotifications(messages);

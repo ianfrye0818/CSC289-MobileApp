@@ -1,3 +1,4 @@
+import { Audio } from 'expo-av';
 import React, { useEffect } from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import Animated, {
@@ -28,10 +29,7 @@ const TIMING = {
 
 const DERIVED = {
   logoStartsAt:
-    TIMING.signatureRiseIn +
-    TIMING.signatureHold +
-    TIMING.signatureFadeOut +
-    TIMING.logoDelay,
+    TIMING.signatureRiseIn + TIMING.signatureHold + TIMING.signatureFadeOut + TIMING.logoDelay,
   totalDuration: 0, // computed below
 };
 DERIVED.totalDuration =
@@ -64,6 +62,20 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
 
   useEffect(() => {
     // Stage 1 — signature rises and fades in, holds, fades out.
+    let sound: Audio.Sound | undefined;
+    const playSound = async () => {
+      try {
+        const { sound: playbackObject } = await Audio.Sound.createAsync(
+          require('@/assets/sounds/splashjingle.wav'),
+        );
+        sound = playbackObject;
+        await sound.playAsync();
+      } catch (error) {
+        console.log('Sound error:', error);
+      }
+    };
+
+    playSound();
     signatureOpacity.value = withSequence(
       withTiming(1, {
         duration: TIMING.signatureRiseIn,
@@ -112,7 +124,12 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
       onFinish();
     }, DERIVED.totalDuration);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -127,7 +144,10 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
   }));
 
   return (
-    <View style={styles.container} pointerEvents='none'>
+    <View
+      style={styles.container}
+      pointerEvents='none'
+    >
       <Animated.View style={[styles.centerOverlay, signatureAnimatedStyle]}>
         <Text style={styles.signatureLine}>The A</Text>
         <Text style={styles.signatureLine}>Team</Text>
