@@ -12,6 +12,7 @@ import { NotificationsModule } from './features/notifications/Notifications.modu
 import { OrdersModule } from './features/orders/Orders.module';
 import { ProductsModule } from './features/products/Products.module';
 import { ReviewsModule } from './features/reviews/Reviews.module';
+import { ShippingModule } from './features/shipping/shipping.module';
 import { WebhooksModule } from './features/webhooks/Webhooks.module';
 import { HealthController } from './health.controller';
 import { configSchema } from './services/ConfigService/Config.schema';
@@ -52,6 +53,7 @@ import { GlobalServicesModule } from './services/GlobalServices.module';
     NotificationsModule,
     WebhooksModule,
     ReviewsModule,
+    ShippingModule,
   ],
   controllers: [HealthController],
   providers: [
